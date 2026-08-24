@@ -1,0 +1,23 @@
+hub_id: ge7si1
+port: 8080
+
+site:
+  latitude: 51.5
+  longitude: -0.1
+  timezone: Europe/London
+
+# Only generations we have captured checksums for can be reproduced byte-exactly.
+# Set false once the live test shows the hub ignores the checksum.
+restrict_generations: true
+
+schedule:
+  - at: sunrise
+    duration_min: 45
+  - at: sunset
+    duration_min: 60
+
+mqtt:
+  host: 127.0.0.1
+  port: 1883
+  # username: hozelock
+  # password: ...

@@ -1,0 +1,4 @@
+2026-08-22 19:44  set schedule: 06:00 for 30 min (0x1e) all days, 21:00 for 45 min (0x2d) all days
+                  (times as displayed in app; assumed BST = UTC+1)
+2026-08-22 19:46  hub power-cycled to force a tap/0 fetch
+                  -> purpose: solve the tap/0 time-code encoding from two known clock times

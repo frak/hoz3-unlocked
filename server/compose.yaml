@@ -1,0 +1,8 @@
+services:
+  hozelock:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./config.yaml:/config/config.yaml:ro

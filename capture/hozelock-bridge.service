@@ -1,0 +1,16 @@
+[Unit]
+Description=Hozelock transparent capture bridge
+After=network-pre.target
+Before=hozelock-capture.service
+# USB NIC can enumerate after basic.target; without this the bridge comes up
+# with one member and the hub sits dark until someone notices
+BindsTo=sys-subsystem-net-devices-eth1.device
+After=sys-subsystem-net-devices-eth1.device
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/hozelock-bridge.sh eth0 eth1
+
+[Install]
+WantedBy=multi-user.target

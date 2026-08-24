@@ -1,0 +1,17 @@
+[Unit]
+Description=Hozelock hub packet capture
+After=network.target
+# Without br0 tcpdump just fails and Restart=always spins on it
+Requires=hozelock-bridge.service
+After=hozelock-bridge.service
+
+[Service]
+# Hourly rotation, 30 days retained; the hub only polls every 20 min so files stay small
+ExecStart=/usr/bin/tcpdump -i br0 -s 0 -n -U \
+  -G 3600 -w /var/captures/hub-%%Y%%m%%d-%%H%%M%%S.pcap -W 720 \
+  ether host AA:BB:CC:DD:EE:FF
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
