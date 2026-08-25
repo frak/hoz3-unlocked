@@ -28,6 +28,9 @@ def load(path):
         site=site,
         events=events,
         restrict_generations=cfg.get('restrict_generations', True),
+        initial_generation=cfg.get('initial_generation'),
+        corrupt_checksum=cfg.get('corrupt_checksum', False),
+        replay_blob=cfg.get('replay_blob'),
     )
     return cfg, st
 

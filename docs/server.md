@@ -73,6 +73,7 @@ cd server
 uv run python test_codec.py      # round-trips all 24 captured blobs byte-for-byte
 uv run python test_schedule.py   # rebuilds a captured programme from a schedule
 uv run python test_server.py     # replays ~200 real hub requests at the server
+uv run python test_mqtt.py       # discovery payloads and command handling
 ```
 
 The corpus in `../data/hb-raw.tsv` is the ground truth, and it cannot be regenerated after

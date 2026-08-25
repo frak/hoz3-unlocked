@@ -14,12 +14,12 @@ specification itself, and a replacement server.
 |---|---|
 | Protocol | decoded, except the checksum algorithm |
 | Replacement server | built, passing tests against captured traffic; not yet run against the hub |
-| Next step | does the hub actually validate the checksum? (`docs/server.md`) |
+| Next step | point the hub at it — [docs/live-test.md](docs/live-test.md) |
 
 ## Layout
 
 ```
-docs/       protocol specification, capture rig build, server design
+docs/       protocol specification, capture rig build, server design, live test
 capture/    the packet-capture rig: bridge script, systemd units, analysis tool
 server/     the replacement server (Python 3.14, uv, containerised)
 data/       captured traffic — the ground truth behind every claim in the docs

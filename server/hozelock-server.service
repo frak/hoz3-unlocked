@@ -1,0 +1,19 @@
+[Unit]
+Description=Hozelock cloud replacement
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+# Adjust User and the two paths to match where the repo was cloned.
+User=pi
+WorkingDirectory=/home/pi/hozelock/server
+ExecStart=/home/pi/.local/bin/uv run hozelock-server config.yaml
+
+# Binding port 80 without running the whole thing as root
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -75,6 +75,24 @@ def main():
     ok &= check('shifting the epoch 5 min moves the lead gap by one unit',
                 lead - lead2, 1)
 
+    # The clock and the programme must share an origin, or the hub rejects the
+    # programme -- this is what made the first live attempt fail.
+    from hozelock import state as sm
+    st = sm.HubState('x', SITE, [schedule.Event('06:00', 30),
+                                 schedule.Event('21:00', 45)])
+    origin = st.week_origin(datetime(2026, 8, 26, 19, 30))
+    ok &= check('week origin is Hozelock\'s Saturday 22:55', origin, EPOCH)
+    ok &= check('clock reproduces the captured wrap',
+                [st.clock(datetime(2026, 8, 22, 22, 53))[0],
+                 st.clock(datetime(2026, 8, 22, 23, 9))[0]], [10078, 14])
+    ok &= check('clock never exceeds one week',
+                max(st.clock(EPOCH + timedelta(minutes=m))[0]
+                    for m in range(0, 10080, 97)) < sm.CLOCK_WEEK_MINUTES, True)
+    lead, chain = schedule.build(st.events, SITE, st.schedule_epoch(
+        datetime(2026, 8, 26, 19, 30)))
+    ok &= check('programme built on the week origin still closes the cycle',
+                lead + sum(g for _, g in chain), codec.CYCLE_UNITS)
+
     print('\nOK' if ok else '\nFAILURES')
     return 0 if ok else 1
 

@@ -56,7 +56,16 @@ class Handler(BaseHTTPRequestHandler):
             self._reply(self.state.heartbeat_response())
             return
 
-        log.warning('unrecognised request: %s', self.path)
+        # Wrong hub_id is the likeliest misconfiguration, and a bare 404 hides it.
+        for pattern in (TAP_PATH, HEARTBEAT_PATH):
+            m = pattern.match(url.path)
+            if m:
+                log.error('hub id mismatch: request says %r, config says %r - '
+                          'the hub uses the id from its URL path, not the one the '
+                          'app shows', m.group(1), self.state.hub_id)
+                break
+        else:
+            log.warning('unrecognised request: %s', self.path)
         self.send_error(404)
 
 

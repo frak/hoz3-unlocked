@@ -1,5 +1,7 @@
+# From the URL path the hub uses, not the ID shown in the app:
+#   grep -o '/notify/[^/]*/' ../data/hb.tsv | sort -u
 hub_id: ge7si1
-port: 8080
+port: 80
 
 site:
   latitude: 51.5
@@ -10,6 +12,16 @@ site:
 # Set false once the live test shows the hub ignores the checksum.
 restrict_generations: true
 
+# Where the generation counter starts. Power-cycle the hub at cutover and it
+# reports held=0000, so any value differs and it will fetch. Only matters if you
+# cut over without a reboot.
+initial_generation: 0x08bd
+
+# Phase 1 experiment: deliberately send a wrong schedule checksum. If the hub
+# behaves identically, it does not validate and the unknown algorithm stops
+# mattering.
+corrupt_checksum: false
+
 schedule:
   - at: sunrise
     duration_min: 45
@@ -17,7 +29,14 @@ schedule:
     duration_min: 60
 
 mqtt:
-  host: 127.0.0.1
+  host: 192.168.1.6
   port: 1883
-  # username: hozelock
-  # password: ...
+  username: mqtt_user
+  password: mqtt_pass
+  node_id: hozelock
+
+# Diagnostic: serve this captured programme verbatim instead of generating one.
+# It carries a real checksum, so it isolates "is our schedule encoding right?"
+# from "is our checksum wrong?". This one waters 06:00 for 30 min and 21:00 for
+# 45 min, every day. Comment out to go back to the configured schedule.
+replay_blob: AFUetC1sHrQtbB60LWwetC1sHrQtbB60LWwetC0XAMz______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________wAAAAAA074

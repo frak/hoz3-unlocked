@@ -108,6 +108,19 @@ def main():
 
         st.observe(codec.b64_decode('AgEIG-IAAgEQAAAAAgAAAAAIwAAAAAjA'))
         ok &= check('watering state parsed from a real request', st.watering, 'manual')
+
+        # A zero checksum is what the real service never sends, and the hub may
+        # discard the response entirely if we get it wrong.
+        from hozelock import checksums, state as sm
+        body = urllib.request.urlopen(
+            f'http://127.0.0.1:{PORT}/notify/{HUB}/', timeout=5).read().decode('latin1')
+        blob = codec.unwrap(body)
+        want = checksums.CHECKSUMS[(sm.DEFAULT_FLAG, st.generation)]
+        ok &= check('heartbeat carries the captured checksum',
+                    (blob[22] << 8) | blob[23], want)
+        ok &= check('every generation we serve has a checksum',
+                    all((sm.DEFAULT_FLAG, g) in checksums.CHECKSUMS
+                        for g in sm.KNOWN_GENERATIONS), True)
     finally:
         httpd.shutdown()
         httpd.server_close()
