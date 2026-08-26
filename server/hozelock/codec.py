@@ -26,6 +26,10 @@ WATERING_STATES = {
     (0x00, 0x00): 'idle',
     (0x01, 0x10): 'manual',
     (0x01, 0x04): 'scheduled',
+    # Seen once on the real service, 18:05-19:09 on 21 Aug, with no watering and
+    # nothing unusual around it. Not "waiting for the controller": it persists in
+    # demo mode where the controller polls every minute. Meaning unknown.
+    (0x02, 0x00): 'state-02',
 }
 
 
@@ -34,7 +38,10 @@ def b64_decode(s):
 
 
 def b64_encode(b):
-    return base64.urlsafe_b64encode(b).decode().rstrip('=')
+    # Padding must be kept: the hub's decoder needs it. A 24-byte heartbeat
+    # needs none, but a 218-byte programme does, and without it the hub silently
+    # refuses the programme and re-fetches forever.
+    return base64.urlsafe_b64encode(b).decode()
 
 
 def unwrap(body):

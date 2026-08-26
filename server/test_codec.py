@@ -65,6 +65,16 @@ def main():
         if events and total != codec.CYCLE_UNITS:
             failures.append(f'schedule lead={lead}: totals {total}, not {codec.CYCLE_UNITS}')
 
+    # The hub's decoder needs the padding; without it the programme is refused.
+    for blob in sorted(schedules | beats):
+        wrapped = codec.wrap(blob)
+        if codec.unwrap(wrapped) != blob:
+            failures.append(f'{len(blob)}-byte blob does not survive wrap/unwrap')
+        n = len(codec.b64_encode(blob))
+        if n % 4:
+            failures.append(f'{len(blob)}-byte blob encodes to {n} chars, not a '
+                            f'multiple of 4 - padding was stripped')
+
     if failures:
         print(f'\n{len(failures)} FAILURES:')
         for f in failures[:10]:

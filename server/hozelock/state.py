@@ -27,6 +27,7 @@ WEEK_ORIGIN_MINUTE = 55
 CMD_NONE = 0
 CMD_WATER = 1
 CMD_STOP = 2
+COMMAND_NAMES = {CMD_WATER: 'water', CMD_STOP: 'stop'}
 
 DEFAULT_FLAG = 0x00
 
@@ -99,15 +100,22 @@ class HubState:
     def schedule_epoch(self, now=None):
         return self.week_origin(now)
 
-    def water_now(self):
-        self.pending = CMD_WATER
+    def _queue(self, command, name):
+        # One slot, last write wins. The hub may be offline for minutes, so an
+        # undelivered command being replaced is silent data loss unless said.
+        if self.pending and self.pending != command:
+            log.warning('replacing an undelivered %s command with %s - the hub '
+                        'never collected the first one',
+                        COMMAND_NAMES.get(self.pending, self.pending), name)
+        self.pending = command
         self.bump()
         self._notify()
 
+    def water_now(self):
+        self._queue(CMD_WATER, 'water')
+
     def stop_watering(self):
-        self.pending = CMD_STOP
-        self.bump()
-        self._notify()
+        self._queue(CMD_STOP, 'stop')
 
     def set_schedule(self, events):
         self.events = events

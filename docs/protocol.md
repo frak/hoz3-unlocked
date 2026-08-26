@@ -32,7 +32,11 @@ Three things a replacement server must honour:
 
 - **The response is sentinel-framed, not HTML.** The hub scans for `#!hb=` and stops at the `.`. The markup is
   decoration and can be anything, but reproduce the sentinel and the trailing dot exactly.
-- **`hb` is base64url** — `-` and `_`, not `+` and `/`.
+- **`hb` is base64url** — `-` and `_`, not `+` and `/` — and **the padding must be
+  kept**. A 24-byte heartbeat needs none, so stripping it looks harmless; a 218-byte
+  programme needs one `=`, and without it the hub refuses the programme and
+  re-fetches in a loop forever. Real body lengths: 107 bytes for a heartbeat, 367 for
+  a programme.
 - **The request arrives in many tiny TCP segments** — 12, 6, 5, 32, 9 bytes, one write per token, no coalescing. Any
   real HTTP server handles this; a hand-rolled socket listener must not assume one `read()` yields a whole request line.
 
@@ -88,6 +92,7 @@ Watering state, offsets 7–8:
 | `00 00` | idle                         |
 | `01 10` | watering, manually triggered |
 | `01 04` | watering, schedule triggered |
+| `02 00` | unknown — seen for ~64 minutes on the real service with no watering, and observed persisting on the replacement while the hub was otherwise healthy. Not a fault: the hub accepts programmes and heartbeats normally in this state |
 
 The distinction matters: the hub reports *why* it is watering, so the server can tell its own commands from schedule
 firings.
