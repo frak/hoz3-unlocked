@@ -1,0 +1,84 @@
+{
+ "scheduleID": "3",
+ "name": "Test",
+ "description": null,
+ "scheduleDays": {
+  "Monday": {
+   "dayOfWeek": "Monday",
+   "wateringEvents": [
+    {
+     "startTime": 50400000,
+     "endTime": 51600000,
+     "duration": 1200000,
+     "enabled": false
+    }
+   ]
+  },
+  "Thursday": {
+   "dayOfWeek": "Thursday",
+   "wateringEvents": [
+    {
+     "startTime": 0,
+     "endTime": 1200000,
+     "duration": 1200000,
+     "enabled": false
+    }
+   ]
+  },
+  "Friday": {
+   "dayOfWeek": "Friday",
+   "wateringEvents": [
+    {
+     "startTime": 0,
+     "endTime": 1200000,
+     "duration": 1200000,
+     "enabled": false
+    }
+   ]
+  },
+  "Sunday": {
+   "dayOfWeek": "Sunday",
+   "wateringEvents": [
+    {
+     "startTime": 0,
+     "endTime": 3300000,
+     "duration": 3300000,
+     "enabled": false
+    }
+   ]
+  },
+  "Wednesday": {
+   "dayOfWeek": "Wednesday",
+   "wateringEvents": [
+    {
+     "startTime": 0,
+     "endTime": 1200000,
+     "duration": 1200000,
+     "enabled": false
+    }
+   ]
+  },
+  "Tuesday": {
+   "dayOfWeek": "Tuesday",
+   "wateringEvents": [
+    {
+     "startTime": 59400000,
+     "endTime": 67200000,
+     "duration": 7800000,
+     "enabled": true
+    }
+   ]
+  },
+  "Saturday": {
+   "dayOfWeek": "Saturday",
+   "wateringEvents": [
+    {
+     "startTime": 0,
+     "endTime": 1200000,
+     "duration": 1200000,
+     "enabled": false
+    }
+   ]
+  }
+ }
+}
