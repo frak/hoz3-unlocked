@@ -71,6 +71,7 @@ class HubState:
         self.watering = 'idle'
         self.generation_held = None
         self.generation_confirmed = None
+        self._warned_checksum = False
         self._lock = threading.Lock()
         self._listeners = []
 
@@ -185,9 +186,17 @@ class HubState:
         epoch = self.schedule_epoch(now)
         events = self.events if self.schedule_enabled else []
         lead, chain = schedule.build(events, self.site, epoch)
-        checksum = b'\xff\xff' if self.corrupt_checksum else b'\x00\x00'
-        return codec.encode_schedule(lead, chain, flags=self.flags(),
-                                     checksum=checksum)
+        blob = codec.encode_schedule(lead, chain, flags=self.flags())
+        if self.corrupt_checksum:
+            return blob[:216] + b'\xff\xff'
+        ck = codec.schedule_checksum(blob)
+        if ck is None:
+            if not self._warned_checksum:
+                self._warned_checksum = True
+                log.error('cannot compute the schedule checksum - the hub will '
+                          'refuse this programme. Run capture/collect-checksums.py')
+            return blob
+        return blob[:216] + bytes([ck >> 8, ck & 0xff])
 
     def next_watering(self, now=None):
         now = now or datetime.now()
