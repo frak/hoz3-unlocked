@@ -16,9 +16,25 @@ HEARTBEAT_PATH = re.compile(r'^/notify/([^/]+)/$')
 TAP_PATH = re.compile(r'^/notify/([^/]+)/tap/(\d+)/$')
 
 
+# Reproduced from the capture. The hub is a small embedded client and we have
+# no idea which of these it depends on, so send what the real service sent.
+EXTRA_HEADERS = [
+    ('Strict-Transport-Security', 'max-age=63072000; includeSubDomains'),
+    ('Access-Control-Allow-Origin', '*'),
+    ('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, DELETE, PUT'),
+    ('Access-Control-Max-Age', '1000'),
+    ('Access-Control-Allow-Headers',
+     'x-requested-with, Content-Type, origin, authorization, accept, '
+     'client-security-token'),
+]
+
+
 class Handler(BaseHTTPRequestHandler):
     protocol_version = 'HTTP/1.1'
     state = None
+
+    def version_string(self):
+        return 'Apache'
 
     def log_message(self, fmt, *args):
         log.debug(fmt, *args)
@@ -26,6 +42,8 @@ class Handler(BaseHTTPRequestHandler):
     def _reply(self, blob):
         body = codec.wrap(blob).encode('latin1')
         self.send_response(200)
+        for name, value in EXTRA_HEADERS:
+            self.send_header(name, value)
         self.send_header('Content-Type', 'text/plain;charset=ISO-8859-1')
         self.send_header('Content-Length', str(len(body)))
         self.send_header('Connection', 'close')

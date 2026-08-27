@@ -31,6 +31,7 @@ def load(path):
         initial_generation=cfg.get('initial_generation'),
         corrupt_checksum=cfg.get('corrupt_checksum', False),
         replay_blob=cfg.get('replay_blob'),
+        demo_mode=cfg.get('demo_mode', False),
     )
     return cfg, st
 

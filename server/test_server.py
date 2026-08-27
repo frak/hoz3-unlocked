@@ -115,12 +115,19 @@ def main():
         body = urllib.request.urlopen(
             f'http://127.0.0.1:{PORT}/notify/{HUB}/', timeout=5).read().decode('latin1')
         blob = codec.unwrap(body)
-        want = checksums.CHECKSUMS[(sm.DEFAULT_FLAG, st.generation)]
+        want = checksums.CHECKSUMS[(st.flag, st.generation)]
         ok &= check('heartbeat carries the captured checksum',
                     (blob[22] << 8) | blob[23], want)
         ok &= check('every generation we serve has a checksum',
-                    all((sm.DEFAULT_FLAG, g) in checksums.CHECKSUMS
-                        for g in sm.KNOWN_GENERATIONS), True)
+                    all((st.flag, g) in checksums.CHECKSUMS
+                        for g in st.generations), True)
+        demo = sm.HubState('x', schedule.Site(51.5, -0.1), [], demo_mode=True)
+        ok &= check('demo mode sets flag 0x10', demo.heartbeat_response()[5], 0x10)
+        ok &= check('demo mode has captured checksums too',
+                    all((demo.flag, g) in checksums.CHECKSUMS
+                        for g in demo.generations), True)
+        ok &= check('demo mode has more usable generations',
+                    len(demo.generations) > len(st.generations), True)
     finally:
         httpd.shutdown()
         httpd.server_close()

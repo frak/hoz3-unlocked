@@ -29,28 +29,35 @@ CMD_WATER = 1
 CMD_STOP = 2
 COMMAND_NAMES = {CMD_WATER: 'water', CMD_STOP: 'stop'}
 
-DEFAULT_FLAG = 0x00
+# Response byte 5 tells the hub whether demo mode is on: 0x10 switches the
+# controller to a 1-minute radio poll and the hub to ~7-second heartbeats,
+# against ~16 minutes and 20 minutes normally. The cloud drives this on every
+# heartbeat, so the app's setting is overridden the moment we take over.
+FLAG_NORMAL = 0x00
+FLAG_DEMO = 0x10
 
-# Checksums are unidentified, so only generations we captured can be reproduced.
-# Cycling through these keeps every heartbeat reply byte-accurate.
-KNOWN_GENERATIONS = sorted(
-    gen for (flag, gen) in checksums.CHECKSUMS if flag == DEFAULT_FLAG)
+
+def generations_for(flag):
+    """Only generations we hold a captured checksum for, at this flag value."""
+    return sorted(gen for (f, gen) in checksums.CHECKSUMS if f == flag)
 
 
 class HubState:
     def __init__(self, hub_id, site, events, clock_epoch=None,
                  restrict_generations=True, initial_generation=None,
-                 corrupt_checksum=False, replay_blob=None):
+                 corrupt_checksum=False, replay_blob=None, demo_mode=False):
         self.hub_id = hub_id
         self.site = site
         self.events = events
         self.clock_epoch = clock_epoch or datetime(2026, 1, 1)
         self.restrict_generations = restrict_generations
         self.corrupt_checksum = corrupt_checksum
+        self.flag = FLAG_DEMO if demo_mode else FLAG_NORMAL
+        self.generations = generations_for(self.flag)
         # A captured programme, served verbatim. The only way to hand the hub a
         # valid schedule checksum until the algorithm is solved.
         self.replay_blob = codec.b64_decode(replay_blob) if replay_blob else None
-        self.generation = initial_generation or KNOWN_GENERATIONS[0]
+        self.generation = initial_generation or self.generations[0]
         self.pending = CMD_NONE
         self.schedule_enabled = True
         self.last_seen = None
@@ -74,10 +81,10 @@ class HubState:
                 # Step to the next generation we hold a checksum for, wrapping.
                 # The hub only needs the value to change, not to increase.
                 try:
-                    i = KNOWN_GENERATIONS.index(self.generation)
+                    i = self.generations.index(self.generation)
                 except ValueError:
                     i = -1
-                self.generation = KNOWN_GENERATIONS[(i + 1) % len(KNOWN_GENERATIONS)]
+                self.generation = self.generations[(i + 1) % len(self.generations)]
             else:
                 self.generation += 1
         return self.generation
@@ -141,7 +148,7 @@ class HubState:
 
     def heartbeat_response(self, now=None):
         minutes, seconds = self.clock(now)
-        ck = checksums.CHECKSUMS.get((DEFAULT_FLAG, self.generation))
+        ck = checksums.CHECKSUMS.get((self.flag, self.generation))
         if ck is None:
             log.warning('no captured checksum for generation %04x - sending zeros; '
                         'the hub may ignore this response', self.generation)
@@ -149,7 +156,7 @@ class HubState:
         else:
             checksum = bytes([ck >> 8, ck & 0xff])
         return codec.encode_heartbeat_response(minutes, seconds, self.generation,
-                                               flag=DEFAULT_FLAG, checksum=checksum)
+                                               flag=self.flag, checksum=checksum)
 
     def flags(self):
         f = bytearray(5)

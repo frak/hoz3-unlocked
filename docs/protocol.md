@@ -107,9 +107,22 @@ firings.
 |--------|----------------------------------------------------------------|
 | 0–1    | clock: **minutes within a 7-day week**, 0–10079 (below)        |
 | 2      | clock: seconds, matches wall clock (252/273 samples)           |
-| 5      | flag, `0x10` / `0x00` — meaning unknown                        |
+| 5      | **demo mode**: `0x10` on, `0x00` off (below)                    |
 | 8–9    | **generation counter**, server side                            |
 | 22–23  | checksum (unidentified)                                        |
+
+### Byte 5 is demo mode, and the server drives it
+
+`0x10` enables it, `0x00` disables it, on every heartbeat. Two transitions in the
+capture confirm it: at 18:53:50 on 22 August the flag went `00` → `10` and the
+heartbeat interval collapsed from ~768 seconds to ~8; and a logged
+"enabled and disabled demo mode" at 19:26 appears as `10` then `00` ten seconds
+apart.
+
+Demo mode is therefore **not** state the hub holds. Setting it in the app before
+cutting over achieves nothing, because the replacement server overrides it on the
+next heartbeat. A server that always sends `0x00` forces normal cadence: ~16-minute
+heartbeats and a 20-minute controller poll, which makes every test slow.
 
 ### The clock is a weekly counter, and it anchors everything
 
@@ -247,7 +260,7 @@ none. Home Assistant can sidestep this entirely by pointing its REST sensors str
 ## Open questions
 
 - **The checksum algorithm.** See below — heavily characterised, not identified.
-- **Response byte 5** (`0x10`/`0x00`) and **request bytes 11–13**.
+- **Request bytes 11–13** — radio link metrics of some kind.
 - **Other endpoints.** Only `/notify/{hubId}/` and `/notify/{hubId}/tap/0/` have been seen, and `hoz3.com` was the only
   hostname resolved. A firmware-update endpoint that only appears at boot would be easy to miss — worth re-checking DNS
   across a hub reboot before cutting the hub off from the internet.

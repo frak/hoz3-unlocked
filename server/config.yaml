@@ -12,6 +12,11 @@ site:
 # Set false once the live test shows the hub ignores the checksum.
 restrict_generations: true
 
+# Demo mode: controller polls every minute instead of every 20, hub heartbeats
+# every ~7s instead of ~16 min. Invaluable for testing, heavy on batteries.
+# The server drives this, so the app's setting is irrelevant once cut over.
+demo_mode: false
+
 # Where the generation counter starts. Power-cycle the hub at cutover and it
 # reports held=0000, so any value differs and it will fetch. Only matters if you
 # cut over without a reboot.
