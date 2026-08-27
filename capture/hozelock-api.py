@@ -20,6 +20,7 @@ import json
 import os
 import pathlib
 import sys
+import time
 import urllib.error
 import urllib.request
 
@@ -38,17 +39,29 @@ def resolve_hub(explicit=None):
     sys.exit(f'no hub id: set $HOZELOCK_HUB or write it to {HUBID_FILE}')
 
 
-def call(hub, path='', method='GET', payload=None):
+# Status 0 means the request never reached the server. Callers retry on it;
+# an unattended run must survive a dropped connection rather than dying hours in.
+NETWORK_ERROR = 0
+
+
+def call(hub, path='', method='GET', payload=None, retries=4, timeout=30):
     url = f'{BASE}/{hub}{path}'
     data = json.dumps(payload).encode() if payload is not None else None
-    req = urllib.request.Request(url, data=data, method=method,
-                                 headers={'Content-Type': 'application/json'})
-    try:
-        with urllib.request.urlopen(req, timeout=20) as r:
-            body = r.read().decode()
-            return r.status, (json.loads(body) if body.strip() else None)
-    except urllib.error.HTTPError as e:
-        return e.code, e.read().decode()[:400]
+    last = 'unknown'
+    for attempt in range(retries):
+        req = urllib.request.Request(url, data=data, method=method,
+                                     headers={'Content-Type': 'application/json'})
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                body = r.read().decode()
+                return r.status, (json.loads(body) if body.strip() else None)
+        except urllib.error.HTTPError as e:
+            return e.code, e.read().decode()
+        except Exception as e:
+            last = f'{type(e).__name__}: {e}'
+            if attempt < retries - 1:
+                time.sleep(2 ** attempt)
+    return NETWORK_ERROR, f'network error after {retries} tries: {last}'
 
 
 # startTime is a sentinel for solar events rather than a clock offset.
@@ -110,13 +123,27 @@ def put_schedule(hub, sid, schedule):
     return call(hub, f'/schedules/{sid}', 'PUT', {'schedule': schedule})
 
 
+def set_days(schedule, per_day):
+    """Give each weekday its own events: {day: [(start_ms, minutes)]}."""
+    for day, d in schedule['scheduleDays'].items():
+        events = per_day.get(day, [])
+        d['wateringEvents'] = [
+            {'startTime': start, 'endTime': start + minutes * 60_000,
+             'duration': minutes * 60_000, 'enabled': True}
+            for start, minutes in events
+        ]
+    return schedule
+
+
 def set_events(schedule, events, days=None):
     """Replace the watering events. `events` is [(start_ms, duration_min)]."""
     for day, d in schedule['scheduleDays'].items():
         if days and day not in days:
             continue
+        # endTime is exactly startTime + duration; the captured payloads show
+        # -2000 + 2700000 = 2698000 and -1000 + 3600000 = 3599000.
         d['wateringEvents'] = [
-            {'startTime': start, 'endTime': start + minutes * 60_000 - 2000,
+            {'startTime': start, 'endTime': start + minutes * 60_000,
              'duration': minutes * 60_000, 'enabled': True}
             for start, minutes in events
         ]
@@ -143,6 +170,31 @@ def probe_write(args):
     return 0
 
 
+def get_controller(hub, cid):
+    _, body = call(hub)
+    hub_obj = body.get('hub', body) if isinstance(body, dict) else {}
+    for c in hub_obj.get('controllers', []) or []:
+        if str(c.get('controllerID')) == str(cid):
+            return c
+    return None
+
+
+def use_schedule(hub, cid, sid):
+    """Point a controller at a different schedule.
+
+    The default schedule cannot be restructured, so collection runs against one
+    of the user-defined schedules instead.
+    """
+    c = get_controller(hub, cid)
+    if not c:
+        return 404, f'no controller {cid}'
+    c['scheduleID'] = sid
+    sch = get_schedule(hub, sid)
+    if sch:
+        c['schedule'] = sch
+    return call(hub, f'/controllers/{cid}', 'PUT', {'controller': c})
+
+
 def action(hub, name, payload):
     code, body = call(hub, f'/controllers/actions/{name}', 'POST', payload)
     print(f'POST {name} {payload} -> {code} {body if isinstance(body, str) else ""}')
@@ -163,6 +215,8 @@ def main():
     d = sub.add_parser('demo'); d.add_argument('state', choices=['on', 'off'])
     w = sub.add_parser('water'); w.add_argument('--minutes', type=int, default=1)
     sub.add_parser('stop')
+    us = sub.add_parser('use-schedule', help='point the controller at a schedule')
+    us.add_argument('scheduleID')
     st = sub.add_parser('set', help='overwrite a schedule\'s events')
     st.add_argument('--schedule', help='default: the hub default schedule')
     st.add_argument('--event', action='append', required=True,
@@ -222,6 +276,12 @@ def main():
         return action(args.hub, 'waterNow', {**ids, 'duration': args.minutes * 60_000})
     if args.cmd == 'stop':
         return action(args.hub, 'stopWatering', ids)
+    if args.cmd == 'use-schedule':
+        code, body = use_schedule(args.hub, cid, args.scheduleID)
+        print(f'controller {cid} -> schedule {args.scheduleID}: {code}')
+        if isinstance(body, str):
+            print(f'   {body[:400]}')
+        return 0 if code < 300 else 1
 
 
 if __name__ == '__main__':

@@ -27,6 +27,7 @@ import json
 import pathlib
 import random
 import re
+import select
 import signal
 import subprocess
 import sys
@@ -44,9 +45,14 @@ _spec.loader.exec_module(api)
 
 SENTINEL = re.compile(r'#!hb=([A-Za-z0-9_\-=]+)\.')
 SAMPLES = pathlib.Path(__file__).resolve().parents[1] / 'data' / 'checksum-samples.jsonl'
+SNAPSHOT = SAMPLES.with_name('schedule-snapshot.json')
+DEMO_REFRESH_S = 20 * 60
 
 # Only these bytes ever vary; the rest is constant padding. 264 bits.
 VARYING = list(range(1, 32)) + [212, 213]
+# Schedule changes never move the command-flag bytes, so a collection run tops
+# out here; the last 16 bits come from a waterNow and a stop.
+SCHEDULE_RANK = 31 * 8
 
 
 class Sniffer:
@@ -60,7 +66,11 @@ class Sniffer:
         self.buf = ''
         self.latest = None
 
-    def poll(self):
+    def poll(self, timeout=1.0):
+        # readline() blocks forever when no packets arrive, which would defeat
+        # every timeout above it. Wait on the pipe instead.
+        if not select.select([self.proc.stdout], [], [], timeout)[0]:
+            return None
         line = self.proc.stdout.readline()
         if not line:
             return None
@@ -79,7 +89,7 @@ class Sniffer:
     def wait_for_new(self, previous, timeout=90):
         end = time.time() + timeout
         while time.time() < end:
-            blob = self.poll()
+            blob = self.poll(timeout=min(1.0, max(0.05, end - time.time())))
             if blob and blob != previous:
                 return blob
         return None
@@ -88,16 +98,26 @@ class Sniffer:
         self.proc.terminate()
 
 
+DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday',
+        'Sunday']
+
+
 def random_schedule(rng):
-    """A schedule chosen to move as many programme bytes as possible."""
-    events = []
-    for _ in range(rng.choice([1, 2, 2, 3])):
-        if rng.random() < 0.3:
-            start = rng.choice([-2000, -1000])          # sunrise / sunset
-        else:
-            start = rng.randrange(0, 24 * 60, 5) * 60_000
-        events.append((start, rng.choice(list(range(1, 31)) + [35, 40, 60, 90, 130])))
-    return sorted(set(events))
+    """Independent events per weekday.
+
+    Writing the same events to all seven days moves only two duration bytes out
+    of the fourteen in the programme; varying each day exercises the whole
+    chain, so far fewer rounds are needed.
+    """
+    per_day = {}
+    for day in DAYS:
+        # Two per day fills the programme without overflowing it: simulation
+        # gives 1:1 rank growth here, against 0.4 when 1-event days are mixed in
+        # (too few bytes move) and no better with three.
+        events = {(rng.randrange(0, 24 * 60) * 60_000, rng.randrange(1, 181))
+                  for _ in range(2)}
+        per_day[day] = sorted(events)
+    return per_day
 
 
 def collect(args):
@@ -105,7 +125,9 @@ def collect(args):
     original = api.get_schedule(args.hub, args.schedule)
     if not original:
         sys.exit(f'no schedule {args.schedule!r} - check --hub')
-    print(f'snapshotted {args.schedule!r}; it will be restored on exit')
+    SNAPSHOT.parent.mkdir(parents=True, exist_ok=True)
+    SNAPSHOT.write_text(json.dumps(original, indent=1))
+    print(f'snapshotted {args.schedule!r} to {SNAPSHOT}; restored on exit')
 
     restored = []
 
@@ -113,15 +135,36 @@ def collect(args):
         if restored:
             return
         restored.append(True)
-        code, _ = api.put_schedule(args.hub, args.schedule, original)
-        print(f'\nrestored original schedule -> {code}')
+        # The API may be why we are exiting, so try harder than usual here.
+        for attempt in range(6):
+            code, _ = api.put_schedule(args.hub, args.schedule, original)
+            if code < 300 and code != api.NETWORK_ERROR:
+                print(f'\nrestored original schedule -> {code}')
+                return
+            time.sleep(5 * (attempt + 1))
+        print('\nCOULD NOT RESTORE the original schedule - it is saved to '
+              f'{SNAPSHOT}; re-apply it when the API is reachable', file=sys.stderr)
 
     atexit.register(restore)
     signal.signal(signal.SIGINT, lambda *_: sys.exit(0))
     signal.signal(signal.SIGTERM, lambda *_: sys.exit(0))
 
-    api.call(args.hub, '/controllers/actions/setMode', 'POST',
-             {'controllerIDs': [args.controller], 'mode': 'demo'})
+    # Demo mode lapses after about an hour, and without it a round costs ~16
+    # minutes instead of ~10 seconds. Re-assert it well inside that window.
+    demo_expiry = 0
+
+    def keep_demo():
+        nonlocal demo_expiry
+        if time.time() < demo_expiry:
+            return
+        code, _ = api.call(args.hub, '/controllers/actions/setMode', 'POST',
+                           {'controllerIDs': [args.controller], 'mode': 'demo'})
+        if code < 300 and code != api.NETWORK_ERROR:
+            demo_expiry = time.time() + DEMO_REFRESH_S
+        else:
+            print(f'    demo mode refresh failed ({code}); rounds will be slow')
+
+    keep_demo()
 
     sniffer = Sniffer(args.iface)
     SAMPLES.parent.mkdir(parents=True, exist_ok=True)
@@ -130,14 +173,23 @@ def collect(args):
 
     previous = None
     written = 0
+    started = time.time()
+    start_rank = rank_of(load_samples())
     try:
         with open(SAMPLES, 'a') as out:
             for n in range(args.rounds):
+                keep_demo()
                 events = random_schedule(rng)
-                sched = api.set_events(json.loads(json.dumps(original)), events)
-                code, _ = api.put_schedule(args.hub, args.schedule, sched)
+                sched = api.set_days(json.loads(json.dumps(original)), events)
+                code, body = api.put_schedule(args.hub, args.schedule, sched)
+                if code == api.NETWORK_ERROR:
+                    print(f'[{n}] {body}; waiting 60s')
+                    time.sleep(60)
+                    continue
                 if code >= 300:
-                    print(f'[{n}] PUT failed {code}, backing off')
+                    detail = body if isinstance(body, str) else json.dumps(body or {})
+                    print(f'[{n}] PUT failed {code}: {detail[:600]}')
+                    print(f'     events were {events}')
                     time.sleep(10)
                     continue
                 blob = sniffer.wait_for_new(previous, args.timeout)
@@ -155,13 +207,58 @@ def collect(args):
                 if written % 10 == 0:
                     seen = load_samples()
                     r = rank_of(seen)
-                    print(f'[{n}] {len(seen)} samples, rank {r}/{len(VARYING) * 8}')
-                    if r >= len(VARYING) * 8:
-                        print('full rank reached - the map is determined')
+                    rate = (time.time() - started) / max(written, 1)
+                    gained = max(r - start_rank, 1)
+                    per_sample = gained / written
+                    left = (SCHEDULE_RANK - r) / per_sample * rate / 60
+                    print(f'[{n}] {len(seen)} samples, rank {r}/{SCHEDULE_RANK}, '
+                          f'{rate:.0f}s each, {per_sample:.2f} rank/sample, '
+                          f'~{left:.0f} min left')
+                    if r >= SCHEDULE_RANK:
+                        print('schedule bits complete - now measure the command '
+                              'flags with a waterNow and a stop')
                         break
     finally:
         sniffer.stop()
         restore()
+    return 0
+
+
+SHAPES = [
+    ('one absolute',        [(6 * 3600_000, 30)]),
+    ('two absolute',        [(6 * 3600_000, 30), (21 * 3600_000, 45)]),
+    ('three absolute',      [(6 * 3600_000, 30), (13 * 3600_000, 20),
+                             (21 * 3600_000, 45)]),
+    ('sunrise only',        [(-2000, 45)]),
+    ('sunrise + sunset',    [(-2000, 45), (-1000, 60)]),
+    ('solar + absolute',    [(-2000, 45), (13 * 3600_000, 20)]),
+    ('absolute + solar',    [(13 * 3600_000, 20), (-1000, 60)]),
+    ('unsorted absolute',   [(21 * 3600_000, 45), (6 * 3600_000, 30)]),
+    ('odd minute duration', [(6 * 3600_000, 17)]),
+    ('non-5-minute start',  [(6 * 3600_000 + 7 * 60_000, 30)]),
+    ('overlapping',         [(6 * 3600_000, 120), (7 * 3600_000, 30)]),
+    ('long duration',       [(6 * 3600_000, 180)]),
+]
+
+
+def probe_shapes(args):
+    """Find which schedule shapes the API accepts, before a long run."""
+    original = api.get_schedule(args.hub, args.schedule)
+    if not original:
+        sys.exit(f'no schedule {args.schedule!r}')
+    try:
+        for name, events in SHAPES:
+            sched = api.set_events(json.loads(json.dumps(original)), events)
+            code, body = api.put_schedule(args.hub, args.schedule, sched)
+            msg = ''
+            if code >= 300:
+                detail = body if isinstance(body, str) else json.dumps(body or {})
+                msg = detail[detail.find('errorMessage'):][:160]
+            print(f'  {name:<22} {code} {msg}')
+            time.sleep(1)
+    finally:
+        api.put_schedule(args.hub, args.schedule, original)
+        print('\noriginal schedule restored')
     return 0
 
 
@@ -270,6 +367,8 @@ def main():
     p = argparse.ArgumentParser(description=__doc__,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('--solve', action='store_true', help='analyse what is on file')
+    p.add_argument('--probe-shapes', action='store_true',
+                   help='find which schedule shapes the API accepts')
     p.add_argument('--import-corpus', action='store_true',
                    help='seed from programmes already captured in data/')
     p.add_argument('--hub', help='default: $HOZELOCK_HUB or capture/.hubid')
@@ -285,6 +384,10 @@ def main():
     if args.solve:
         return solve(args)
     args.hub = api.resolve_hub(args.hub)
+    if args.schedule is None:
+        args.schedule = f'default_{args.hub}'
+    if args.probe_shapes:
+        return probe_shapes(args)
     if args.schedule is None:
         args.schedule = f'default_{args.hub}'
     return collect(args)
