@@ -66,9 +66,10 @@ it the most valuable thing in this repo.
 
 ## What is still unknown
 
-- **The checksum algorithm.** Characterised as GF(2)-affine and shown not to be a
-  CRC, but not identified. The server sends captured values and pins its generation
-  counter to the observed range until we know whether the hub cares.
+- **The checksum algorithm.** GF(2)-affine, shown not to be a CRC, not identified.
+  The hub validates it and refuses anything wrong. Worked around by measurement —
+  the full statement of the problem, all measurements, and what has been ruled out
+  is in [docs/checksum-problem.md](docs/checksum-problem.md).
 - **The programme epoch** — inferred from the captures, not proven.
 - **Battery and signal** — request bytes 11–13 are undecoded, so those sensors are
   not available. Decoding them needs the real service for comparison.

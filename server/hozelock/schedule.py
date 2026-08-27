@@ -69,6 +69,26 @@ def _to_units(delta):
     return round(delta.total_seconds() / 60 / codec.GAP_UNIT_MIN)
 
 
+# A gap of 200 units or more needs a continuation byte, which lengthens the
+# programme into byte positions whose checksum bits cannot be measured (they
+# only ever hold a terminator or padding). Keeping every gap below that costs a
+# few minutes' shift for about a week around midsummer.
+MAX_GAP_UNITS = 199
+
+
+def clamp_gaps(firings, horizon_end):
+    """Pull events earlier so no gap needs a continuation byte."""
+    out = list(firings)
+    for i in range(len(out)):
+        nxt = out[i + 1][0] if i + 1 < len(out) else horizon_end
+        over = _to_units(nxt - out[i][0]) - MAX_GAP_UNITS
+        if over > 0 and i + 1 < len(out):
+            when, duration = out[i + 1]
+            out[i + 1] = (when - timedelta(minutes=over * codec.GAP_UNIT_MIN),
+                          duration)
+    return out
+
+
 def build(events, site, epoch, now=None):
     """-> (lead_gap_units, [(duration_min, gap_units)]) covering exactly one week.
 
@@ -82,6 +102,7 @@ def build(events, site, epoch, now=None):
     if not firings:
         return 0, []
 
+    firings = clamp_gaps(firings, horizon_end)
     lead = _to_units(firings[0][0] - epoch)
     out = []
     for i, (when, duration) in enumerate(firings):

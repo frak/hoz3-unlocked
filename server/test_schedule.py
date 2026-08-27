@@ -93,6 +93,24 @@ def main():
     ok &= check('programme built on the week origin still closes the cycle',
                 lead + sum(g for _, g in chain), codec.CYCLE_UNITS)
 
+    # Every programme must stay in one shape: a longer one runs into bytes whose
+    # checksum bits cannot be measured, and the hub would refuse it.
+    st2 = sm.HubState('x', SITE, [])
+    solar = [schedule.Event('sunrise', 45), schedule.Event('sunset', 60)]
+    ends, bad = set(), 0
+    for n in range(366):
+        day = datetime(2026, 9, 1) + timedelta(days=n)
+        lead, chain = schedule.build(solar, SITE, st2.week_origin(day))
+        blob = codec.encode_schedule(lead, chain)
+        ends.add(len(blob[:210].rstrip(b'\xff')))
+        if lead + sum(g for _, g in chain) != codec.CYCLE_UNITS:
+            bad += 1
+    ok &= check('a year of solar programmes keeps one payload length',
+                sorted(ends), [32])
+    ok &= check('every one closes the weekly cycle', bad, 0)
+    ok &= check('no gap needs a continuation byte',
+                max(g for _, g in chain) <= schedule.MAX_GAP_UNITS, True)
+
     print('\nOK' if ok else '\nFAILURES')
     return 0 if ok else 1
 
