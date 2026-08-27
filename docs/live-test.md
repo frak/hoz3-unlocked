@@ -56,7 +56,12 @@ uv sync
 
 ## 3. Configure
 
-Edit `server/config.yaml`:
+Copy the example and edit it — `config.yaml` is untracked, so your
+credentials and coordinates stay out of the repo:
+
+```bash
+cp server/config.example.yaml server/config.yaml
+```
 
 ```yaml
 hub_id: ge7si1

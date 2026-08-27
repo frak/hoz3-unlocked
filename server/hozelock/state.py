@@ -58,6 +58,13 @@ class HubState:
         # valid schedule checksum until the algorithm is solved.
         self.replay_blob = codec.b64_decode(replay_blob) if replay_blob else None
         self.generation = initial_generation or self.generations[0]
+        if self.restrict_generations and self.generation not in self.generations:
+            # Checksums are per (flag, generation); a value valid in one mode is
+            # usually absent in the other, and the hub ignores unchecksummed replies.
+            log.warning('initial_generation %04x has no captured checksum at '
+                        'flag %02x - using %04x instead',
+                        self.generation, self.flag, self.generations[0])
+            self.generation = self.generations[0]
         self.pending = CMD_NONE
         self.schedule_enabled = True
         self.last_seen = None
@@ -168,6 +175,12 @@ class HubState:
 
     def schedule_blob(self, now=None):
         if self.replay_blob:
+            # Commands ride in the flag bytes, which a replayed blob cannot carry:
+            # changing them would invalidate the captured checksum it exists for.
+            if self.pending:
+                log.warning('replay_blob is set, so the pending %s command cannot '
+                            'be sent - the hub will do nothing. Unset replay_blob.',
+                            COMMAND_NAMES.get(self.pending, self.pending))
             return self.replay_blob
         epoch = self.schedule_epoch(now)
         events = self.events if self.schedule_enabled else []

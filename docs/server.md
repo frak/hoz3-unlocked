@@ -9,7 +9,8 @@ supported and will stop working when the real service dies.
 ## Running
 
 ```bash
-docker compose up -d          # serves port 80, reads ./config.yaml
+cp config.example.yaml config.yaml   # then edit it
+docker compose up -d                 # serves port 80
 ```
 
 Then point `hoz3.com` at it with a DNS override on the router. The hub resolves via

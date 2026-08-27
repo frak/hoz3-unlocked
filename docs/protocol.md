@@ -304,6 +304,26 @@ Measured linear map, offset 6 (duration) of a 218-byte schedule blob:
 L (02) baca L (04) bdb9 L (08) 46a6 L (10) d768 L (03) c522 L (36) a9a5 L (4e) acaa L (9c) 872e
 ```
 
+### The hub validates both checksums — confirmed live, 27 August 2026
+
+Not inferred. Tested against the hub with the replacement server:
+
+| what was served | result |
+|---|---|
+| heartbeat with `00 00` checksum | hub never fetched the programme at all |
+| heartbeat with the captured checksum | hub fetched immediately |
+| a **captured** programme, real checksum | accepted, `held` settled on our generation |
+| a **generated** programme, `00 00` checksum | refused; five re-fetches per heartbeat, `held` never moves |
+
+The blob was byte-identical to Hozelock's in the accepted case, so the checksum is
+the only difference that matters. **A generated programme cannot be served until the
+algorithm is solved.**
+
+Narrowing that helps: only **33 of the 218 bytes ever vary** — offsets 1–31 (the
+programme) and 212–213 (the command flags). The remaining 183 are constant padding.
+So the map has 264 input bits, not 1744, and 264 independent samples would determine
+it completely.
+
 ### What this means for the server
 
 For the **heartbeat**, you may not need the algorithm at all: the response checksum depends only on the flag byte and
