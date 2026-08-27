@@ -32,7 +32,7 @@ import signal
 import subprocess
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / 'server'))
 from hozelock import codec  # noqa: E402
@@ -48,11 +48,25 @@ SAMPLES = pathlib.Path(__file__).resolve().parents[1] / 'data' / 'checksum-sampl
 SNAPSHOT = SAMPLES.with_name('schedule-snapshot.json')
 DEMO_REFRESH_S = 20 * 60
 
-# Only these bytes ever vary; the rest is constant padding. 264 bits.
-VARYING = list(range(1, 32)) + [212, 213]
-# Schedule changes never move the command-flag bytes, so a collection run tops
-# out here; the last 16 bits come from a waterNow and a stop.
-SCHEDULE_RANK = 31 * 8
+# The payload runs to about byte 38 once a gap needs continuation bytes -- the
+# original corpus only ever showed 31 because those programmes were all short.
+# Modelling too few bytes makes distinct programmes look identical to the solver
+# and the rank silently stalls, so allow headroom.
+# Real programmes usually end between bytes 32 and 35, but around midsummer the
+# sunrise-to-sunset gap exceeds 200 units, needs a continuation byte, and runs
+# to 38. Model to 39 so those days are covered too.
+PAYLOAD_END = 40
+
+# Share of days given a gap long enough to need a continuation byte. Raising it
+# lengthens the payload, which is how the tail bytes get exercised.
+WIDE_SHARE = 0.35
+# Minutes between the two events on a "wide" day. Midsummer sunrise-to-sunset in
+# London is ~998, just over the 200-unit threshold, which is what makes those
+# programmes longer than the rest of the year.
+WIDE_SPAN = (1000, 1180)
+VARYING = list(range(1, PAYLOAD_END)) + [212, 213]
+# Schedule changes never move the command-flag bytes; those come from --flags.
+SCHEDULE_RANK = (PAYLOAD_END - 1) * 8
 
 
 class Sniffer:
@@ -111,16 +125,31 @@ def random_schedule(rng):
     """
     per_day = {}
     for day in DAYS:
-        # Two per day fills the programme without overflowing it: simulation
-        # gives 1:1 rank growth here, against 0.4 when 1-event days are mixed in
-        # (too few bytes move) and no better with three.
-        events = {(rng.randrange(0, 24 * 60) * 60_000, rng.randrange(1, 181))
-                  for _ in range(2)}
-        per_day[day] = sorted(events)
+        # Two events a day, spaced so both gaps stay under 200 units. A wider
+        # spacing needs continuation bytes, which lengthens the payload past
+        # anything a real schedule produces.
+        t1 = rng.randrange(0, 24 * 60)
+        # A wider spacing needs a continuation byte, which lengthens the payload.
+        # Real programmes do this at some times of year, so a share of samples
+        # must too or the tail bytes never move.
+        wide = rng.random() < WIDE_SHARE
+        span = (rng.randrange(*WIDE_SPAN) if wide
+                else rng.randrange(450, 991))
+        t2 = (t1 + span) % (24 * 60)
+        per_day[day] = sorted([(min(t1, t2) * 60_000, rng.randrange(1, 181)),
+                               (max(t1, t2) * 60_000, rng.randrange(1, 181))])
     return per_day
 
 
 def collect(args):
+    global WIDE_SHARE, WIDE_SPAN
+    if args.long:
+        WIDE_SHARE = 0.85
+        print('long-payload mode: targeting the tail bytes')
+    if args.span:
+        WIDE_SPAN = (args.span[0], args.span[1] + 1)
+        WIDE_SHARE = 1.0
+        print(f'every day spanning {args.span[0]}-{args.span[1]} minutes')
     rng = random.Random(args.seed)
     original = api.get_schedule(args.hub, args.schedule)
     if not original:
@@ -169,7 +198,9 @@ def collect(args):
     sniffer = Sniffer(args.iface)
     SAMPLES.parent.mkdir(parents=True, exist_ok=True)
     seen = load_samples()
-    print(f'{len(seen)} samples already on file; rank {rank_of(seen)}/{len(VARYING) * 8}')
+    total = len(load_samples(all_lengths=True))
+    print(f'{total} samples on file, {len(seen)} usable (payload within '
+          f'{PAYLOAD_END} bytes); rank {rank_of(seen)}/{SCHEDULE_RANK}')
 
     previous = None
     written = 0
@@ -214,10 +245,13 @@ def collect(args):
                     print(f'[{n}] {len(seen)} samples, rank {r}/{SCHEDULE_RANK}, '
                           f'{rate:.0f}s each, {per_sample:.2f} rank/sample, '
                           f'~{left:.0f} min left')
-                    if r >= SCHEDULE_RANK:
-                        print('schedule bits complete - now measure the command '
-                              'flags with a waterNow and a stop')
+                    still = needed_missing(seen)
+                    if not still:
+                        print('every bit the server needs is now spanned')
                         break
+                    if len(still) <= 24:
+                        by_byte = sorted({p for p, _ in still})
+                        print(f'      {len(still)} needed bits left, in bytes {by_byte}')
     finally:
         sniffer.stop()
         restore()
@@ -262,15 +296,60 @@ def probe_shapes(args):
     return 0
 
 
-def load_samples():
+def collect_flags(args):
+    """Capture the two command blobs.
+
+    Schedule changes never move bytes 212-213, so a waterNow and a stop are the
+    only way to see those bits. The server only ever sets 0x01 in one of them,
+    so two vectors are enough -- the full 16 bits are not needed.
+    """
+    sniffer = Sniffer(args.iface)
+    ids = {'controllerIDs': [args.controller]}
+    try:
+        with open(SAMPLES, 'a') as out:
+            for name, path, payload in (
+                    ('waterNow', 'waterNow', {**ids, 'duration': 60_000}),
+                    ('stopWatering', 'stopWatering', ids)):
+                previous = sniffer.latest
+                code, _ = api.call(args.hub, f'/controllers/actions/{path}',
+                                   'POST', payload)
+                print(f'{name} -> {code}')
+                blob = sniffer.wait_for_new(previous, args.timeout)
+                if blob is None:
+                    print(f'  no programme seen after {name}')
+                    continue
+                flags = blob[211:216].hex(" ")
+                print(f'  captured, flags = {flags}')
+                if not any(blob[211:216]):
+                    print('  WARNING: flags are all zero - the command was not in '
+                          'this programme; the hub may have fetched too early')
+                out.write(json.dumps({
+                    'at': datetime.now().isoformat(timespec='seconds'),
+                    'events': name,
+                    'blob': base64.b64encode(blob).decode(),
+                }) + '\n')
+                out.flush()
+                time.sleep(5)
+    finally:
+        sniffer.stop()
+    blobs = load_samples()
+    print(f'{len(blobs)} samples, rank {rank_of(blobs)}')
+    return 0
+
+
+def load_samples(all_lengths=False):
     if not SAMPLES.exists():
         return []
     out = []
     for line in open(SAMPLES):
         try:
-            out.append(base64.b64decode(json.loads(line)['blob']))
+            blob = base64.b64decode(json.loads(line)['blob'])
         except Exception:
             continue
+        # A longer payload carries bits outside the model; including it makes
+        # distinct programmes look identical to the solver and stalls the rank.
+        if all_lengths or all(b == 0xff for b in blob[PAYLOAD_END:210]):
+            out.append(blob)
     return out
 
 
@@ -330,14 +409,11 @@ def import_corpus():
     return 0
 
 
-def solve(args):
-    blobs = load_samples()
-    n_bits = len(VARYING) * 8
-    print(f'{len(blobs)} samples, {n_bits} unknowns, rank {rank_of(blobs)}')
-    if len(blobs) < 2:
-        return 1
+def build_basis(blobs):
+    """-> (reference, {leading_bit: (vector, checksum_delta)}, inconsistencies)"""
     ref = blobs[0]
     basis = {}
+    bad = 0
     for blob in blobs[1:]:
         v = bits_of(blob, ref)
         img = ((blob[216] << 8) | blob[217]) ^ ((ref[216] << 8) | ref[217])
@@ -352,14 +428,199 @@ def solve(args):
                 break
         else:
             if img:
-                print('INCONSISTENT: a zero difference maps to a non-zero checksum '
-                      'delta - the checksum depends on something outside VARYING')
-                return 1
-    print(f'consistent so far; {len(basis)} independent vectors')
-    if len(basis) < n_bits:
-        print(f'need {n_bits - len(basis)} more independent samples')
+                bad += 1
+    return ref, basis, bad
+
+
+def checksum_with(ref, basis, blob):
+    """Compute a programme's checksum, or None if it is outside the span."""
+    v = bits_of(blob, ref)
+    img = (ref[216] << 8) | ref[217]
+    while v:
+        h = v.bit_length() - 1
+        if h not in basis:
+            return None
+        bv, bi = basis[h]
+        v ^= bv
+        img ^= bi
+    return img
+
+
+# Bytes 212-213 only ever hold 0x00 or 0x01, so bits 1-7 can never be measured
+# and are never needed: the server sets no other value.
+UNREACHABLE = {(212, b) for b in range(1, 8)} | {(213, b) for b in range(1, 8)}
+
+
+def missing_bits(blobs):
+    """Which (byte, bit) positions the samples still do not span."""
+    _, basis, _ = build_basis(blobs)
+    reduced = {h: v for h, (v, _) in basis.items()}
+    gaps = []
+    for i, pos in enumerate(VARYING):
+        for bit in range(8):
+            v = 1 << (i * 8 + bit)
+            while v:
+                h = v.bit_length() - 1
+                if h in reduced:
+                    v ^= reduced[h]
+                else:
+                    gaps.append((pos, bit))
+                    break
+    return gaps
+
+
+def needed_missing(blobs):
+    return [g for g in missing_bits(blobs) if g not in UNREACHABLE]
+
+
+def stats(blobs):
+    """Which byte positions actually move, and how much."""
+    gaps = missing_bits(blobs)
+    if gaps:
+        by_byte = {}
+        for pos, bit in gaps:
+            by_byte.setdefault(pos, []).append(bit)
+        needed = len([g for g in gaps if g not in UNREACHABLE])
+        print(f'{len(gaps)} bits unspanned, {needed} of them actually needed '
+              f'(bytes 212-213 bits 1-7 never vary and are not required):')
+        for pos in sorted(by_byte):
+            print(f'  byte {pos:3d}: bits {sorted(by_byte[pos])}')
+        print()
+    print('per-byte variation across all samples:')
+    for pos in range(0, 218):
+        vals = {b[pos] for b in blobs}
+        if len(vals) > 1:
+            tag = ''
+            if pos not in VARYING:
+                tag = '   <-- OUTSIDE the modelled set'
+            print(f'  byte {pos:3d}: {len(vals):3d} distinct values{tag}')
+    unchanged = [p for p in VARYING if len({b[p] for b in blobs}) == 1]
+    if unchanged:
+        print(f'modelled bytes that never moved: {unchanged}')
+
+
+def verify_deployment(blobs, args):
+    """The only test that matters: can we checksum what the server will serve?
+
+    Chasing full rank is futile -- bytes near the terminator only ever hold
+    0x00, 0xcc or 0xff, so most of their bits cannot vary at all. What counts is
+    whether a year of real programmes falls inside the measured span.
+    """
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / 'server'))
+    from hozelock import schedule as sched_mod, state as state_mod
+    try:
+        import yaml
+        cfg = yaml.safe_load(open(args.config)) if pathlib.Path(args.config).exists() else {}
+    except ImportError:
+        # PyYAML lives in the server venv; the sunrise/sunset default is what
+        # matters here anyway.
+        cfg = {}
+    site = sched_mod.Site(**cfg['site']) if cfg.get('site') else sched_mod.Site(51.5, -0.1)
+    events = ([sched_mod.Event(**e) for e in cfg['schedule']] if cfg.get('schedule')
+              else [sched_mod.Event('sunrise', 45), sched_mod.Event('sunset', 60)])
+    st = state_mod.HubState('x', site, events)
+
+    ref, basis, _ = build_basis(blobs)
+    covered, misses = 0, []
+    for n in range(0, 366):
+        day = datetime(2026, 9, 1) + timedelta(days=n)
+        origin = st.week_origin(day)
+        lead, chain = sched_mod.build(events, site, origin)
+        blob = codec.encode_schedule(lead, chain)
+        if checksum_with(ref, basis, blob) is None:
+            misses.append((day, blob))
+        else:
+            covered += 1
+    print(f'a year of real programmes: {covered} computable, {len(misses)} '
+          f'outside the measured span')
+
+    # A pending command sets byte 212 or 213, giving a different blob. Without
+    # these, manual watering fails at runtime with everything else working.
+    day = datetime(2026, 9, 1)
+    lead, chain = sched_mod.build(events, site, st.week_origin(day))
+    for name, flags in (('water now', b'\x00\x01\x00\x00\x00'),
+                        ('stop', b'\x00\x00\x01\x00\x00')):
+        blob = codec.encode_schedule(lead, chain, flags=flags)
+        got = checksum_with(ref, basis, blob)
+        print(f'  {name} programme: '
+              f'{"computable" if got is not None else "OUTSIDE THE SPAN"}')
+        if got is None:
+            misses.append((name, blob))
+    for day, blob in misses[:8]:
+        end = len(blob[:210].rstrip(b'\xff'))
+        print(f'    {day:%d %b}: payload ends at {end}, '
+              f'bytes 30-35 = {blob[30:36].hex(" ")}')
+    return not misses
+
+
+def solve(args):
+    blobs = load_samples()
+    if len(blobs) < 2:
+        print('not enough samples')
+        return 1
+    if args.stats:
+        stats(blobs)
+        return 0
+    ref, basis, bad = build_basis(blobs)
+    print(f'{len(blobs)} samples, rank {len(basis)}/{SCHEDULE_RANK} '
+          f'(schedule bits), {bad} inconsistencies')
+    if bad:
+        print('INCONSISTENT: the checksum depends on bytes outside VARYING')
+        return 1
+
+    # A random 90/10 split: training on the first half leaves too low a rank to
+    # predict anything, which looks like a pass but tests nothing.
+    rng = random.Random(0)
+    ok = miss = wrong = 0
+    for _ in range(5):
+        shuffled = blobs[:]
+        rng.shuffle(shuffled)
+        cut = len(shuffled) * 9 // 10
+        train_ref, train_basis, _ = build_basis(shuffled[:cut])
+        for blob in shuffled[cut:]:
+            got = checksum_with(train_ref, train_basis, blob)
+            want = (blob[216] << 8) | blob[217]
+            if got is None:
+                miss += 1
+            elif got == want:
+                ok += 1
+            else:
+                wrong += 1
+    print(f'held-out check (5x 90/10 split): {ok} predicted correctly, '
+          f'{wrong} WRONG, {miss} outside the training span')
+    if wrong:
+        print('the model is not linear over these bytes - stop and reconsider')
+        return 1
+
+    ok = verify_deployment(blobs, args)
+    still = needed_missing(blobs)
+    if still:
+        by_byte = sorted({p for p, _ in still})
+        print(f'({len(still)} bits unspanned in bytes {by_byte} - only a problem '
+              f'if the year check above failed)')
+    if not ok:
         return 2
-    print('solved - the checksum can now be computed for any programme')
+    if args.write:
+        out = pathlib.Path(__file__).resolve().parents[1] / 'server' / 'hozelock'
+        out = out / 'checksum_map.py'
+        lines = ['"""Solved schedule-checksum map (generated by',
+                 'capture/collect-checksums.py --solve --write).',
+                 '',
+                 'The algorithm is unidentified but GF(2)-affine, so the map was',
+                 'measured: each entry is a difference vector over the varying bytes',
+                 'and the checksum delta it produces. See docs/protocol.md.',
+                 '"""',
+                 f'VARYING = {VARYING!r}',
+                 f'REFERENCE = bytes.fromhex({ref.hex()!r})',
+                 'BASIS = {']
+        for h in sorted(basis):
+            v, img = basis[h]
+            lines.append(f'    {h}: (0x{v:x}, 0x{img:04x}),')
+        lines += ['}', '']
+        out.write_text('\n'.join(lines))
+        print(f'wrote {out}')
+    else:
+        print('solved - rerun with --write to generate the server module')
     return 0
 
 
@@ -367,6 +628,16 @@ def main():
     p = argparse.ArgumentParser(description=__doc__,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('--solve', action='store_true', help='analyse what is on file')
+    p.add_argument('--config',
+                   default=str(pathlib.Path(__file__).resolve().parents[1]
+                               / 'server' / 'config.yaml'),
+                   help='schedule to verify coverage against')
+    p.add_argument('--stats', action='store_true',
+                   help='with --solve, show which bytes actually vary')
+    p.add_argument('--write', action='store_true',
+                   help='with --solve, generate the server module')
+    p.add_argument('--flags', action='store_true',
+                   help='capture the two command-flag samples')
     p.add_argument('--probe-shapes', action='store_true',
                    help='find which schedule shapes the API accepts')
     p.add_argument('--import-corpus', action='store_true',
@@ -378,6 +649,11 @@ def main():
     p.add_argument('--rounds', type=int, default=400)
     p.add_argument('--timeout', type=int, default=90)
     p.add_argument('--seed', type=int, default=1)
+    p.add_argument('--long', action='store_true',
+                   help='bias towards long payloads, to cover the tail bytes')
+    p.add_argument('--span', nargs=2, type=int, metavar=('MIN', 'MAX'),
+                   help='minutes between the two daily events, for every day - '
+                        'use to reproduce a particular programme shape')
     args = p.parse_args()
     if args.import_corpus:
         return import_corpus()
@@ -388,6 +664,8 @@ def main():
         args.schedule = f'default_{args.hub}'
     if args.probe_shapes:
         return probe_shapes(args)
+    if args.flags:
+        return collect_flags(args)
     if args.schedule is None:
         args.schedule = f'default_{args.hub}'
     return collect(args)
