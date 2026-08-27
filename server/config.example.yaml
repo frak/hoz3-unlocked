@@ -1,0 +1,49 @@
+# From the URL path the hub uses, not the ID shown in the app:
+#   grep -o '/notify/[^/]*/' ../data/hb.tsv | sort -u
+hub_id: ge7si1
+port: 80
+
+site:
+  latitude: 51.5
+  longitude: -0.1
+  timezone: Europe/London
+
+# The hub validates the checksum (confirmed 27 Aug 2026), and we cannot compute
+# it yet, so only generations we hold a captured checksum for can be served.
+# Leave true until the checksum is solved.
+restrict_generations: true
+
+# Demo mode: controller polls every minute instead of every 20, hub heartbeats
+# every ~7s instead of ~16 min. Invaluable for testing, heavy on batteries.
+# The server drives this, so setting it in the app has no effect once cut over.
+demo_mode: false
+
+# Where the generation counter starts. Only needed if cutting over without a
+# power cycle: a freshly booted hub reports held=0000 and fetches regardless.
+# Valid values differ per demo_mode, so one that works in normal mode will not
+# work in demo.
+# initial_generation: 0x08bd
+
+# Diagnostic: deliberately send a wrong schedule checksum. Answered 27 Aug 2026
+# -- the hub does validate it and refuses the programme. Kept for re-testing.
+corrupt_checksum: false
+
+schedule:
+  - at: sunrise
+    duration_min: 45
+  - at: sunset
+    duration_min: 60
+
+mqtt:
+  host: 192.168.1.6
+  port: 1883
+  username: CHANGEME
+  password: CHANGEME
+  node_id: hozelock
+
+# Diagnostic: serve this captured programme verbatim instead of generating one.
+# It carries a real checksum, so the hub accepts it -- useful for proving the
+# transport works. Leave commented out for normal use: a replayed blob cannot
+# carry the command flags, so water/stop silently do nothing while it is set.
+# This one waters 06:00 for 30 min and 21:00 for 45 min, every day.
+# replay_blob: AFUetC1sHrQtbB60LWwetC1sHrQtbB60LWwetC0XAMz______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________wAAAAAA074

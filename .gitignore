@@ -1,5 +1,11 @@
 .venv/
 __pycache__/
 *.pyc
-.DS_Store
 .idea/
+.DS_Store
+
+# The cloud API has no auth, so the hub id is effectively a credential
+capture/.hubid
+
+# Holds MQTT credentials and site coordinates
+server/config.yaml
