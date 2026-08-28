@@ -111,23 +111,27 @@ def main():
 
         # A zero checksum is what the real service never sends, and the hub may
         # discard the response entirely if we get it wrong.
-        from hozelock import checksums, state as sm
+        from hozelock import checksums, heartbeat_checksum as hb, state as sm
         body = urllib.request.urlopen(
             f'http://127.0.0.1:{PORT}/notify/{HUB}/', timeout=5).read().decode('latin1')
         blob = codec.unwrap(body)
-        want = checksums.CHECKSUMS[(st.flag, st.generation)]
-        ok &= check('heartbeat carries the captured checksum',
-                    (blob[22] << 8) | blob[23], want)
-        ok &= check('every generation we serve has a checksum',
-                    all((st.flag, g) in checksums.CHECKSUMS
-                        for g in st.generations), True)
+        ok &= check('heartbeat carries the computed checksum',
+                    (blob[22] << 8) | blob[23],
+                    hb.checksum(st.flag, st.generation))
+        ok &= check('the solved algorithm reproduces every captured pair',
+                    all(hb.checksum(f, g) == c
+                        for (f, g), c in checksums.CHECKSUMS.items()), True)
+        # The point of solving it: an uncaptured generation now gets a checksum
+        # too, so the server is no longer capped at the table's 30/45 values.
+        st.generation = 0x4321
+        blob = codec.unwrap(urllib.request.urlopen(
+            f'http://127.0.0.1:{PORT}/notify/{HUB}/', timeout=5).read().decode('latin1'))
+        ok &= check('an uncaptured generation still gets its checksum',
+                    (blob[22] << 8) | blob[23], hb.checksum(st.flag, 0x4321))
         demo = sm.HubState('x', schedule.Site(51.5, -0.1), [], demo_mode=True)
         ok &= check('demo mode sets flag 0x10', demo.heartbeat_response()[5], 0x10)
-        ok &= check('demo mode has captured checksums too',
-                    all((demo.flag, g) in checksums.CHECKSUMS
-                        for g in demo.generations), True)
-        ok &= check('demo mode has more usable generations',
-                    len(demo.generations) > len(st.generations), True)
+        ok &= check('the demo flag changes the checksum',
+                    hb.checksum(0x10, 0x0900) != hb.checksum(0x00, 0x0900), True)
     finally:
         httpd.shutdown()
         httpd.server_close()
