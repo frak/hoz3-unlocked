@@ -15,7 +15,7 @@ DATA = Path(__file__).resolve().parents[1] / 'data'
 EPOCH = datetime(2026, 8, 22, 22, 55)
 SITE = schedule.Site(latitude=51.5, longitude=-0.1)
 
-def captured(lead_units, path=DATA / 'hb-raw.tsv'):
+def captured(lead_units, path=DATA / 'captures' / 'hb-raw.tsv'):
     """The real blob whose lead gap matches, straight from the capture."""
     for line in open(path):
         f = line.rstrip('\n').split('\t')

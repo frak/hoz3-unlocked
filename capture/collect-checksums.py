@@ -380,7 +380,7 @@ def rank_of(blobs):
 
 def import_corpus():
     """Programmes recorded before this tool existed are still valid samples."""
-    raw = SAMPLES.parent / 'hb-raw.tsv'
+    raw = SAMPLES.parent / 'captures' / 'hb-raw.tsv'
     have = {bytes(b) for b in load_samples()}
     added = 0
     SAMPLES.parent.mkdir(parents=True, exist_ok=True)

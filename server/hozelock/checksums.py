@@ -1,9 +1,10 @@
 """Captured heartbeat-response checksums.
 
-The algorithm is unidentified (see docs/protocol.md), but the checksum is a
-function of the flag byte and the generation alone -- verified across 615
-distinct responses. Serving only generations in this table keeps every reply
-byte-accurate without needing to compute anything.
+Superseded by heartbeat_checksum.py, which computes any generation in closed form
+(see docs/checksum.md). Retained as captured reference data: these 75 pairs came
+off the wire from the real service and cannot be regenerated after April 2027.
+Nothing depends on them except the tests that check the solved form reproduces
+every one.
 """
 
 CHECKSUMS = {

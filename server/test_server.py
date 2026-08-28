@@ -19,7 +19,7 @@ HUB = 'ge7si1'
 REAL_TAP_URI = '/notify/ge7si1/tap/0/?hb=AgEIG-IAAgAAAACUhAUAAAi9AAAIvUlC'
 
 
-def captured_requests(path=DATA / 'hb.tsv', limit=200):
+def captured_requests(path=DATA / 'captures' / 'hb.tsv', limit=200):
     """Real request URIs the hub sent, both endpoints."""
     out = []
     for line in open(path):

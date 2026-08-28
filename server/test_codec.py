@@ -1,7 +1,7 @@
 """Round-trip the codec against every blob Hozelock actually sent.
 
-Corpus is hb-raw.tsv (see capture-setup.md). Checksums are excluded: the
-algorithm is unidentified, so bytes 216-217 cannot yet be regenerated.
+Corpus is data/captures/hb-raw.tsv (see capture-setup.md). Checksums are carried
+through rather than recomputed -- test_checksum.py covers the algorithm itself.
 """
 import re
 import sys
@@ -14,7 +14,7 @@ DATA = Path(__file__).resolve().parents[1] / 'data'
 CK = slice(216, 218)
 
 
-def corpus(path=DATA / 'hb-raw.tsv'):
+def corpus(path=DATA / 'captures' / 'hb-raw.tsv'):
     seen = {}
     for line in open(path):
         f = line.rstrip('\n').split('\t')
