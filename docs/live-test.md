@@ -1,10 +1,8 @@
 # Live test: running the hub against our server
 
-Everything so far has been verified against captured traffic. This is the first time
-the hub talks to our server instead of Hozelock's.
-
-Setup being built: the server runs **on the Pi, on port 80**, and the hub sits on its
-own network segment behind the Pi so nothing else is affected.
+The cutover runbook: the hub stops talking to Hozelock and talks to us instead.
+The server runs **on the Pi, on port 80**, and the hub sits on its own network
+segment behind the Pi so nothing else is affected.
 
 ```
 hub —— [eth1] Pi —— [eth0] router
@@ -72,8 +70,7 @@ site:
   longitude: -0.1
   timezone: Europe/London
 
-restrict_generations: true
-corrupt_checksum: false
+restrict_generations: false   # both checksums are computed; see docs/checksum.md
 
 schedule:
   - at: sunrise
@@ -92,7 +89,7 @@ mqtt:
 path. Get it from the capture:
 
 ```bash
-grep -o '/notify/[^/]*/' ../data/hb.tsv | sort -u
+grep -o '/notify/[^/]*/' ../data/captures/hb.tsv | sort -u
 ```
 
 Getting this wrong means every request 404s and the hub never gets an answer. The
@@ -105,9 +102,9 @@ the placeholder London ones.
 
 ## 4. Start the server and prove it works locally
 
-Install it as a service, so it survives closing the terminal and comes back after a
-reboot. Running it in the foreground is the easiest way to lose an evening to
-"the hub cannot connect" when the real answer is that the terminal was closed.
+Install it as a service so it survives a closed terminal and comes back after a reboot.
+Running it in the foreground is the easiest way to lose an evening to "the hub cannot
+connect" when the real answer is that the terminal closed.
 
 ```bash
 sudo cp hozelock-server.service /etc/systemd/system/
@@ -116,7 +113,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now hozelock-server
 ```
 
-Follow the log in its own terminal — you will want this for the rest of the test:
+Follow the log in its own terminal — you want this for the rest of the test:
 
 ```bash
 journalctl -u hozelock-server -f
@@ -129,12 +126,12 @@ root.
 curl "http://localhost/notify/ge7si1/tap/0/?hb=AgEIG-IAAgAAAACUhAUAAAi9AAAIvUlC"
 ```
 
-**Check:** `sudo ss -lntp | grep :80` shows it listening, and the curl returns
-`<html>...#!hb=AF...` — a long base64 blob ending in `.`. The log shows a
+**Check:** `sudo ss -lntp | grep :80` shows it listening, the curl returns
+`<html>...#!hb=AF...` — a long base64 blob ending in `.` — and the log shows a
 `tap/0 fetch` line.
 
-If port 80 is empty, nothing else in this runbook will work: the hub will get a DHCP
-lease, fail to reach anything, and restart its network every 45 seconds.
+If port 80 is empty nothing else here works: the hub gets a DHCP lease, fails to reach
+anything, and restarts its network every 45 seconds.
 
 ---
 
@@ -144,15 +141,12 @@ lease, fail to reach anything, and restart its network every 45 seconds.
 mosquitto_sub -h 192.168.1.6 -u xxxx -P xxxx -v -t 'homeassistant/+/hozelock/#' -t 'hozelock/#'
 ```
 
-**Check:** six retained `.../config` messages, and `hozelock/hozelock/available`
-reading `online`. In Home Assistant a device called **Hozelock Cloud Controller**
-should now exist with six entities.
+**Check:** six retained `.../config` messages and `hozelock/hozelock/available` reading
+`online`. In Home Assistant a device called **Hozelock Cloud Controller** appears with
+six entities. If the topics are there but HA shows nothing, the problem is HA's MQTT
+integration, not the server.
 
-If the topics are there but HA shows nothing, the problem is HA's MQTT integration,
-not the server.
-
-Leave this subscription running in its own terminal — it is the clearest view of
-what the server is doing.
+Leave this subscription running — it is the clearest view of what the server is doing.
 
 ---
 
@@ -165,8 +159,7 @@ sudo systemctl disable --now hozelock-capture.service hozelock-bridge.service
 sudo ip link del br0
 ```
 
-Stopping a `oneshot` unit does not undo its work, which is why `br0` needs deleting
-explicitly.
+Stopping a `oneshot` unit does not undo its work, hence the explicit `br0` delete.
 
 **Check:** `ip link show br0` reports "does not exist", and
 `ip -4 addr show eth0` shows a normal `192.168.1.x` address.
@@ -193,8 +186,8 @@ If it complains that `eth0` has no address, step 6 was skipped.
 
 ## 8. Start capturing
 
-The first live test is worth recording — this is the run you will want to look back
-at when something behaves oddly.
+Worth recording — this is the run you will want to look back at when something behaves
+oddly.
 
 ```bash
 sudo mkdir -p /var/captures
@@ -210,12 +203,11 @@ sudo tcpdump -i eth1 -s 0 -U -w /var/captures/livetest-%Y%m%d-%H%M%S.pcap \
 
 **Power-cycle the hub.**
 
-This matters more than it looks. A freshly booted hub reports `held=0000`, so
-whatever generation we serve differs from what it holds and it fetches immediately.
-Cut over without rebooting and the hub still holds a generation from the real
-service — `0x0914` or higher, above ours — and if it only acts when the counter
-*increases* it will sit there doing nothing, looking exactly like a protocol
-failure.
+This matters more than it looks. A freshly booted hub reports `held=0000`, so whatever
+generation we serve differs from what it holds and it fetches immediately. Cut over
+without rebooting and the hub still holds a generation from the real service —
+`0x0914` or higher, above ours — and it may sit there doing nothing, looking exactly
+like a protocol failure.
 
 ---
 
@@ -233,7 +225,10 @@ heartbeat: state=idle held=2237 generation=08bd     ← hub is holding our progr
 hub telling us it accepted the blob.
 
 If it fetches `tap/0` over and over and `held` never settles, it is rejecting what
-we send — most likely the checksum. Skip to step 13.
+we send. The hub does validate both checksums, so that is the first thing to
+suspect — but they are computed rather than replayed now, and
+`uv run python test_checksum.py` will say whether the algorithm still reproduces
+every captured sample.
 
 ---
 
@@ -252,9 +247,8 @@ mosquitto_pub -h 192.168.1.6 -u xxxx -P xxxx -t hozelock/hozelock/water_now/set 
 mosquitto_pub -h 192.168.1.6 -u xxxx -P xxxx -t hozelock/hozelock/stop/set -m PRESS
 ```
 
-Do this via MQTT before trying the Home Assistant button — it separates "the server
-works" from "the HA integration works". If watering fails you know which half to
-look at.
+Do this via MQTT before trying the Home Assistant button: it separates "the server
+works" from "the HA integration works", so a failure tells you which half to look at.
 
 ---
 
@@ -271,40 +265,16 @@ schedule:
 **Check:** the tap opens at 18:30, and the log shows `state=scheduled` rather than
 `manual`.
 
-This is the only step that tests the **programme epoch**, which was inferred from
-the captures rather than proven. If watering happens at a consistent offset from the
-intended time — always 25 minutes late, say — that is the cause, and it is a fixable
-constant rather than a broken design.
-
----
-
-## 13. Does the hub validate the checksum?
-
-The experiment that decides how much work remains. Set in `config.yaml`:
-
-```yaml
-corrupt_checksum: true
-```
-
-Restart the server, power-cycle the hub, and watch step 10's log lines again.
-
-- **Behaves identically** → it does not validate. Set `restrict_generations: false`
-  and the unidentified checksum algorithm stops mattering entirely.
-- **Refuses the programme** (re-fetches in a loop, `held` never settles) → it
-  validates, and the checksum has to be solved. See "The checksums" in
-  [protocol.md](protocol.md) for what is already known.
-
-Either answer is worth having. Record it in `data/events.log` with the time, then
-set `corrupt_checksum: false` again.
+This is the only step that tests the **programme epoch**, which was inferred from the
+captures rather than proven. A consistent offset from the intended time — always 25
+minutes late, say — is that, and it is a fixable constant rather than a broken design.
 
 ---
 
 ## Rollback
 
-Unplug the hub from the Pi and connect it back to the router. It returns to the real
-service, which exists until April 2027.
-
-To undo the Pi's side as well:
+Unplug the hub from the Pi and connect it back to the router; it returns to the real
+service, which exists until April 2027. To undo the Pi's side as well:
 
 ```bash
 sudo rm /etc/dnsmasq.d/hozelock.conf
@@ -319,7 +289,7 @@ sudo systemctl restart dnsmasq
 |---|---|
 | hub never appears in the log | DNS — check `hoz3.com` resolves to `10.0.9.1` from the hub's segment |
 | hub appears but never fetches `tap/0` | cut over without a power cycle (step 9) |
-| `tap/0` fetched repeatedly, `held` never settles | hub is rejecting the blob — go to step 13 |
+| `tap/0` fetched repeatedly, `held` never settles | hub is rejecting the blob — run `test_checksum.py` |
 | tap opens and never closes | manual watering has no duration field; send Stop explicitly |
 | watering fires at a consistent offset | programme epoch is wrong — see step 12 |
 | entities missing in HA, topics present | HA's MQTT integration, not the server |

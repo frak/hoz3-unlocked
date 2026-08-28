@@ -32,6 +32,7 @@ Python 3.14, dependencies managed by `uv` via `pyproject.toml`.
 |---|---|
 | `hozelock/codec.py` | wire codec — framing, base64url, both blob types. Shared with `../capture/decode.py` so analysis and server cannot drift |
 | `hozelock/schedule.py` | human schedule → 7-day interval chain, with solar resolution via `astral` |
+| `hozelock/{schedule,heartbeat}_checksum.py` | the solved checksums — [checksum.md](checksum.md) |
 | `hozelock/state.py` | hub state and the generation counter |
 | `hozelock/server.py` | the two HTTP endpoints |
 | `hozelock/mqtt_bridge.py` | Home Assistant entities over MQTT discovery |
@@ -74,23 +75,18 @@ cd server
 uv run python test_codec.py      # round-trips all 24 captured blobs byte-for-byte
 uv run python test_schedule.py   # rebuilds a captured programme from a schedule
 uv run python test_server.py     # replays ~200 real hub requests at the server
+uv run python test_checksum.py   # both checksums against every captured sample
 uv run python test_mqtt.py       # discovery payloads and command handling
 ```
 
-The corpus in `../data/hb-raw.tsv` is the ground truth, and it cannot be regenerated after
-April 2027 — the tests are worth more than usual for that reason.
+The corpus in `../data/captures/hb-raw.tsv` is the ground truth, and it cannot be
+regenerated after April 2027 — the tests are worth more than usual for that reason.
 
-## Unresolved, and what it means here
+## Known limits
 
-- **Checksums are not understood.** Responses carry captured values rather than
-  computed ones, so `restrict_generations: true` keeps the generation inside the
-  range we have observed (`0x08bd`–`0x0914`, 88 values) and cycles within it. If the
-  live test shows the hub ignores the checksum, set it false and the constraint
-  disappears.
 - **The programme epoch is inferred.** Gaps are counted from a day boundary in the
-  server's own clock frame, which fits the captured blobs but is not proven. The
-  live test must confirm waterings land at the intended times; if they are offset by
-  a constant, this is why.
+  server's own clock frame, which fits the captured blobs but is not proven. If
+  waterings land at a consistent offset from the intended time, this is why.
 - **Manual watering duration is unknown** — one captured sample, no duration field
   identified. The server issues a start and relies on an explicit stop.
 - **No battery or signal sensors.** Request bytes 11–13 are undecoded. Decoding them
