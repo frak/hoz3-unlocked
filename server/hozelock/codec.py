@@ -143,29 +143,15 @@ def encode_schedule(lead_units, events, flags=b'\x00' * 5, checksum=b'\x00\x00')
 
 
 def schedule_checksum(blob):
-    """Compute a programme's checksum, or None if it cannot be.
+    """Compute a programme's checksum from the solved algorithm.
 
-    The algorithm is unidentified; checksum_map.py holds a measured basis for
-    the bytes that vary (see capture/collect-checksums.py). Returns None when
-    the map is absent, or when the programme falls outside the measured span --
-    the hub rejects a wrong checksum, so a caller must not guess.
+    Byte-hash structure recovered in docs/checksum-problem.md; the map is
+    X8-propagated rather than measured, so it holds for any programme shape and
+    never falls outside a span. Kept returning an int (never None) so callers
+    can serve generated programmes unconditionally.
     """
-    try:
-        from . import checksum_map as table
-    except ImportError:
-        return None
-    v = 0
-    for i, pos in enumerate(table.VARYING):
-        v |= (blob[pos] ^ table.REFERENCE[pos]) << (i * 8)
-    out = (table.REFERENCE[216] << 8) | table.REFERENCE[217]
-    while v:
-        h = v.bit_length() - 1
-        if h not in table.BASIS:
-            return None
-        vec, img = table.BASIS[h]
-        v ^= vec
-        out ^= img
-    return out
+    from . import schedule_checksum as solved
+    return solved.checksum(blob)
 
 
 def decode_heartbeat_request(blob):
