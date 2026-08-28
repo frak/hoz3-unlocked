@@ -2,7 +2,7 @@
 
 The 218-byte programme's trailing checksum (bytes 216-217) is a GF(2)-affine
 byte hash, recovered by measuring its linear structure and finding the byte-to-
-byte recurrence that measurement alone missed (see docs/checksum-problem.md).
+byte recurrence that measurement alone missed (see docs/checksum.md).
 
     ck(blob) = BASE ^ sum_{p=1..213} X8^(p-1) . T(blob[p])
 

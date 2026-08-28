@@ -38,7 +38,7 @@ def main():
         if got != want:
             failures.append(f'{blob[1:20].hex()}...: got {got:04x} want {want:04x}')
 
-    # The worked example from docs/checksum-problem.md.
+    # The worked example from docs/checksum.md.
     worked = next(samples())
     assert worked[1:9].hex() == '542dac3c742dac3c', 'first sample is the worked example'
     if codec.schedule_checksum(worked) != 0x9bf6:

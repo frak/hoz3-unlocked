@@ -2,7 +2,7 @@
 
 The 24-byte response's trailing checksum (bytes 22-23) is GF(2)-affine in the
 demo flag (byte 5) and the 16-bit generation (bytes 8-9), and independent of the
-clock -- see docs/checksum-problem.md. It is the SAME bespoke byte field as the
+clock -- see docs/checksum.md. It is the SAME bespoke byte field as the
 schedule checksum: byte 9 (generation low) uses the byte table L9, and byte 8
 (generation high) is one position earlier, so its table is X8^340 . L9, where X8
 is the schedule's byte-advance operator (X8 has order 341 on the checksum span,

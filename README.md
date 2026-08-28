@@ -12,9 +12,9 @@ specification itself, and a replacement server.
 
 | | |
 |---|---|
-| Protocol | decoded, except the checksum algorithm |
-| Replacement server | built, passing tests against captured traffic; not yet run against the hub |
-| Next step | point the hub at it — [docs/live-test.md](docs/live-test.md) |
+| Protocol | fully decoded, including both checksums |
+| Replacement server | built, passing tests against captured traffic; run against the hub, but not yet serving a computed programme end to end |
+| Next step | serve a generated programme to the hub — [docs/live-test.md](docs/live-test.md) |
 
 ## Layout
 
@@ -58,6 +58,7 @@ uv sync
 uv run python test_codec.py     # round-trips 24 captured blobs byte-for-byte
 uv run python test_schedule.py
 uv run python test_server.py
+uv run python test_checksum.py  # 560 captured programmes + the worked example
 ```
 
 The tests run against `data/`, which holds real traffic recorded while the service
@@ -66,10 +67,6 @@ it the most valuable thing in this repo.
 
 ## What is still unknown
 
-- **The checksum algorithm.** GF(2)-affine, shown not to be a CRC, not identified.
-  The hub validates it and refuses anything wrong. Worked around by measurement —
-  the full statement of the problem, all measurements, and what has been ruled out
-  is in [docs/checksum-problem.md](docs/checksum-problem.md).
 - **The programme epoch** — inferred from the captures, not proven.
 - **Battery and signal** — request bytes 11–13 are undecoded, so those sensors are
   not available. Decoding them needs the real service for comparison.
