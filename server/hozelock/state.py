@@ -7,7 +7,7 @@ import logging
 import threading
 from datetime import datetime, timedelta
 
-from . import codec, checksums, schedule
+from . import codec, checksums, heartbeat_checksum, schedule
 
 log = logging.getLogger('hozelock.state')
 
@@ -36,6 +36,12 @@ COMMAND_NAMES = {CMD_WATER: 'water', CMD_STOP: 'stop'}
 FLAG_NORMAL = 0x00
 FLAG_DEMO = 0x10
 
+# The hub acts when the generation *changes*, not when it grows (the old table
+# cycled it non-monotonically and the hub fetched fine), so capping it is free.
+# 0x1fff keeps every served heartbeat checksum inside the live-validated range,
+# never in the unproven high-byte8 extrapolation.
+GENERATION_MAX = 0x1fff
+
 
 def generations_for(flag):
     """Only generations we hold a captured checksum for, at this flag value."""
@@ -44,7 +50,7 @@ def generations_for(flag):
 
 class HubState:
     def __init__(self, hub_id, site, events, clock_epoch=None,
-                 restrict_generations=True, initial_generation=None,
+                 restrict_generations=False, initial_generation=None,
                  corrupt_checksum=False, replay_blob=None, demo_mode=False):
         self.hub_id = hub_id
         self.site = site
@@ -94,7 +100,9 @@ class HubState:
                     i = -1
                 self.generation = self.generations[(i + 1) % len(self.generations)]
             else:
-                self.generation += 1
+                # Cycle 1..GENERATION_MAX (never 0, which the hub treats as a
+                # fresh boot). Always changes, so the hub always re-fetches.
+                self.generation = (self.generation % GENERATION_MAX) + 1
         return self.generation
 
     def week_origin(self, now=None):
@@ -156,13 +164,8 @@ class HubState:
 
     def heartbeat_response(self, now=None):
         minutes, seconds = self.clock(now)
-        ck = checksums.CHECKSUMS.get((self.flag, self.generation))
-        if ck is None:
-            log.warning('no captured checksum for generation %04x - sending zeros; '
-                        'the hub may ignore this response', self.generation)
-            checksum = b'\x00\x00'
-        else:
-            checksum = bytes([ck >> 8, ck & 0xff])
+        ck = heartbeat_checksum.checksum(self.flag, self.generation)
+        checksum = bytes([ck >> 8, ck & 0xff])
         return codec.encode_heartbeat_response(minutes, seconds, self.generation,
                                                flag=self.flag, checksum=checksum)
 

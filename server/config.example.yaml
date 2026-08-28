@@ -8,10 +8,10 @@ site:
   longitude: -0.1
   timezone: Europe/London
 
-# The hub validates the checksum (confirmed 27 Aug 2026), and we cannot compute
-# it yet, so only generations we hold a captured checksum for can be served.
-# Leave true until the checksum is solved.
-restrict_generations: true
+# The heartbeat checksum is solved (28 Aug 2026), so any generation can be
+# served -- leave this off. Set true only to fall back to cycling the captured
+# generations in checksums.py (e.g. to A/B a suspected checksum regression).
+restrict_generations: false
 
 # Demo mode: controller polls every minute instead of every 20, hub heartbeats
 # every ~7s instead of ~16 min. Invaluable for testing, heavy on batteries.
@@ -20,8 +20,8 @@ demo_mode: false
 
 # Where the generation counter starts. Only needed if cutting over without a
 # power cycle: a freshly booted hub reports held=0000 and fetches regardless.
-# Valid values differ per demo_mode, so one that works in normal mode will not
-# work in demo.
+# The server then cycles it in 1..0x1fff, the live-validated checksum range;
+# keep any value you set here inside that range too.
 # initial_generation: 0x08bd
 
 # Diagnostic: deliberately send a wrong schedule checksum. Answered 27 Aug 2026

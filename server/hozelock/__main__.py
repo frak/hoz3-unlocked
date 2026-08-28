@@ -27,7 +27,7 @@ def load(path):
         hub_id=cfg['hub_id'],
         site=site,
         events=events,
-        restrict_generations=cfg.get('restrict_generations', True),
+        restrict_generations=cfg.get('restrict_generations', False),
         initial_generation=cfg.get('initial_generation'),
         corrupt_checksum=cfg.get('corrupt_checksum', False),
         replay_blob=cfg.get('replay_blob'),
