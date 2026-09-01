@@ -4,12 +4,16 @@ The hub has no command channel of its own: it notices the generation moved,
 re-fetches the programme, and acts on what it finds (see protocol.md).
 """
 import logging
+import re
 import threading
+from dataclasses import replace
 from datetime import datetime, timedelta
 
 from . import codec, checksums, heartbeat_checksum, schedule
 
 log = logging.getLogger('hozelock.state')
+
+TIME_RE = re.compile(r'^\d{1,2}:\d{2}$')
 
 # The clock is a position within a 7-day week, 0..10079, not a free-running
 # counter -- the capture contains the wrap (10078 -> 14). A programme is always
@@ -49,12 +53,24 @@ def generations_for(flag):
 
 
 class HubState:
-    def __init__(self, hub_id, site, events, clock_epoch=None,
+    def __init__(self, hub_id, site, events=None, clock_epoch=None,
                  restrict_generations=False, initial_generation=None,
-                 corrupt_checksum=False, replay_blob=None, demo_mode=False):
+                 corrupt_checksum=False, replay_blob=None, demo_mode=False,
+                 schedules=None, active_schedule=None, overlays=None,
+                 state_file=None):
         self.hub_id = hub_id
         self.site = site
-        self.events = events
+        # `events` stays positional for the single-schedule callers; a bare list
+        # is just the degenerate case of one schedule.
+        self.schedules = list(schedules) if schedules else [
+            schedule.Schedule(name='Default', events=list(events or []))]
+        self.active_schedule = active_schedule or self.schedules[0].name
+        if not self._find(self.active_schedule):
+            log.warning('active_schedule %r is not defined - using %r',
+                        active_schedule, self.schedules[0].name)
+            self.active_schedule = self.schedules[0].name
+        self.overlays = overlays or schedule.Overlays()
+        self.state_file = state_file
         self.clock_epoch = clock_epoch or datetime(2026, 1, 1)
         self.restrict_generations = restrict_generations
         self.corrupt_checksum = corrupt_checksum
@@ -80,6 +96,45 @@ class HubState:
         self._warned_checksum = False
         self._lock = threading.Lock()
         self._listeners = []
+
+    def _find(self, name):
+        return next((s for s in self.schedules if s.name == name), None)
+
+    def active(self):
+        return self._find(self.active_schedule) or self.schedules[0]
+
+    @property
+    def events(self):
+        """The active schedule's events. Read-only: mutate via set_event so the
+        change is validated, persisted, and picked up by the hub."""
+        return self.active().events
+
+    def _persist(self):
+        if self.state_file:
+            from . import persist
+            persist.save(self.state_file, self)
+
+    def _rejects(self, events=None, overlays=None):
+        """-> a reason string if this would produce an unservable programme.
+
+        schedule_blob() is on the hub's fetch path, so an edit that cannot encode
+        would leave the hub with nothing at all. Trial-build before committing.
+        """
+        try:
+            lead, chain = schedule.build(
+                events if events is not None else self.events,
+                self.site, self.schedule_epoch(),
+                overlays=overlays if overlays is not None else self.overlays)
+            codec.encode_schedule(lead, chain, flags=self.flags())
+        except Exception as e:
+            return str(e)
+        return None
+
+    def _commit(self, what):
+        self.bump()
+        self._persist()
+        self._notify()
+        log.info('%s', what)
 
     def on_change(self, fn):
         self._listeners.append(fn)
@@ -141,14 +196,131 @@ class HubState:
         self._queue(CMD_STOP, 'stop')
 
     def set_schedule(self, events):
-        self.events = events
-        self.bump()
-        self._notify()
+        """Replace the active schedule's events wholesale."""
+        reason = self._rejects(events=events)
+        if reason:
+            return reason
+        self.active().events = list(events)
+        self._commit(f'schedule {self.active_schedule!r} updated')
+        return None
+
+    def select_schedule(self, name):
+        """Point the hub at a different schedule. -> a reason string on refusal."""
+        if not self._find(name):
+            known = ', '.join(s.name for s in self.schedules)
+            return f'no schedule named {name!r} (have: {known})'
+        if name == self.active_schedule:
+            return None
+        previous = self.active_schedule
+        self.active_schedule = name
+        reason = self._rejects()
+        if reason:
+            self.active_schedule = previous
+            return reason
+        self._commit(f'active schedule {previous!r} -> {name!r}')
+        return None
+
+    def set_event(self, slot, mode=None, at=None, duration_min=None):
+        """Edit one event of the active schedule. -> a reason string on refusal.
+
+        `slot` is 0-based. Modes are 'clock', 'sunrise', 'sunset' and 'unused';
+        an unused slot is simply absent from the served programme.
+        """
+        events = [replace(e) for e in self.events]
+        while len(events) <= slot:
+            events.append(schedule.Event(at='06:00', duration_min=0))
+        ev = events[slot]
+
+        if mode is not None:
+            mode = mode.strip().lower()
+            if mode == 'unused':
+                events[slot] = None
+            elif mode in ('sunrise', 'sunset'):
+                ev.at = mode
+            elif mode == 'clock':
+                # Carry the existing clock time across a solar->clock switch;
+                # the UI sends mode and time as two separate messages.
+                if ev.at in ('sunrise', 'sunset'):
+                    ev.at = at or '06:00'
+            else:
+                return f'unknown mode {mode!r}'
+        if at is not None and events[slot] is not None:
+            if not TIME_RE.match(at):
+                return f'{at!r} is not HH:MM'
+            hh, mm = (int(x) for x in at.split(':'))
+            if hh > 23 or mm > 59:
+                return f'{at!r} is not a valid time'
+            if ev.at not in ('sunrise', 'sunset'):
+                ev.at = at
+        if duration_min is not None and events[slot] is not None:
+            duration_min = int(duration_min)
+            if not 0 <= duration_min <= 0xff:
+                return f'duration {duration_min} is outside 0-255'
+            ev.duration_min = duration_min
+
+        events = [e for e in events if e is not None]
+        reason = self._rejects(events=events)
+        if reason:
+            return reason
+        self.active().events = events
+        self._commit(f'schedule {self.active_schedule!r} slot {slot + 1} edited')
+        return None
+
+    def pause(self, days, now=None):
+        """Suppress watering for N days. 0 cancels. -> a reason string on refusal."""
+        days = float(days)
+        if days < 0:
+            return 'pause days cannot be negative'
+        now = now or datetime.now()
+        until = now + timedelta(days=days) if days else None
+        reason = self._rejects(overlays=replace(self.overlays, pause_until=until))
+        if reason:
+            return reason
+        self.overlays.pause_until = until
+        self._commit(f'paused until {until}' if until else 'pause cancelled')
+        return None
+
+    def adjust(self, percent, days=1, now=None):
+        """Scale durations by percent for N days. 0 cancels."""
+        percent, days = int(percent), float(days)
+        if days <= 0 and percent:
+            return 'adjust needs a positive number of days'
+        now = now or datetime.now()
+        trial = (replace(self.overlays, adjust_percent=percent,
+                         adjust_until=now + timedelta(days=days))
+                 if percent else
+                 replace(self.overlays, adjust_percent=0, adjust_until=None))
+        reason = self._rejects(overlays=trial)
+        if reason:
+            return reason
+        self.overlays.adjust_percent = trial.adjust_percent
+        self.overlays.adjust_until = trial.adjust_until
+        self._commit(f'adjust {percent:+d}% until {trial.adjust_until}'
+                     if percent else 'adjust cancelled')
+        return None
+
+    def expire_overlays(self, now=None):
+        """Drop lapsed overlays. -> True if anything changed.
+
+        The hub only refetches when the generation moves, so an expiry that does
+        not bump would keep serving the boosted programme indefinitely.
+        """
+        now = now or datetime.now()
+        changed = False
+        if self.overlays.pause_until and now >= self.overlays.pause_until:
+            self.overlays.pause_until = None
+            changed = True
+        if self.overlays.adjust_until and now >= self.overlays.adjust_until:
+            self.overlays.adjust_percent = 0
+            self.overlays.adjust_until = None
+            changed = True
+        if changed:
+            self._commit('overlay expired')
+        return changed
 
     def set_enabled(self, enabled):
         self.schedule_enabled = enabled
-        self.bump()
-        self._notify()
+        self._commit(f'schedule {"enabled" if enabled else "disabled"}')
 
     def observe(self, request_blob):
         fields = codec.decode_heartbeat_request(request_blob)
@@ -188,7 +360,8 @@ class HubState:
             return self.replay_blob
         epoch = self.schedule_epoch(now)
         events = self.events if self.schedule_enabled else []
-        lead, chain = schedule.build(events, self.site, epoch)
+        lead, chain = schedule.build(events, self.site, epoch,
+                                     overlays=self.overlays)
         blob = codec.encode_schedule(lead, chain, flags=self.flags())
         if self.corrupt_checksum:
             return blob[:216] + b'\xff\xff'
@@ -205,6 +378,8 @@ class HubState:
         now = now or datetime.now()
         if not self.schedule_enabled:
             return None
-        upcoming = [w for w, _ in schedule.resolve(self.events, self.site, now)
-                    if w >= now]
-        return min(upcoming) if upcoming else None
+        firings = [f for f in schedule.resolve(self.events, self.site, now)
+                   if f[0] >= now]
+        # Without this a paused system still advertises a watering it will not do.
+        firings = self.overlays.apply(firings)
+        return min(w for w, _ in firings) if firings else None
