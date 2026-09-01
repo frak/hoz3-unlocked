@@ -13,13 +13,14 @@ specification itself, and a replacement server.
 | | |
 |---|---|
 | Protocol | fully decoded, including both checksums |
-| Replacement server | built, passing tests against captured traffic; run against the hub, but not yet serving a computed programme end to end |
-| Next step | serve a generated programme to the hub — [docs/live-test.md](docs/live-test.md) |
+| Replacement server | built and passing tests; the hub fetches from it and confirms what it is served |
+| Control | Home Assistant cards over MQTT, plus a [JSON API](docs/api.md) that survives a broker outage |
+| Next step | run a full week on the replacement — [docs/live-test.md](docs/live-test.md) |
 
 ## Layout
 
 ```
-docs/       protocol specification, capture rig build, server design, live test
+docs/       protocol spec, capture rig, server design, control API, live test
 capture/    the packet-capture rig: bridge script, systemd units, analysis tool
 server/     the replacement server (Python 3.14, uv, containerised)
 data/       captured traffic — the ground truth behind every claim in the docs
@@ -68,7 +69,12 @@ Then point `hoz3.com` at it with a DNS override on the router. The hub resolves 
 the DHCP-supplied resolver, so no NAT interception is needed.
 
 Control is via **Home Assistant over MQTT discovery** — entities appear
-automatically. The Hozelock phone app is not supported and dies with the service.
+automatically, and `python -m hozelock.dashboard config.yaml` prints the two cards.
+Several named schedules can be defined and switched at will, with the app's pause and
+±% adjust as temporary overlays. A [JSON API](docs/api.md) covers the same ground for
+scripts, and keeps working when the broker does not.
+
+The Hozelock phone app is not supported and dies with the service.
 
 ## Tests
 
@@ -79,6 +85,10 @@ uv run python test_codec.py     # round-trips 24 captured blobs byte-for-byte
 uv run python test_schedule.py
 uv run python test_server.py
 uv run python test_checksum.py  # 560 captured programmes + the worked example
+uv run python test_overlays.py  # pause and adjust
+uv run python test_api.py
+uv run python test_mqtt.py
+uv run python test_dashboard.py
 ```
 
 The tests run against `data/`, which holds real traffic recorded while the service

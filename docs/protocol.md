@@ -200,6 +200,19 @@ their sum (455 per pair).
 Times are **local** (BST at capture), confirmed by the 21:00 schedule firing at 21:01.
 Disabling all schedules collapses the payload to `00 00 00 cc` plus padding.
 
+### Multiple schedules, pause and adjust are cloud concepts, not wire ones
+
+The app offers several named schedules and lets you pause or scale watering, but
+**none of that reaches the hub.** There is no slot index in the programme and no
+pause or adjust field: the cloud resolves whichever schedule is active, with any
+modifier already applied, into the single 218-byte chain above. Switching schedule
+is indistinguishable on the wire from editing one.
+
+Two consequences for a replacement. It can offer as many schedules as it likes,
+because they cost nothing on the wire. And a paused week has no captured shape to
+copy — collapsing to `00 00 00 cc` is our choice, not a reproduction of
+Hozelock's, though the hub accepts it.
+
 ### The flag bytes are the manual command channel
 
 There is no separate "water now" endpoint. The commands ride in the schedule blob's flag field,

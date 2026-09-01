@@ -72,11 +72,16 @@ site:
 
 restrict_generations: false   # both checksums are computed; see docs/checksum.md
 
-schedule:
-  - at: sunrise
-    duration_min: 45
-  - at: sunset
-    duration_min: 60
+schedules:
+  - name: Summer
+    events:
+      - at: sunrise
+        duration_min: 45
+      - at: sunset
+        duration_min: 60
+  - name: Away
+    events: []
+active_schedule: Summer
 
 mqtt:
   host: 192.168.1.6       # your Mosquitto container
@@ -141,9 +146,14 @@ anything, and restarts its network every 45 seconds.
 mosquitto_sub -h 192.168.1.6 -u xxxx -P xxxx -v -t 'homeassistant/+/hozelock/#' -t 'hozelock/#'
 ```
 
-**Check:** six retained `.../config` messages and `hozelock/hozelock/available` reading
-`online`. In Home Assistant a device called **Hozelock Cloud Controller** appears with
-six entities. If the topics are there but HA shows nothing, the problem is HA's MQTT
+**Check:** a retained `.../config` message per entity and
+`hozelock/hozelock/available` reading `online`. In Home Assistant a device called
+**Hozelock Cloud Controller** appears. Then generate the cards and paste each into a
+Manual card:
+
+```bash
+uv run python -m hozelock.dashboard config.yaml
+``` If the topics are there but HA shows nothing, the problem is HA's MQTT
 integration, not the server.
 
 Leave this subscription running — it is the clearest view of what the server is doing.
@@ -249,6 +259,14 @@ mosquitto_pub -h 192.168.1.6 -u xxxx -P xxxx -t hozelock/hozelock/stop/set -m PR
 
 Do this via MQTT before trying the Home Assistant button: it separates "the server
 works" from "the HA integration works", so a failure tells you which half to look at.
+
+The [control API](api.md) is a third way in, and the one that still works when the
+broker is down:
+
+```bash
+curl -X POST -H 'Content-Type: application/json' localhost/api/water
+curl localhost/api/state
+```
 
 ---
 
