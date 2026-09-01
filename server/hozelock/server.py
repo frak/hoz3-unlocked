@@ -3,12 +3,13 @@
 Stands in for hoz3.com. Plain HTTP on port 80: the hub uses no TLS and no auth
 (see protocol.md).
 """
+import json
 import logging
 import re
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlparse
 
-from . import codec
+from . import api, codec
 
 log = logging.getLogger('hozelock.server')
 
@@ -52,8 +53,36 @@ class Handler(BaseHTTPRequestHandler):
         self._send(codec.wrap(blob).encode('latin1'),
                    'text/plain;charset=ISO-8859-1', headers=[HSTS_HEADER])
 
+    def _api(self):
+        """-> True if this was an /api/ request, answered."""
+        length = int(self.headers.get('Content-Length') or 0)
+        body = self.rfile.read(length) if length else b''
+        result = api.handle(self.state, self.command, urlparse(self.path).path,
+                            content_type=self.headers.get('Content-Type'),
+                            body=body)
+        if result is None:
+            return False
+        status, payload = result
+        if status >= 400:
+            log.warning('api %s %s -> %s %s', self.command, self.path, status,
+                        payload.get('error'))
+        self._send(json.dumps(payload, indent=1).encode(), 'application/json',
+                   status=status)
+        return True
+
+    def do_POST(self):
+        if not self._api():
+            self.send_error(404)
+
+    do_PUT = do_POST
+    do_DELETE = do_POST
+
     def do_GET(self):
         url = urlparse(self.path)
+        if url.path.startswith(api.PREFIX):
+            self._api()
+            return
+
         hb = parse_qs(url.query).get('hb', [None])[0]
         if hb:
             try:
