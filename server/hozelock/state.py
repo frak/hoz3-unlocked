@@ -121,9 +121,10 @@ class HubState:
         would leave the hub with nothing at all. Trial-build before committing.
         """
         try:
+            now = datetime.now()
             lead, chain = schedule.build(
                 events if events is not None else self.events,
-                self.site, self.schedule_epoch(),
+                self.site, self.schedule_epoch(now), now=now,
                 overlays=overlays if overlays is not None else self.overlays)
             codec.encode_schedule(lead, chain, flags=self.flags())
         except Exception as e:
@@ -360,7 +361,7 @@ class HubState:
             return self.replay_blob
         epoch = self.schedule_epoch(now)
         events = self.events if self.schedule_enabled else []
-        lead, chain = schedule.build(events, self.site, epoch,
+        lead, chain = schedule.build(events, self.site, epoch, now=now,
                                      overlays=self.overlays)
         blob = codec.encode_schedule(lead, chain, flags=self.flags())
         if self.corrupt_checksum:
@@ -381,5 +382,5 @@ class HubState:
         firings = [f for f in schedule.resolve(self.events, self.site, now)
                    if f[0] >= now]
         # Without this a paused system still advertises a watering it will not do.
-        firings = self.overlays.apply(firings)
+        firings = self.overlays.apply(firings, now)
         return min(w for w, _ in firings) if firings else None

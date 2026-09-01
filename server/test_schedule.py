@@ -111,6 +111,53 @@ def main():
     ok &= check('no gap needs a continuation byte',
                 max(g for _, g in chain) <= schedule.MAX_GAP_UNITS, True)
 
+    print()
+    print('  -- importing the app\'s schedules from the cloud --')
+    import json
+    snap = json.load(open(DATA / 'schedule-snapshot.json'))
+    scheds = schedule.from_cloud_schedules(snap)
+    ok &= check('one schedule, named from the cloud',
+                [s.name for s in scheds], ['Test'])
+    ok &= check('the enabled event survives',
+                [(e.at, e.duration_min, list(e.days)) for e in scheds[0].events],
+                [('16:30', 130, ['tue'])])
+    ok &= check('the six disabled days are dropped', len(scheds[0].events), 1)
+
+    solar = schedule.from_cloud_schedules([{'name': 'S', 'scheduleDays': {
+        'Monday': {'dayOfWeek': 'Monday', 'wateringEvents': [
+            {'startTime': -2000, 'duration': 2700000, 'enabled': True}]},
+        'Friday': {'dayOfWeek': 'Friday', 'wateringEvents': [
+            {'startTime': -2000, 'duration': 2700000, 'enabled': True}]}}}])
+    ok &= check('solar sentinels decode', solar[0].events[0].at, 'sunrise')
+    ok &= check('identical events across days are grouped',
+                list(solar[0].events[0].days), ['mon', 'fri'])
+
+    # An unrecognised sentinel must not be guessed at -- it would water at the
+    # wrong hour and look like a scheduling bug.
+    raised = False
+    try:
+        schedule.from_cloud_schedules([{'name': 'X', 'scheduleDays': {
+            'Monday': {'dayOfWeek': 'Monday', 'wateringEvents': [
+                {'startTime': -9999, 'duration': 60000, 'enabled': True}]}}}])
+    except ValueError:
+        raised = True
+    ok &= check('an unknown sentinel raises rather than guessing', raised, True)
+
+    ok &= check('the export round-trips back through config',
+                [(e.at, e.duration_min, list(e.days))
+                 for e in schedule.from_cloud_schedules(snap)[0].events],
+                [(e['at'], e['duration_min'], e.get('days'))
+                 for e in schedule.to_config(scheds)[0]['events']])
+
+    print()
+    print('  -- pause and adjust --')
+    ok &= check('adjust matches the captured +50% (45/60 -> 68/90)',
+                (schedule.scale_duration(45, 50), schedule.scale_duration(60, 50)),
+                (68, 90))
+    ok &= check('a duration cannot overflow its byte',
+                schedule.scale_duration(200, 100), 255)
+    ok &= check('a shrink works too', schedule.scale_duration(60, -50), 30)
+
     print('\nOK' if ok else '\nFAILURES')
     return 0 if ok else 1
 

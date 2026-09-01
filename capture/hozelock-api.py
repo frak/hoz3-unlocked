@@ -170,6 +170,38 @@ def probe_write(args):
     return 0
 
 
+def export_schedules(args):
+    """Print the hub's schedules as config.yaml.
+
+    The cloud is the only place these exist and it shuts down at the end of
+    April 2027, so this is a now-or-never job.
+    """
+    status, body = call(args.hub, '/schedules')
+    if status != 200:
+        print(f'GET /schedules -> {status}: {body}', file=sys.stderr)
+        return 1
+
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / 'server'))
+    from hozelock import schedule as sched_mod
+    import yaml
+
+    scheds = sched_mod.from_cloud_schedules(body)
+    if not scheds:
+        print('no schedules returned', file=sys.stderr)
+        return 1
+
+    empty = [s.name for s in scheds if not s.events]
+    print('# Exported from the live cloud API. Paste into server/config.yaml.')
+    print(f'# {len(scheds)} schedule(s); disabled events are dropped.')
+    if empty:
+        print(f'# No enabled events in: {", ".join(empty)}')
+    print(yaml.safe_dump(
+        {'schedules': sched_mod.to_config(scheds),
+         'active_schedule': scheds[0].name},
+        sort_keys=False, default_flow_style=False, allow_unicode=True))
+    return 0
+
+
 def get_controller(hub, cid):
     _, body = call(hub)
     hub_obj = body.get('hub', body) if isinstance(body, dict) else {}
@@ -209,6 +241,8 @@ def main():
     sub = p.add_subparsers(dest='cmd', required=True)
     sh = sub.add_parser('show'); sh.add_argument('--raw', action='store_true')
     sub.add_parser('probe-write')
+    sub.add_parser('export-schedules',
+                   help='print the hub\'s schedules as config.yaml')
     a = sub.add_parser('adjust'); a.add_argument('percent', type=int)
     a.add_argument('--days', type=int, default=1)
     sub.add_parser('unadjust')
@@ -231,6 +265,8 @@ def main():
         return show(args)
     if args.cmd == 'probe-write':
         return probe_write(args)
+    if args.cmd == 'export-schedules':
+        return export_schedules(args)
     if args.cmd == 'set':
         sch = get_schedule(args.hub, args.schedule)
         if not sch:

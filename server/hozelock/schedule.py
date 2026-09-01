@@ -56,13 +56,24 @@ class Overlays:
         ends = [t for t in (self.pause_until, self.adjust_until) if t and t > now]
         return min(ends) if ends else None
 
-    def apply(self, firings):
-        """-> firings with paused ones dropped and adjusted ones scaled."""
+    def apply(self, firings, now=None):
+        """-> firings with paused ones dropped and adjusted ones scaled.
+
+        The programme is a repeating week anchored at an origin in the past, so
+        a slot the clock has already gone by does not fire now -- it fires when
+        the cycle comes round again. Comparing that real occurrence against the
+        expiry is what makes "pause for 8 days" reach into next week's slots
+        while "pause for 2" leaves them alone.
+        """
+        now = now or datetime.now()
+        cycle = timedelta(days=HORIZON_DAYS)
         out = []
         for when, duration in firings:
-            if self.pause_until and when < self.pause_until:
+            occurs = when if when >= now else when + cycle
+            if self.pause_until and occurs < self.pause_until:
                 continue
-            if self.adjust_percent and self.adjust_until and when < self.adjust_until:
+            if (self.adjust_percent and self.adjust_until
+                    and occurs < self.adjust_until):
                 duration = scale_duration(duration, self.adjust_percent)
             out.append((when, duration))
         return out
@@ -154,7 +165,7 @@ def build(events, site, epoch, now=None, overlays=None):
     horizon_end = epoch + timedelta(days=HORIZON_DAYS)
     firings = [f for f in firings if f[0] < horizon_end]
     if overlays:
-        firings = overlays.apply(firings)
+        firings = overlays.apply(firings, now)
     if not firings:
         return 0, []
 
