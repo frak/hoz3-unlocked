@@ -41,6 +41,46 @@ def check(name, got, want):
     return False
 
 
+def headers_for(port, path):
+    try:
+        return urllib.request.urlopen(f'http://127.0.0.1:{port}{path}', timeout=5).headers
+    except urllib.error.HTTPError as e:
+        return e.headers
+
+
+def cors_count(headers):
+    return len([k for k in headers.keys() if k.lower().startswith('access-control')])
+
+
+def check_cors(st):
+    """The CORS set must reach hub routes and nothing else.
+
+    This fails *open* -- a route that forgets to opt out silently becomes
+    cross-origin writable -- so every path is asserted, not just the happy one.
+    """
+    ok = True
+    for flag, want in ((True, 4), (False, 0)):
+        httpd = server.serve(st, host='127.0.0.1', port=0, hub_cors_headers=flag)
+        port = httpd.server_address[1]
+        threading.Thread(target=httpd.serve_forever, daemon=True).start()
+        try:
+            for label, path in (('heartbeat', f'/notify/{HUB}/'),
+                                ('tap/0', f'/notify/{HUB}/tap/0/')):
+                h = headers_for(port, path)
+                ok &= check(f'hub {label} CORS headers (flag={flag})',
+                            cors_count(h), want)
+                ok &= check(f'hub {label} keeps HSTS (flag={flag})',
+                            'Strict-Transport-Security' in h, True)
+            # Where /api/ will live: it must never inherit the hub's headers.
+            for label, path in (('404', '/nope'), ('api path', '/api/state')):
+                ok &= check(f'{label} carries no CORS headers (flag={flag})',
+                            cors_count(headers_for(port, path)), 0)
+        finally:
+            httpd.shutdown()
+            httpd.server_close()
+    return ok
+
+
 def main():
     st = state_mod.HubState(
         hub_id=HUB,
@@ -132,6 +172,8 @@ def main():
         ok &= check('demo mode sets flag 0x10', demo.heartbeat_response()[5], 0x10)
         ok &= check('the demo flag changes the checksum',
                     hb.checksum(0x10, 0x0900) != hb.checksum(0x00, 0x0900), True)
+
+        ok &= check_cors(st)
     finally:
         httpd.shutdown()
         httpd.server_close()

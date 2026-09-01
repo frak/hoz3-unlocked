@@ -64,7 +64,8 @@ def main(path=None):
 
     threading.Thread(target=refresher, args=(st,), daemon=True).start()
 
-    httpd = server.serve(st, port=cfg.get('port', 80))
+    httpd = server.serve(st, port=cfg.get('port', 80),
+                         hub_cors_headers=cfg.get('hub_cors_headers', True))
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:

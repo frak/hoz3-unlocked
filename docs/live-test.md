@@ -271,6 +271,35 @@ minutes late, say — is that, and it is a fixable constant rather than a broken
 
 ---
 
+## 13. Does the hub read the CORS headers?
+
+Five minutes, and it decides whether the replacement carries a set of headers it may
+not need. They matter because the control API sits behind the same server, and
+`Allow-Origin: *` with `Allow-Methods: POST` is what would let a website you visit
+drive your tap.
+
+```yaml
+hub_cors_headers: false
+```
+
+Restart, then watch the log across three heartbeats and one `tap/0` fetch:
+
+```bash
+journalctl -u hozelock-server -f
+```
+
+- **Unchanged** — heartbeats arrive, the hub fetches, `held` settles on our
+  generation → the hub ignores them. They can be deleted for good.
+- **Hub stops fetching, or `held` never settles** → it does read them. Set the flag
+  back to `true`; `server.py` already scopes them to the hub routes, so the control
+  API is unaffected either way.
+
+Record the answer in [protocol.md](protocol.md) under Open questions. It cannot be
+established after April 2027 — the hub is the only thing that can answer it, and only
+while it is talking to something.
+
+---
+
 ## Rollback
 
 Unplug the hub from the Pi and connect it back to the router; it returns to the real

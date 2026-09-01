@@ -3,6 +3,12 @@
 hub_id: ge7si1
 port: 80
 
+# Reproduce the real service's Access-Control-* headers. The hub is an embedded
+# client, not a browser, so it almost certainly ignores them -- but that is
+# untested. Set false, then watch three heartbeats and a tap/0 fetch: if `held`
+# still settles, they can go for good. Record the answer in docs/protocol.md.
+hub_cors_headers: true
+
 site:
   latitude: 51.5
   longitude: -0.1
