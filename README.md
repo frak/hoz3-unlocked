@@ -28,6 +28,26 @@ data/       captured traffic — the ground truth behind every claim in the docs
 Start with **[docs/protocol.md](docs/protocol.md)** — it is the document everything
 else depends on.
 
+## Two network modes, and they are mutually exclusive
+
+The Pi is either watching the hub talk to Hozelock, or standing in for Hozelock. It
+cannot do both, and each mode holds the same two interfaces.
+
+| | **bridge** — `capture/hozelock-bridge.sh` | **routed** — `capture/hozelock-route.sh` |
+|---|---|---|
+| hub talks to | the real `hoz3.com` | our server |
+| the Pi is | an invisible L2 tap, no IP | gateway and resolver on `10.0.9.x` |
+| use it for | capture, collecting checksum samples | the live test, and anything testing our responses |
+| set up in | [capture-setup.md](docs/capture-setup.md) | [live-test.md](docs/live-test.md) steps 6–7 |
+
+Switching to routed means stopping the bridge units first, or they reclaim the
+interface on the next boot:
+
+```bash
+sudo systemctl disable --now hozelock-capture.service hozelock-bridge.service
+sudo ip link del br0
+```
+
 ## The protocol, in one paragraph
 
 Cleartext HTTP on port 80, no auth, no TLS. The hub GETs

@@ -278,6 +278,9 @@ not need. They matter because the control API sits behind the same server, and
 `Allow-Origin: *` with `Allow-Methods: POST` is what would let a website you visit
 drive your tap.
 
+**Needs the hub cut over to our server — steps 6–10 above, not the capture bridge.**
+On the bridge the hub is talking to Hozelock and this flag changes nothing it sees.
+
 ```yaml
 hub_cors_headers: false
 ```
