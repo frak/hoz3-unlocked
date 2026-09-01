@@ -69,13 +69,17 @@ def encode_gap(units):
     out = bytearray()
     use_c9 = True
     while units >= CONT_C9_VALUE:
-        if use_c9:
+        # 0xff carries 255, so it cannot take a remainder of 200..254 -- fall
+        # back to 0xc9 rather than underflowing. Only reachable for gaps that
+        # captured programmes never contained, such as a multi-day pause.
+        if use_c9 or units < CONT_FF_VALUE:
             out.append(CONT_C9)
             units -= CONT_C9_VALUE
+            use_c9 = False
         else:
             out.extend((0xff, 0x00))
             units -= CONT_FF_VALUE
-        use_c9 = not use_c9
+            use_c9 = True
     out.append(units)
     return bytes(out)
 
