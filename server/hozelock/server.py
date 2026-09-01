@@ -17,25 +17,18 @@ TAP_PATH = re.compile(r'^/notify/([^/]+)/tap/(\d+)/$')
 
 
 # Reproduced from the capture, and inert for us: the hub is not a browser.
+#
+# The real service also sent Access-Control-* on every response. We do not: the
+# hub was served without them on 1 Sep 2026 and behaved identically (fetched
+# tap/0, settled `held` on our generation), so it does not read them -- and
+# `Allow-Origin: *` with `Allow-Methods: POST` in front of the control API is
+# exactly what would let a website you visit drive your tap. See protocol.md.
 HSTS_HEADER = ('Strict-Transport-Security', 'max-age=63072000; includeSubDomains')
-
-# Captured too, but these would green-light a cross-origin POST, so they are
-# attached per hub route rather than globally. Whether the hub reads them at all
-# is untested -- see the hub_cors_headers spike in docs/protocol.md.
-CORS_HEADERS = [
-    ('Access-Control-Allow-Origin', '*'),
-    ('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, DELETE, PUT'),
-    ('Access-Control-Max-Age', '1000'),
-    ('Access-Control-Allow-Headers',
-     'x-requested-with, Content-Type, origin, authorization, accept, '
-     'client-security-token'),
-]
 
 
 class Handler(BaseHTTPRequestHandler):
     protocol_version = 'HTTP/1.1'
     state = None
-    hub_cors_headers = True
 
     def version_string(self):
         return 'Apache'
@@ -45,7 +38,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def _send(self, body, content_type, status=200, headers=()):
         """The only writer. Headers are passed in, never defaulted, so a new
-        route cannot inherit the hub's CORS set by forgetting to opt out."""
+        route cannot silently inherit another's."""
         self.send_response(status)
         for name, value in headers:
             self.send_header(name, value)
@@ -56,11 +49,8 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def _reply(self, blob):
-        headers = [HSTS_HEADER]
-        if self.hub_cors_headers:
-            headers += CORS_HEADERS
         self._send(codec.wrap(blob).encode('latin1'),
-                   'text/plain;charset=ISO-8859-1', headers=headers)
+                   'text/plain;charset=ISO-8859-1', headers=[HSTS_HEADER])
 
     def do_GET(self):
         url = urlparse(self.path)
@@ -99,10 +89,8 @@ class Handler(BaseHTTPRequestHandler):
         self.send_error(404)
 
 
-def serve(state, host='0.0.0.0', port=80, hub_cors_headers=True):
-    handler = type('BoundHandler', (Handler,),
-                   {'state': state, 'hub_cors_headers': hub_cors_headers})
+def serve(state, host='0.0.0.0', port=80):
+    handler = type('BoundHandler', (Handler,), {'state': state})
     httpd = ThreadingHTTPServer((host, port), handler)
-    log.info('listening on %s:%s for hub %s (hub CORS headers %s)',
-             host, port, state.hub_id, 'on' if hub_cors_headers else 'off')
+    log.info('listening on %s:%s for hub %s', host, port, state.hub_id)
     return httpd

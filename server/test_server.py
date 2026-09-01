@@ -53,31 +53,30 @@ def cors_count(headers):
 
 
 def check_cors(st):
-    """The CORS set must reach hub routes and nothing else.
+    """No route may carry Access-Control-*.
 
-    This fails *open* -- a route that forgets to opt out silently becomes
-    cross-origin writable -- so every path is asserted, not just the happy one.
+    The hub was served without them on 1 Sep 2026 and behaved identically, so
+    they are gone -- and re-adding them would put `Allow-Origin: *` in front of
+    the control API. Every route is asserted because this fails open.
     """
     ok = True
-    for flag, want in ((True, 4), (False, 0)):
-        httpd = server.serve(st, host='127.0.0.1', port=0, hub_cors_headers=flag)
-        port = httpd.server_address[1]
-        threading.Thread(target=httpd.serve_forever, daemon=True).start()
-        try:
-            for label, path in (('heartbeat', f'/notify/{HUB}/'),
-                                ('tap/0', f'/notify/{HUB}/tap/0/')):
-                h = headers_for(port, path)
-                ok &= check(f'hub {label} CORS headers (flag={flag})',
-                            cors_count(h), want)
-                ok &= check(f'hub {label} keeps HSTS (flag={flag})',
-                            'Strict-Transport-Security' in h, True)
-            # Where /api/ will live: it must never inherit the hub's headers.
-            for label, path in (('404', '/nope'), ('api path', '/api/state')):
-                ok &= check(f'{label} carries no CORS headers (flag={flag})',
-                            cors_count(headers_for(port, path)), 0)
-        finally:
-            httpd.shutdown()
-            httpd.server_close()
+    httpd = server.serve(st, host='127.0.0.1', port=0)
+    port = httpd.server_address[1]
+    threading.Thread(target=httpd.serve_forever, daemon=True).start()
+    try:
+        for label, path in (('heartbeat', f'/notify/{HUB}/'),
+                            ('tap/0', f'/notify/{HUB}/tap/0/'),
+                            ('404', '/nope'),
+                            ('api path', '/api/state')):
+            ok &= check(f'{label} carries no CORS headers',
+                        cors_count(headers_for(port, path)), 0)
+        for label, path in (('heartbeat', f'/notify/{HUB}/'),
+                            ('tap/0', f'/notify/{HUB}/tap/0/')):
+            ok &= check(f'hub {label} keeps the captured HSTS header',
+                        'Strict-Transport-Security' in headers_for(port, path), True)
+    finally:
+        httpd.shutdown()
+        httpd.server_close()
     return ok
 
 

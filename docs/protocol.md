@@ -42,6 +42,19 @@ Three things a replacement server must honour:
   token, no coalescing. Any real HTTP server handles this; a hand-rolled socket listener must
   not assume one `read()` yields a whole request line.
 
+### The hub ignores the `Access-Control-*` headers — confirmed live, 1 September 2026
+
+The real service sent `Access-Control-Allow-Origin: *` and
+`Allow-Methods: POST, GET, OPTIONS, DELETE, PUT` on every response, and the replacement
+reproduced them in case the hub depended on them. It does not: served without them, the hub
+fetched `tap/0` and settled `held` on our generation exactly as before. CORS is a browser
+mechanism and the hub is not a browser.
+
+So **a replacement should not send them.** They are not merely redundant — the control API is
+served by the same listener, and `Allow-Origin: *` alongside `Allow-Methods: POST` is what
+would let a page you happen to visit drive your tap. `Strict-Transport-Security` is still
+reproduced; it is inert over plain HTTP and costs nothing.
+
 ### Cadence
 
 | | interval |
@@ -293,17 +306,6 @@ The blob was byte-identical to Hozelock's in the accepted case, so the checksum 
 difference that matters.
 
 ## Open questions
-
-- **Does the hub read the `Access-Control-*` headers?** The real service sent them on every
-  response and the replacement reproduces them, but CORS is a browser mechanism and the hub is
-  an embedded client that scans for `#!hb=` — so it almost certainly ignores them. Untested.
-  It matters because those headers sit in front of the control API too: `Allow-Origin: *` with
-  `Allow-Methods: POST` is what would let a website you visit drive your tap.
-
-  To settle it, set `hub_cors_headers: false` and watch three heartbeats and one `tap/0` fetch.
-  If the hub still fetches and `held` still settles on our generation, it does not read them
-  and they can be deleted outright. If it stops fetching, it does — keep them, scoped to the
-  hub routes as `server.py` already does. Either way, record the answer here.
 
 - **Request bytes 11–13** — radio link metrics of some kind. Decoding them needs the real
   service to compare against, so it must happen before April 2027 if those readings matter.
