@@ -9,3 +9,6 @@ capture/.hubid
 
 # Holds MQTT credentials and site coordinates
 server/config.yaml
+
+# Live schedule state; seeded from config.yaml, then authoritative
+server/state.json

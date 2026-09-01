@@ -105,7 +105,10 @@ def main(path=None):
 
     bridge = None
     if cfg.get('mqtt'):
-        bridge = mqtt_bridge.Bridge(st, **cfg['mqtt'])
+        bridge = mqtt_bridge.Bridge(
+            st, max_event_slots=cfg.get('max_event_slots',
+                                        mqtt_bridge.DEFAULT_SLOTS),
+            **cfg['mqtt'])
         bridge.start()
 
     threading.Thread(target=refresher, args=(st,), daemon=True).start()
