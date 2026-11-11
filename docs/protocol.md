@@ -112,7 +112,8 @@ Watering state, offsets 7–8. Byte 7 is a **bitfield**, byte 8 is the trigger:
 
 So `01 10` is a manual run, `01 04` a scheduled one, `02 00` idle-while-resyncing, and
 `03 10` a manual run begun *during* a resync — which is how the bitfield was found, live on
-11 November 2026, 20:18. Before that `02 00` had been recorded as an unexplained state seen
+11 November 2026, 20:18 (journal: `data/captures/livetest-20261111.log`, summarised in
+`data/events.log`). Before that `02 00` had been recorded as an unexplained state seen
 once for ~64 minutes, because a 47-hour capture caught it only while nothing was watering.
 All 1117 captured requests decode under this reading with nothing left over.
 

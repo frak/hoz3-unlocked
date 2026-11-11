@@ -1,0 +1,702 @@
+Nov 11 19:20:52 trixie systemd[1]: Started hozelock-server.service - Hozelock cloud replacement.
+Nov 11 19:20:54 trixie uv[1183]: 2026-11-11 19:20:54,091 INFO    hozelock  schedules loaded from /home/mikey/hoz3-unlocked/server/state.json (config.yaml `schedules:` ignored; delete the file to re-seed from config)
+Nov 11 19:20:54 trixie uv[1183]: 2026-11-11 19:20:54,107 INFO    hozelock.server  listening on 0.0.0.0:80 for hub ge7si1 (hub CORS headers off)
+Nov 11 19:20:54 trixie uv[1183]: 2026-11-11 19:20:54,214 INFO    hozelock.mqtt  connected to broker (Success)
+Nov 11 19:58:00 trixie uv[1183]: 2026-11-11 19:58:00,827 INFO    hozelock.mqtt  connected to broker (Success)
+Nov 11 19:58:14 trixie uv[1183]: 2026-11-11 19:58:14,552 INFO    hozelock.server  heartbeat: state=idle held=0 generation=08c3
+Nov 11 19:58:17 trixie uv[1183]: 2026-11-11 19:58:17,277 INFO    hozelock.server  tap/0 fetch: generation=08c3 pending=0
+Nov 11 19:58:24 trixie uv[1183]: 2026-11-11 19:58:24,480 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 19:58:31 trixie uv[1183]: 2026-11-11 19:58:31,476 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 19:58:38 trixie uv[1183]: 2026-11-11 19:58:38,482 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 19:59:12 trixie uv[1183]: 2026-11-11 19:59:12,340 INFO    hozelock.server  heartbeat: state=idle held=0 generation=08c3
+Nov 11 19:59:24 trixie uv[1183]: 2026-11-11 19:59:24,054 INFO    hozelock.server  heartbeat: state=idle held=0 generation=08c3
+Nov 11 19:59:26 trixie uv[1183]: 2026-11-11 19:59:26,881 INFO    hozelock.server  tap/0 fetch: generation=08c3 pending=0
+Nov 11 19:59:34 trixie uv[1183]: 2026-11-11 19:59:34,742 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 19:59:41 trixie uv[1183]: 2026-11-11 19:59:41,544 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 19:59:48 trixie uv[1183]: 2026-11-11 19:59:48,557 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 19:59:55 trixie uv[1183]: 2026-11-11 19:59:55,554 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:00:02 trixie uv[1183]: 2026-11-11 20:00:02,547 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:00:09 trixie uv[1183]: 2026-11-11 20:00:09,553 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:00:16 trixie uv[1183]: 2026-11-11 20:00:16,550 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:00:23 trixie uv[1183]: 2026-11-11 20:00:23,543 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:00:30 trixie uv[1183]: 2026-11-11 20:00:30,612 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:00:37 trixie uv[1183]: 2026-11-11 20:00:37,536 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:00:44 trixie uv[1183]: 2026-11-11 20:00:44,546 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:00:51 trixie uv[1183]: 2026-11-11 20:00:51,536 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:00:58 trixie uv[1183]: 2026-11-11 20:00:58,545 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:01:05 trixie uv[1183]: 2026-11-11 20:01:05,991 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:01:12 trixie uv[1183]: 2026-11-11 20:01:12,547 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:01:19 trixie uv[1183]: 2026-11-11 20:01:19,538 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:01:26 trixie uv[1183]: 2026-11-11 20:01:26,553 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:01:33 trixie uv[1183]: 2026-11-11 20:01:33,537 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:01:40 trixie uv[1183]: 2026-11-11 20:01:40,543 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:01:47 trixie uv[1183]: 2026-11-11 20:01:47,625 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:01:54 trixie uv[1183]: 2026-11-11 20:01:54,973 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:02:01 trixie uv[1183]: 2026-11-11 20:02:01,542 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:02:08 trixie uv[1183]: 2026-11-11 20:02:08,539 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:02:15 trixie uv[1183]: 2026-11-11 20:02:15,542 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:02:22 trixie uv[1183]: 2026-11-11 20:02:22,538 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:02:29 trixie uv[1183]: 2026-11-11 20:02:29,535 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:02:36 trixie uv[1183]: 2026-11-11 20:02:36,541 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:02:43 trixie uv[1183]: 2026-11-11 20:02:43,968 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:02:50 trixie uv[1183]: 2026-11-11 20:02:50,546 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:02:57 trixie uv[1183]: 2026-11-11 20:02:57,537 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3
+Nov 11 20:02:59 trixie uv[1183]: 2026-11-11 20:02:59,916 INFO    hozelock.mqtt  command water_now = PRESS
+Nov 11 20:03:04 trixie uv[1183]: 2026-11-11 20:03:04,614 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c4
+Nov 11 20:03:07 trixie uv[1183]: 2026-11-11 20:03:07,340 INFO    hozelock.server  tap/0 fetch: generation=08c4 pending=1
+Nov 11 20:03:14 trixie uv[1183]: 2026-11-11 20:03:14,548 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:03:21 trixie uv[1183]: 2026-11-11 20:03:21,542 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:03:28 trixie uv[1183]: 2026-11-11 20:03:28,535 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:03:35 trixie uv[1183]: 2026-11-11 20:03:35,539 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:03:42 trixie uv[1183]: 2026-11-11 20:03:42,535 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:03:49 trixie uv[1183]: 2026-11-11 20:03:49,528 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:03:56 trixie uv[1183]: 2026-11-11 20:03:56,544 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:04:03 trixie uv[1183]: 2026-11-11 20:04:03,537 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:04:10 trixie uv[1183]: 2026-11-11 20:04:10,534 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:04:17 trixie uv[1183]: 2026-11-11 20:04:17,618 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:04:24 trixie uv[1183]: 2026-11-11 20:04:24,974 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:04:31 trixie uv[1183]: 2026-11-11 20:04:31,533 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:04:38 trixie uv[1183]: 2026-11-11 20:04:38,545 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:04:45 trixie uv[1183]: 2026-11-11 20:04:45,539 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:04:52 trixie uv[1183]: 2026-11-11 20:04:52,525 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:04:59 trixie uv[1183]: 2026-11-11 20:04:59,544 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:05:06 trixie uv[1183]: 2026-11-11 20:05:06,535 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:05:13 trixie uv[1183]: 2026-11-11 20:05:13,963 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:05:20 trixie uv[1183]: 2026-11-11 20:05:20,540 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:05:27 trixie uv[1183]: 2026-11-11 20:05:27,534 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:05:34 trixie uv[1183]: 2026-11-11 20:05:34,599 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:05:41 trixie uv[1183]: 2026-11-11 20:05:41,524 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:05:48 trixie uv[1183]: 2026-11-11 20:05:48,536 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:05:55 trixie uv[1183]: 2026-11-11 20:05:55,532 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:06:03 trixie uv[1183]: 2026-11-11 20:06:03,009 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:06:09 trixie uv[1183]: 2026-11-11 20:06:09,529 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:06:16 trixie uv[1183]: 2026-11-11 20:06:16,522 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:06:23 trixie uv[1183]: 2026-11-11 20:06:23,540 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:06:30 trixie uv[1183]: 2026-11-11 20:06:30,540 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:06:37 trixie uv[1183]: 2026-11-11 20:06:37,531 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:06:44 trixie uv[1183]: 2026-11-11 20:06:44,527 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:06:52 trixie uv[1183]: 2026-11-11 20:06:52,035 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:06:59 trixie uv[1183]: 2026-11-11 20:06:59,520 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:07:06 trixie uv[1183]: 2026-11-11 20:07:06,526 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:07:13 trixie uv[1183]: 2026-11-11 20:07:13,536 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:07:20 trixie uv[1183]: 2026-11-11 20:07:20,535 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:07:27 trixie uv[1183]: 2026-11-11 20:07:27,525 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:07:34 trixie uv[1183]: 2026-11-11 20:07:34,516 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:07:41 trixie uv[1183]: 2026-11-11 20:07:41,974 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:07:48 trixie uv[1183]: 2026-11-11 20:07:48,521 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:07:55 trixie uv[1183]: 2026-11-11 20:07:55,536 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:08:02 trixie uv[1183]: 2026-11-11 20:08:02,521 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:08:09 trixie uv[1183]: 2026-11-11 20:08:09,592 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:08:16 trixie uv[1183]: 2026-11-11 20:08:16,536 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:08:23 trixie uv[1183]: 2026-11-11 20:08:23,517 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:08:30 trixie uv[1183]: 2026-11-11 20:08:30,971 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:08:37 trixie uv[1183]: 2026-11-11 20:08:37,516 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:08:44 trixie uv[1183]: 2026-11-11 20:08:44,525 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:08:51 trixie uv[1183]: 2026-11-11 20:08:51,518 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:08:58 trixie uv[1183]: 2026-11-11 20:08:58,518 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:09:05 trixie uv[1183]: 2026-11-11 20:09:05,515 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:09:12 trixie uv[1183]: 2026-11-11 20:09:12,521 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:09:19 trixie uv[1183]: 2026-11-11 20:09:19,970 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:09:26 trixie uv[1183]: 2026-11-11 20:09:26,592 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:09:33 trixie uv[1183]: 2026-11-11 20:09:33,533 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:09:40 trixie uv[1183]: 2026-11-11 20:09:40,532 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:09:47 trixie uv[1183]: 2026-11-11 20:09:47,513 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:09:54 trixie uv[1183]: 2026-11-11 20:09:54,532 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:10:01 trixie uv[1183]: 2026-11-11 20:10:01,522 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:10:08 trixie uv[1183]: 2026-11-11 20:10:08,955 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:10:15 trixie uv[1183]: 2026-11-11 20:10:15,518 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:10:22 trixie uv[1183]: 2026-11-11 20:10:22,512 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:10:29 trixie uv[1183]: 2026-11-11 20:10:29,509 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:10:36 trixie uv[1183]: 2026-11-11 20:10:36,527 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:10:43 trixie uv[1183]: 2026-11-11 20:10:43,602 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:10:50 trixie uv[1183]: 2026-11-11 20:10:50,514 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:10:57 trixie uv[1183]: 2026-11-11 20:10:57,964 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c4
+Nov 11 20:10:59 trixie systemd[1]: Stopping hozelock-server.service - Hozelock cloud replacement...
+Nov 11 20:10:59 trixie systemd[1]: hozelock-server.service: Main process exited, code=exited, status=143/n/a
+Nov 11 20:10:59 trixie systemd[1]: hozelock-server.service: Failed with result 'exit-code'.
+Nov 11 20:10:59 trixie systemd[1]: Stopped hozelock-server.service - Hozelock cloud replacement.
+Nov 11 20:10:59 trixie systemd[1]: hozelock-server.service: Consumed 3.502s CPU time.
+Nov 11 20:10:59 trixie systemd[1]: Started hozelock-server.service - Hozelock cloud replacement.
+Nov 11 20:11:00 trixie uv[2065]: 2026-11-11 20:11:00,206 INFO    hozelock  schedule 'Default' loaded from config.yaml
+Nov 11 20:11:00 trixie uv[2065]: 2026-11-11 20:11:00,236 INFO    hozelock.server  listening on 0.0.0.0:80 for hub ge7si1
+Nov 11 20:11:00 trixie uv[2065]: 2026-11-11 20:11:00,606 INFO    hozelock.mqtt  connected to broker (Success)
+Nov 11 20:11:04 trixie uv[2065]: 2026-11-11 20:11:04,517 INFO    hozelock.server  heartbeat: state=idle held=2244 generation=08c3 link=02 00 00 (no controller!)
+Nov 11 20:11:07 trixie uv[2065]: 2026-11-11 20:11:07,242 INFO    hozelock.server  tap/0 fetch: generation=08c3 pending=0
+Nov 11 20:11:08 trixie systemd[1]: Stopping hozelock-server.service - Hozelock cloud replacement...
+Nov 11 20:11:08 trixie systemd[1]: hozelock-server.service: Main process exited, code=exited, status=143/n/a
+Nov 11 20:11:08 trixie systemd[1]: hozelock-server.service: Failed with result 'exit-code'.
+Nov 11 20:11:08 trixie systemd[1]: Stopped hozelock-server.service - Hozelock cloud replacement.
+Nov 11 20:11:08 trixie systemd[1]: Started hozelock-server.service - Hozelock cloud replacement.
+Nov 11 20:11:08 trixie uv[2079]: 2026-11-11 20:11:08,565 INFO    hozelock  schedule 'Default' loaded from config.yaml
+Nov 11 20:11:08 trixie uv[2079]: 2026-11-11 20:11:08,595 INFO    hozelock.server  listening on 0.0.0.0:80 for hub ge7si1
+Nov 11 20:11:08 trixie uv[2079]: 2026-11-11 20:11:08,988 INFO    hozelock.mqtt  connected to broker (Success)
+Nov 11 20:11:14 trixie uv[2079]: 2026-11-11 20:11:14,517 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3 link=02 00 00 (no controller!)
+Nov 11 20:11:21 trixie uv[2079]: 2026-11-11 20:11:21,529 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3 link=02 00 00 (no controller!)
+Nov 11 20:11:28 trixie uv[2079]: 2026-11-11 20:11:28,525 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3 link=02 00 00 (no controller!)
+Nov 11 20:11:35 trixie uv[2079]: 2026-11-11 20:11:35,527 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3 link=02 00 00 (no controller!)
+Nov 11 20:12:10 trixie uv[2079]: 2026-11-11 20:12:10,885 INFO    hozelock.server  heartbeat: state=idle held=0 generation=08c3 link=01 00 00 (no controller!)
+Nov 11 20:12:22 trixie uv[2079]: 2026-11-11 20:12:22,664 INFO    hozelock.server  heartbeat: state=idle held=0 generation=08c3 link=01 00 00 (no controller!)
+Nov 11 20:12:25 trixie uv[2079]: 2026-11-11 20:12:25,392 INFO    hozelock.server  tap/0 fetch: generation=08c3 pending=0
+Nov 11 20:12:32 trixie uv[2079]: 2026-11-11 20:12:32,290 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3 link=01 00 00 (no controller!)
+Nov 11 20:12:39 trixie uv[2079]: 2026-11-11 20:12:39,302 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3 link=01 00 00 (no controller!)
+Nov 11 20:12:46 trixie uv[2079]: 2026-11-11 20:12:46,299 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3 link=01 00 00 (no controller!)
+Nov 11 20:12:53 trixie uv[2079]: 2026-11-11 20:12:53,289 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3 link=01 00 00 (no controller!)
+Nov 11 20:13:00 trixie uv[2079]: 2026-11-11 20:13:00,289 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3 link=01 00 00 (no controller!)
+Nov 11 20:13:07 trixie uv[2079]: 2026-11-11 20:13:07,303 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3 link=01 00 00 (no controller!)
+Nov 11 20:13:13 trixie uv[2079]: 2026-11-11 20:13:13,478 INFO    hozelock.server  heartbeat: state=unknown 0b00 held=2243 generation=08c3 link=02 00 00 (no controller!)
+Nov 11 20:13:20 trixie uv[2079]: 2026-11-11 20:13:20,300 INFO    hozelock.server  heartbeat: state=unknown 0b00 held=2243 generation=08c3 link=01 00 00 (no controller!)
+Nov 11 20:13:27 trixie uv[2079]: 2026-11-11 20:13:27,375 INFO    hozelock.server  heartbeat: state=unknown 0b00 held=2243 generation=08c3 link=01 00 00 (no controller!)
+Nov 11 20:13:34 trixie uv[2079]: 2026-11-11 20:13:34,294 INFO    hozelock.server  heartbeat: state=unknown 0b00 held=2243 generation=08c3 link=01 00 00 (no controller!)
+Nov 11 20:13:41 trixie uv[2079]: 2026-11-11 20:13:41,290 INFO    hozelock.server  heartbeat: state=unknown 0b00 held=2243 generation=08c3 link=01 00 00 (no controller!)
+Nov 11 20:13:48 trixie uv[2079]: 2026-11-11 20:13:48,287 INFO    hozelock.server  heartbeat: state=unknown 0b00 held=2243 generation=08c3 link=01 00 00 (no controller!)
+Nov 11 20:13:55 trixie uv[2079]: 2026-11-11 20:13:55,287 INFO    hozelock.server  heartbeat: state=unknown 0b00 held=2243 generation=08c3 link=01 00 00 (no controller!)
+Nov 11 20:14:02 trixie uv[2079]: 2026-11-11 20:14:02,768 INFO    hozelock.server  heartbeat: state=unknown 0b00 held=2243 generation=08c3 link=02 00 00 (no controller!)
+Nov 11 20:14:09 trixie uv[2079]: 2026-11-11 20:14:09,292 INFO    hozelock.server  heartbeat: state=unknown 0b00 held=2243 generation=08c3 link=02 00 00 (no controller!)
+Nov 11 20:14:16 trixie uv[2079]: 2026-11-11 20:14:16,286 INFO    hozelock.server  heartbeat: state=unknown 0b00 held=2243 generation=08c3 link=02 00 00 (no controller!)
+Nov 11 20:14:23 trixie uv[2079]: 2026-11-11 20:14:23,282 INFO    hozelock.server  heartbeat: state=unknown 0b00 held=2243 generation=08c3 link=02 00 00 (no controller!)
+Nov 11 20:14:30 trixie uv[2079]: 2026-11-11 20:14:30,282 INFO    hozelock.server  heartbeat: state=unknown 0b00 held=2243 generation=08c3 link=02 00 00 (no controller!)
+Nov 11 20:14:37 trixie uv[2079]: 2026-11-11 20:14:37,281 INFO    hozelock.server  heartbeat: state=unknown 0b00 held=2243 generation=08c3 link=02 00 00 (no controller!)
+Nov 11 20:15:10 trixie uv[2079]: 2026-11-11 20:15:10,932 INFO    hozelock.server  heartbeat: state=idle held=0 generation=08c3 link=01 00 00 (no controller!)
+Nov 11 20:15:22 trixie uv[2079]: 2026-11-11 20:15:22,718 INFO    hozelock.server  heartbeat: state=idle held=0 generation=08c3 link=01 00 00 (no controller!)
+Nov 11 20:15:25 trixie uv[2079]: 2026-11-11 20:15:25,446 INFO    hozelock.server  tap/0 fetch: generation=08c3 pending=0
+Nov 11 20:15:32 trixie uv[2079]: 2026-11-11 20:15:32,340 INFO    hozelock.server  heartbeat: state=idle held=2243 generation=08c3 link=01 00 00 (no controller!)
+Nov 11 20:15:38 trixie uv[2079]: 2026-11-11 20:15:38,515 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=01 00 00 (no controller!)
+Nov 11 20:15:45 trixie uv[2079]: 2026-11-11 20:15:45,339 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=01 00 00 (no controller!)
+Nov 11 20:15:51 trixie uv[2079]: 2026-11-11 20:15:51,874 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=93 83 00
+Nov 11 20:15:58 trixie uv[2079]: 2026-11-11 20:15:58,339 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=93 83 00
+Nov 11 20:16:05 trixie uv[2079]: 2026-11-11 20:16:05,342 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=02 83 00
+Nov 11 20:16:12 trixie uv[2079]: 2026-11-11 20:16:12,105 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=93 83 00
+Nov 11 20:16:19 trixie uv[2079]: 2026-11-11 20:16:19,335 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=93 83 00
+Nov 11 20:16:26 trixie uv[2079]: 2026-11-11 20:16:26,030 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=93 83 03
+Nov 11 20:16:33 trixie uv[2079]: 2026-11-11 20:16:33,341 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=93 83 03
+Nov 11 20:16:39 trixie uv[2079]: 2026-11-11 20:16:39,857 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=94 83 05
+Nov 11 20:16:46 trixie uv[2079]: 2026-11-11 20:16:46,337 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=94 83 05
+Nov 11 20:16:53 trixie uv[2079]: 2026-11-11 20:16:53,333 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=94 83 05
+Nov 11 20:17:00 trixie uv[2079]: 2026-11-11 20:17:00,767 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=02 83 05
+Nov 11 20:17:07 trixie uv[2079]: 2026-11-11 20:17:07,600 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=94 83 05
+Nov 11 20:17:13 trixie uv[2079]: 2026-11-11 20:17:13,887 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=94 83 05
+Nov 11 20:17:21 trixie uv[2079]: 2026-11-11 20:17:21,345 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=94 83 05
+Nov 11 20:17:27 trixie uv[2079]: 2026-11-11 20:17:27,846 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=94 83 05
+Nov 11 20:17:34 trixie uv[2079]: 2026-11-11 20:17:34,593 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=94 83 05
+Nov 11 20:17:41 trixie uv[2079]: 2026-11-11 20:17:41,419 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=94 83 05
+Nov 11 20:17:48 trixie uv[2079]: 2026-11-11 20:17:48,331 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=94 83 05
+Nov 11 20:17:55 trixie uv[2079]: 2026-11-11 20:17:55,344 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=94 83 05
+Nov 11 20:18:01 trixie uv[2079]: 2026-11-11 20:18:01,891 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=94 83 05
+Nov 11 20:18:09 trixie uv[2079]: 2026-11-11 20:18:09,340 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=94 83 05
+Nov 11 20:18:16 trixie uv[2079]: 2026-11-11 20:18:16,327 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=94 83 05
+Nov 11 20:18:23 trixie uv[2079]: 2026-11-11 20:18:23,780 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c3 link=02 83 05
+Nov 11 20:18:26 trixie uv[2079]: 2026-11-11 20:18:26,353 INFO    hozelock.mqtt  command water_now = PRESS
+Nov 11 20:18:30 trixie uv[2079]: 2026-11-11 20:18:30,336 INFO    hozelock.server  heartbeat: state=state-02 held=2243 generation=08c4 link=02 83 05
+Nov 11 20:18:33 trixie uv[2079]: 2026-11-11 20:18:33,064 INFO    hozelock.server  tap/0 fetch: generation=08c4 pending=1
+Nov 11 20:18:40 trixie uv[2079]: 2026-11-11 20:18:40,332 INFO    hozelock.server  heartbeat: state=state-02 held=2244 generation=08c4 link=02 83 05
+Nov 11 20:18:47 trixie uv[2079]: 2026-11-11 20:18:47,344 INFO    hozelock.server  heartbeat: state=state-02 held=2244 generation=08c4 link=02 83 05
+Nov 11 20:18:53 trixie uv[2079]: 2026-11-11 20:18:53,714 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2244 generation=08c4 link=94 82 05
+Nov 11 20:18:59 trixie uv[2079]: 2026-11-11 20:18:59,758 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2244 generation=08c4 link=94 82 05
+Nov 11 20:19:05 trixie uv[2079]: 2026-11-11 20:19:05,797 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2244 generation=08c4 link=02 82 05
+Nov 11 20:19:11 trixie uv[2079]: 2026-11-11 20:19:11,901 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2244 generation=08c4 link=95 82 06
+Nov 11 20:19:18 trixie uv[2079]: 2026-11-11 20:19:18,337 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2244 generation=08c4 link=95 82 06
+Nov 11 20:19:25 trixie uv[2079]: 2026-11-11 20:19:25,339 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2244 generation=08c4 link=95 82 06
+Nov 11 20:19:32 trixie uv[2079]: 2026-11-11 20:19:32,602 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2244 generation=08c4 link=95 82 06
+Nov 11 20:19:39 trixie uv[2079]: 2026-11-11 20:19:39,332 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2244 generation=08c4 link=95 82 06
+Nov 11 20:19:46 trixie uv[2079]: 2026-11-11 20:19:46,342 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2244 generation=08c4 link=95 82 06
+Nov 11 20:19:53 trixie uv[2079]: 2026-11-11 20:19:53,332 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2244 generation=08c4 link=95 82 06
+Nov 11 20:20:00 trixie uv[2079]: 2026-11-11 20:20:00,322 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2244 generation=08c4 link=95 82 06
+Nov 11 20:20:07 trixie uv[2079]: 2026-11-11 20:20:07,412 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2244 generation=08c4 link=95 82 06
+Nov 11 20:20:14 trixie uv[2079]: 2026-11-11 20:20:14,337 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2244 generation=08c4 link=95 82 06
+Nov 11 20:20:21 trixie uv[2079]: 2026-11-11 20:20:21,765 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2244 generation=08c4 link=02 82 06
+Nov 11 20:20:28 trixie uv[2079]: 2026-11-11 20:20:28,337 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2244 generation=08c4 link=02 82 06
+Nov 11 20:20:35 trixie uv[2079]: 2026-11-11 20:20:35,330 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2244 generation=08c4 link=02 82 06
+Nov 11 20:20:42 trixie uv[2079]: 2026-11-11 20:20:42,323 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2244 generation=08c4 link=02 82 06
+Nov 11 20:20:49 trixie uv[2079]: 2026-11-11 20:20:49,339 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2244 generation=08c4 link=02 82 06
+Nov 11 20:20:55 trixie uv[2079]: 2026-11-11 20:20:55,887 INFO    hozelock.server  heartbeat: state=state-02 held=2244 generation=08c4 link=95 82 06
+Nov 11 20:21:03 trixie uv[2079]: 2026-11-11 20:21:03,335 INFO    hozelock.server  heartbeat: state=state-02 held=2244 generation=08c4 link=95 82 06
+Nov 11 20:21:10 trixie uv[2079]: 2026-11-11 20:21:10,763 INFO    hozelock.server  heartbeat: state=state-02 held=2244 generation=08c4 link=02 82 06
+Nov 11 20:21:16 trixie uv[2079]: 2026-11-11 20:21:16,849 INFO    hozelock.server  heartbeat: state=state-02 held=2244 generation=08c4 link=94 83 02
+Nov 11 20:21:23 trixie uv[2079]: 2026-11-11 20:21:23,400 INFO    hozelock.server  heartbeat: state=state-02 held=2244 generation=08c4 link=94 83 02
+Nov 11 20:21:30 trixie uv[2079]: 2026-11-11 20:21:30,586 INFO    hozelock.server  heartbeat: state=state-02 held=2244 generation=08c4 link=94 83 02
+Nov 11 20:21:37 trixie uv[2079]: 2026-11-11 20:21:37,331 INFO    hozelock.server  heartbeat: state=state-02 held=2244 generation=08c4 link=94 83 02
+Nov 11 20:21:43 trixie uv[2079]: 2026-11-11 20:21:43,886 INFO    hozelock.server  heartbeat: state=state-02 held=2244 generation=08c4 link=94 83 02
+Nov 11 20:21:49 trixie uv[2079]: 2026-11-11 20:21:49,847 INFO    hozelock.server  heartbeat: state=state-02 held=2244 generation=08c4 link=94 83 05
+Nov 11 20:21:56 trixie uv[2079]: 2026-11-11 20:21:56,327 INFO    hozelock.server  heartbeat: state=state-02 held=2244 generation=08c4 link=94 83 05
+Nov 11 20:22:03 trixie uv[2079]: 2026-11-11 20:22:03,326 INFO    hozelock.server  heartbeat: state=state-02 held=2244 generation=08c4 link=94 83 05
+Nov 11 20:22:10 trixie uv[2079]: 2026-11-11 20:22:10,320 INFO    hozelock.server  heartbeat: state=state-02 held=2244 generation=08c4 link=94 83 05
+Nov 11 20:22:17 trixie uv[2079]: 2026-11-11 20:22:17,326 INFO    hozelock.server  heartbeat: state=state-02 held=2244 generation=08c4 link=02 83 05
+Nov 11 20:22:24 trixie uv[2079]: 2026-11-11 20:22:24,551 INFO    hozelock.mqtt  command stop = PRESS
+Nov 11 20:22:24 trixie uv[2079]: 2026-11-11 20:22:24,587 INFO    hozelock.server  heartbeat: state=state-02 held=2244 generation=08c5 link=94 83 05
+Nov 11 20:22:27 trixie uv[2079]: 2026-11-11 20:22:27,319 INFO    hozelock.server  tap/0 fetch: generation=08c5 pending=2
+Nov 11 20:22:33 trixie uv[2079]: 2026-11-11 20:22:33,862 INFO    hozelock.server  heartbeat: state=state-02 held=2245 generation=08c5 link=94 83 05
+Nov 11 20:22:41 trixie uv[2079]: 2026-11-11 20:22:41,325 INFO    hozelock.server  heartbeat: state=state-02 held=2245 generation=08c5 link=94 83 05
+Nov 11 20:22:48 trixie uv[2079]: 2026-11-11 20:22:48,325 INFO    hozelock.server  heartbeat: state=state-02 held=2245 generation=08c5 link=94 83 05
+Nov 11 20:22:55 trixie uv[2079]: 2026-11-11 20:22:55,324 INFO    hozelock.server  heartbeat: state=state-02 held=2245 generation=08c5 link=94 83 05
+Nov 11 20:23:02 trixie uv[2079]: 2026-11-11 20:23:02,327 INFO    hozelock.server  heartbeat: state=state-02 held=2245 generation=08c5 link=94 83 05
+Nov 11 20:23:09 trixie uv[2079]: 2026-11-11 20:23:09,324 INFO    hozelock.server  heartbeat: state=state-02 held=2245 generation=08c5 link=94 83 05
+Nov 11 20:23:15 trixie uv[2079]: 2026-11-11 20:23:15,898 INFO    hozelock.server  heartbeat: state=state-02 held=2245 generation=08c5 link=94 83 01
+Nov 11 20:23:22 trixie uv[2079]: 2026-11-11 20:23:22,326 INFO    hozelock.server  heartbeat: state=state-02 held=2245 generation=08c5 link=94 83 01
+Nov 11 20:23:29 trixie uv[2079]: 2026-11-11 20:23:29,325 INFO    hozelock.server  heartbeat: state=state-02 held=2245 generation=08c5 link=94 83 01
+Nov 11 20:23:36 trixie uv[2079]: 2026-11-11 20:23:36,595 INFO    hozelock.server  heartbeat: state=state-02 held=2245 generation=08c5 link=94 83 01
+Nov 11 20:23:43 trixie uv[2079]: 2026-11-11 20:23:43,339 INFO    hozelock.server  heartbeat: state=state-02 held=2245 generation=08c5 link=94 83 01
+Nov 11 20:23:48 trixie uv[2079]: 2026-11-11 20:23:48,964 INFO    hozelock.mqtt  command water_now = PRESS
+Nov 11 20:23:50 trixie uv[2079]: 2026-11-11 20:23:50,404 INFO    hozelock.server  heartbeat: state=state-02 held=2245 generation=08c6 link=94 83 01
+Nov 11 20:23:52 trixie uv[2079]: 2026-11-11 20:23:52,884 INFO    hozelock.server  tap/0 fetch: generation=08c6 pending=1
+Nov 11 20:24:00 trixie uv[2079]: 2026-11-11 20:24:00,347 INFO    hozelock.server  heartbeat: state=state-02 held=2246 generation=08c6 link=94 83 01
+Nov 11 20:24:07 trixie uv[2079]: 2026-11-11 20:24:07,339 INFO    hozelock.server  heartbeat: state=state-02 held=2246 generation=08c6 link=94 83 01
+Nov 11 20:24:13 trixie uv[2079]: 2026-11-11 20:24:13,836 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2246 generation=08c6 link=94 83 01
+Nov 11 20:24:19 trixie uv[2079]: 2026-11-11 20:24:19,881 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2246 generation=08c6 link=02 83 01
+Nov 11 20:24:26 trixie uv[2079]: 2026-11-11 20:24:26,136 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2246 generation=08c6 link=94 83 01
+Nov 11 20:24:33 trixie uv[2079]: 2026-11-11 20:24:33,343 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2246 generation=08c6 link=94 83 01
+Nov 11 20:24:39 trixie uv[2079]: 2026-11-11 20:24:39,981 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2246 generation=08c6 link=94 83 02
+Nov 11 20:24:47 trixie uv[2079]: 2026-11-11 20:24:47,349 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2246 generation=08c6 link=94 83 02
+Nov 11 20:24:53 trixie uv[2079]: 2026-11-11 20:24:53,880 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2246 generation=08c6 link=94 83 04
+Nov 11 20:25:00 trixie uv[2079]: 2026-11-11 20:25:00,424 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2246 generation=08c6 link=94 83 04
+Nov 11 20:25:07 trixie uv[2079]: 2026-11-11 20:25:07,363 INFO    hozelock.server  heartbeat: state=unknown 0310 held=2246 generation=08c6 link=94 83 04
+Nov 11 20:25:14 trixie uv[2079]: 2026-11-11 20:25:14,629 INFO    hozelock.server  heartbeat: state=state-02 held=2246 generation=08c6 link=94 83 04
+Nov 11 20:25:21 trixie uv[2079]: 2026-11-11 20:25:21,366 INFO    hozelock.server  heartbeat: state=state-02 held=2246 generation=08c6 link=94 83 04
+Nov 11 20:25:28 trixie uv[2079]: 2026-11-11 20:25:28,361 INFO    hozelock.server  heartbeat: state=state-02 held=2246 generation=08c6 link=94 83 04
+Nov 11 20:25:35 trixie uv[2079]: 2026-11-11 20:25:35,359 INFO    hozelock.server  heartbeat: state=state-02 held=2246 generation=08c6 link=94 83 04
+Nov 11 20:25:42 trixie uv[2079]: 2026-11-11 20:25:42,351 INFO    hozelock.server  heartbeat: state=state-02 held=2246 generation=08c6 link=94 83 04
+Nov 11 20:25:49 trixie uv[2079]: 2026-11-11 20:25:49,362 INFO    hozelock.server  heartbeat: state=state-02 held=2246 generation=08c6 link=94 83 04
+Nov 11 20:25:52 trixie uv[2079]: 2026-11-11 20:25:52,071 INFO    hozelock.mqtt  command water_now = PRESS
+Nov 11 20:25:55 trixie uv[2079]: 2026-11-11 20:25:55,920 INFO    hozelock.server  heartbeat: state=state-02 held=2246 generation=08c7 link=02 83 04
+Nov 11 20:25:58 trixie uv[2079]: 2026-11-11 20:25:58,648 INFO    hozelock.server  tap/0 fetch: generation=08c7 pending=1
+Nov 11 20:26:05 trixie uv[2079]: 2026-11-11 20:26:05,824 INFO    hozelock.server  heartbeat: state=state-02 held=2247 generation=08c7 link=94 84 04
+Nov 11 20:26:12 trixie uv[2079]: 2026-11-11 20:26:12,435 INFO    hozelock.server  heartbeat: state=state-02 held=2247 generation=08c7 link=94 84 04
+Nov 11 20:26:19 trixie uv[2079]: 2026-11-11 20:26:19,376 INFO    hozelock.server  heartbeat: state=state-02 held=2247 generation=08c7 link=94 84 04
+Nov 11 20:26:25 trixie uv[2079]: 2026-11-11 20:26:25,794 INFO    hozelock.server  heartbeat: state=state-02 held=2247 generation=08c7 link=94 84 04
+Nov 11 20:26:30 trixie uv[2079]: 2026-11-11 20:26:30,825 INFO    hozelock.mqtt  command stop = PRESS
+Nov 11 20:26:30 trixie uv[2079]: 2026-11-11 20:26:30,826 WARNING hozelock.state  replacing an undelivered water command with stop - the hub never collected the first one
+Nov 11 20:26:31 trixie uv[2079]: 2026-11-11 20:26:31,829 INFO    hozelock.server  heartbeat: state=state-02 held=2247 generation=08c8 link=94 84 04
+Nov 11 20:26:34 trixie uv[2079]: 2026-11-11 20:26:34,556 INFO    hozelock.server  tap/0 fetch: generation=08c8 pending=2
+Nov 11 20:26:42 trixie uv[2079]: 2026-11-11 20:26:42,374 INFO    hozelock.server  heartbeat: state=state-02 held=2248 generation=08c8 link=94 84 04
+Nov 11 20:26:49 trixie uv[2079]: 2026-11-11 20:26:49,375 INFO    hozelock.server  heartbeat: state=state-02 held=2248 generation=08c8 link=02 84 04
+Nov 11 20:26:55 trixie uv[2079]: 2026-11-11 20:26:55,955 INFO    hozelock.server  heartbeat: state=state-02 held=2248 generation=08c8 link=94 84 04
+Nov 11 20:27:01 trixie uv[2079]: 2026-11-11 20:27:01,043 INFO    hozelock.mqtt  command water_now = PRESS
+Nov 11 20:27:01 trixie uv[2079]: 2026-11-11 20:27:01,044 WARNING hozelock.state  replacing an undelivered stop command with water - the hub never collected the first one
+Nov 11 20:27:01 trixie uv[2079]: 2026-11-11 20:27:01,798 INFO    hozelock.server  heartbeat: state=state-02 held=2248 generation=08d5 link=94 84 04
+Nov 11 20:27:04 trixie uv[2079]: 2026-11-11 20:27:04,524 INFO    hozelock.server  tap/0 fetch: generation=08d5 pending=1
+Nov 11 20:27:11 trixie uv[2079]: 2026-11-11 20:27:11,384 INFO    hozelock.server  heartbeat: state=state-02 held=2261 generation=08d5 link=94 84 04
+Nov 11 20:27:14 trixie uv[2079]: 2026-11-11 20:27:14,594 INFO    hozelock.mqtt  command stop = PRESS
+Nov 11 20:27:14 trixie uv[2079]: 2026-11-11 20:27:14,594 WARNING hozelock.state  replacing an undelivered water command with stop - the hub never collected the first one
+Nov 11 20:27:18 trixie uv[2079]: 2026-11-11 20:27:18,444 INFO    hozelock.server  heartbeat: state=state-02 held=2261 generation=08ef link=94 84 04
+Nov 11 20:27:21 trixie uv[2079]: 2026-11-11 20:27:21,176 INFO    hozelock.server  tap/0 fetch: generation=08ef pending=2
+Nov 11 20:27:28 trixie uv[2079]: 2026-11-11 20:27:28,377 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=94 84 04
+Nov 11 20:27:35 trixie uv[2079]: 2026-11-11 20:27:35,375 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=94 84 04
+Nov 11 20:27:41 trixie uv[2079]: 2026-11-11 20:27:41,841 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=02 84 04
+Nov 11 20:27:48 trixie uv[2079]: 2026-11-11 20:27:48,363 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=02 84 04
+Nov 11 20:27:55 trixie uv[2079]: 2026-11-11 20:27:55,386 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=02 84 04
+Nov 11 20:28:01 trixie uv[2079]: 2026-11-11 20:28:01,802 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 04
+Nov 11 20:28:08 trixie uv[2079]: 2026-11-11 20:28:08,372 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 04
+Nov 11 20:28:15 trixie uv[2079]: 2026-11-11 20:28:15,376 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 04
+Nov 11 20:28:22 trixie uv[2079]: 2026-11-11 20:28:22,376 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 04
+Nov 11 20:28:29 trixie uv[2079]: 2026-11-11 20:28:29,459 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=02 83 04
+Nov 11 20:28:36 trixie uv[2079]: 2026-11-11 20:28:36,813 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=02 83 04
+Nov 11 20:28:43 trixie uv[2079]: 2026-11-11 20:28:43,379 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=02 83 04
+Nov 11 20:28:50 trixie uv[2079]: 2026-11-11 20:28:50,657 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 04
+Nov 11 20:28:57 trixie uv[2079]: 2026-11-11 20:28:57,396 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 04
+Nov 11 20:29:03 trixie uv[2079]: 2026-11-11 20:29:03,948 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 04
+Nov 11 20:29:10 trixie uv[2079]: 2026-11-11 20:29:10,911 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 05
+Nov 11 20:29:17 trixie uv[2079]: 2026-11-11 20:29:17,394 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 05
+Nov 11 20:29:24 trixie uv[2079]: 2026-11-11 20:29:24,659 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 05
+Nov 11 20:29:31 trixie uv[2079]: 2026-11-11 20:29:31,392 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 05
+Nov 11 20:29:37 trixie uv[2079]: 2026-11-11 20:29:37,963 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 05
+Nov 11 20:29:45 trixie uv[2079]: 2026-11-11 20:29:45,459 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 05
+Nov 11 20:29:52 trixie uv[2079]: 2026-11-11 20:29:52,391 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 05
+Nov 11 20:29:59 trixie uv[2079]: 2026-11-11 20:29:59,388 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 05
+Nov 11 20:30:05 trixie uv[2079]: 2026-11-11 20:30:05,916 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=02 83 03
+Nov 11 20:30:12 trixie uv[2079]: 2026-11-11 20:30:12,839 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=02 83 03
+Nov 11 20:30:19 trixie uv[2079]: 2026-11-11 20:30:19,389 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=02 83 03
+Nov 11 20:30:26 trixie uv[2079]: 2026-11-11 20:30:26,659 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 03
+Nov 11 20:30:32 trixie uv[2079]: 2026-11-11 20:30:32,967 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 03
+Nov 11 20:30:39 trixie uv[2079]: 2026-11-11 20:30:39,400 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 03
+Nov 11 20:30:46 trixie uv[2079]: 2026-11-11 20:30:46,403 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 03
+Nov 11 20:30:53 trixie uv[2079]: 2026-11-11 20:30:53,401 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 03
+Nov 11 20:30:59 trixie uv[2079]: 2026-11-11 20:30:59,999 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=94 83 03
+Nov 11 20:31:07 trixie uv[2079]: 2026-11-11 20:31:07,395 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=02 83 03
+Nov 11 20:31:14 trixie uv[2079]: 2026-11-11 20:31:14,675 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=94 83 03
+Nov 11 20:31:21 trixie uv[2079]: 2026-11-11 20:31:21,396 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=94 83 03
+Nov 11 20:31:28 trixie uv[2079]: 2026-11-11 20:31:28,387 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=94 83 03
+Nov 11 20:31:35 trixie uv[2079]: 2026-11-11 20:31:35,406 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=94 83 03
+Nov 11 20:31:41 trixie uv[2079]: 2026-11-11 20:31:41,958 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=94 83 03
+Nov 11 20:31:49 trixie uv[2079]: 2026-11-11 20:31:49,398 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=94 83 03
+Nov 11 20:31:55 trixie uv[2079]: 2026-11-11 20:31:55,928 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=02 83 04
+Nov 11 20:32:02 trixie uv[2079]: 2026-11-11 20:32:02,665 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 04
+Nov 11 20:32:08 trixie uv[2079]: 2026-11-11 20:32:08,968 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 04
+Nov 11 20:32:16 trixie uv[2079]: 2026-11-11 20:32:16,009 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 06
+Nov 11 20:32:23 trixie uv[2079]: 2026-11-11 20:32:23,680 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 06
+Nov 11 20:32:29 trixie uv[2079]: 2026-11-11 20:32:29,962 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 06
+Nov 11 20:32:36 trixie uv[2079]: 2026-11-11 20:32:36,927 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 06
+Nov 11 20:32:43 trixie uv[2079]: 2026-11-11 20:32:43,680 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 06
+Nov 11 20:32:50 trixie uv[2079]: 2026-11-11 20:32:50,406 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 06
+Nov 11 20:32:57 trixie uv[2079]: 2026-11-11 20:32:57,401 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 06
+Nov 11 20:33:04 trixie uv[2079]: 2026-11-11 20:33:04,410 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 06
+Nov 11 20:33:11 trixie uv[2079]: 2026-11-11 20:33:11,407 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 06
+Nov 11 20:33:17 trixie uv[2079]: 2026-11-11 20:33:17,974 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 06
+Nov 11 20:33:23 trixie uv[2079]: 2026-11-11 20:33:23,919 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=02 83 03
+Nov 11 20:33:30 trixie uv[2079]: 2026-11-11 20:33:30,750 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 03
+Nov 11 20:33:36 trixie uv[2079]: 2026-11-11 20:33:36,976 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 03
+Nov 11 20:33:43 trixie uv[2079]: 2026-11-11 20:33:43,927 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 06
+Nov 11 20:33:50 trixie uv[2079]: 2026-11-11 20:33:50,682 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 06
+Nov 11 20:33:56 trixie uv[2079]: 2026-11-11 20:33:56,981 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 06
+Nov 11 20:34:03 trixie uv[2079]: 2026-11-11 20:34:03,932 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 06
+Nov 11 20:34:10 trixie uv[2079]: 2026-11-11 20:34:10,683 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 06
+Nov 11 20:34:16 trixie uv[2079]: 2026-11-11 20:34:16,976 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 06
+Nov 11 20:34:23 trixie uv[2079]: 2026-11-11 20:34:23,405 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 06
+Nov 11 20:34:29 trixie uv[2079]: 2026-11-11 20:34:29,931 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 05
+Nov 11 20:34:36 trixie uv[2079]: 2026-11-11 20:34:36,686 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 05
+Nov 11 20:34:43 trixie uv[2079]: 2026-11-11 20:34:43,050 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 05
+Nov 11 20:34:50 trixie uv[2079]: 2026-11-11 20:34:50,414 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 05
+Nov 11 20:34:57 trixie uv[2079]: 2026-11-11 20:34:57,408 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 05
+Nov 11 20:35:03 trixie uv[2079]: 2026-11-11 20:35:03,928 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 04
+Nov 11 20:35:10 trixie uv[2079]: 2026-11-11 20:35:10,680 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 04
+Nov 11 20:35:17 trixie uv[2079]: 2026-11-11 20:35:17,400 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 04
+Nov 11 20:35:23 trixie uv[2079]: 2026-11-11 20:35:23,975 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 04
+Nov 11 20:35:31 trixie uv[2079]: 2026-11-11 20:35:31,406 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 04
+Nov 11 20:35:37 trixie uv[2079]: 2026-11-11 20:35:37,926 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 03
+Nov 11 20:35:44 trixie uv[2079]: 2026-11-11 20:35:44,406 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 03
+Nov 11 20:35:51 trixie uv[2079]: 2026-11-11 20:35:51,665 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 03
+Nov 11 20:35:58 trixie uv[2079]: 2026-11-11 20:35:58,051 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 03
+Nov 11 20:36:05 trixie uv[2079]: 2026-11-11 20:36:05,403 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 03
+Nov 11 20:36:12 trixie uv[2079]: 2026-11-11 20:36:12,417 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=93 83 03
+Nov 11 20:36:18 trixie uv[2079]: 2026-11-11 20:36:18,938 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=94 83 03
+Nov 11 20:36:25 trixie uv[2079]: 2026-11-11 20:36:25,691 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=94 83 03
+Nov 11 20:36:31 trixie uv[2079]: 2026-11-11 20:36:31,972 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=94 83 03
+Nov 11 20:36:38 trixie uv[2079]: 2026-11-11 20:36:38,407 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=94 83 03
+Nov 11 20:36:45 trixie uv[2079]: 2026-11-11 20:36:45,404 INFO    hozelock.server  heartbeat: state=state-02 held=2287 generation=08ef link=94 83 03
+Nov 11 20:36:50 trixie systemd[1]: Stopping hozelock-server.service - Hozelock cloud replacement...
+Nov 11 20:36:50 trixie systemd[1]: hozelock-server.service: Main process exited, code=exited, status=143/n/a
+Nov 11 20:36:50 trixie systemd[1]: hozelock-server.service: Failed with result 'exit-code'.
+Nov 11 20:36:50 trixie systemd[1]: Stopped hozelock-server.service - Hozelock cloud replacement.
+Nov 11 20:36:50 trixie systemd[1]: hozelock-server.service: Consumed 5.554s CPU time.
+Nov 11 20:36:50 trixie systemd[1]: Started hozelock-server.service - Hozelock cloud replacement.
+Nov 11 20:36:50 trixie uv[2488]: 2026-11-11 20:36:50,844 INFO    hozelock  schedule 'Default' loaded from config.yaml
+Nov 11 20:36:50 trixie uv[2488]: 2026-11-11 20:36:50,873 INFO    hozelock.server  listening on 0.0.0.0:80 for hub ge7si1
+Nov 11 20:36:50 trixie uv[2488]: 2026-11-11 20:36:50,945 INFO    hozelock.mqtt  connected to broker (Success)
+Nov 11 20:36:51 trixie uv[2488]: 2026-11-11 20:36:51,936 INFO    hozelock.server  heartbeat: state=idle resyncing held=2287 confirmed=2287 generation=08c3 link=93 83 02
+Nov 11 20:36:54 trixie uv[2488]: 2026-11-11 20:36:54,674 INFO    hozelock.server  tap/0 fetch: generation=08c3 pending=0
+Nov 11 20:37:00 trixie uv[2488]: 2026-11-11 20:37:00,845 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2287 generation=08c3 link=93 83 02
+Nov 11 20:37:06 trixie uv[2488]: 2026-11-11 20:37:06,954 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2287 generation=08c3 link=02 83 02
+Nov 11 20:37:14 trixie uv[2488]: 2026-11-11 20:37:14,414 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2287 generation=08c3 link=02 83 02
+Nov 11 20:37:20 trixie uv[2488]: 2026-11-11 20:37:20,833 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2287 generation=08c3 link=93 83 02
+Nov 11 20:37:27 trixie uv[2488]: 2026-11-11 20:37:27,417 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2287 generation=08c3 link=93 83 02
+Nov 11 20:37:34 trixie uv[2488]: 2026-11-11 20:37:34,687 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 20:37:40 trixie uv[2488]: 2026-11-11 20:37:40,976 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 20:37:48 trixie uv[2488]: 2026-11-11 20:37:48,418 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 20:37:54 trixie uv[2488]: 2026-11-11 20:37:54,946 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 20:38:01 trixie uv[2488]: 2026-11-11 20:38:01,417 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 20:38:08 trixie uv[2488]: 2026-11-11 20:38:08,689 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 20:38:14 trixie uv[2488]: 2026-11-11 20:38:14,978 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 20:38:22 trixie uv[2488]: 2026-11-11 20:38:22,470 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 20:38:29 trixie uv[2488]: 2026-11-11 20:38:29,406 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 20:38:35 trixie uv[2488]: 2026-11-11 20:38:35,950 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:38:42 trixie uv[2488]: 2026-11-11 20:38:42,406 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:38:49 trixie uv[2488]: 2026-11-11 20:38:49,684 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:38:56 trixie uv[2488]: 2026-11-11 20:38:56,400 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:39:03 trixie uv[2488]: 2026-11-11 20:39:03,027 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:39:09 trixie uv[2488]: 2026-11-11 20:39:09,945 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:39:16 trixie uv[2488]: 2026-11-11 20:39:16,684 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:39:19 trixie systemd[1]: Stopping hozelock-server.service - Hozelock cloud replacement...
+Nov 11 20:39:19 trixie systemd[1]: hozelock-server.service: Main process exited, code=exited, status=143/n/a
+Nov 11 20:39:19 trixie systemd[1]: hozelock-server.service: Failed with result 'exit-code'.
+Nov 11 20:39:19 trixie systemd[1]: Stopped hozelock-server.service - Hozelock cloud replacement.
+Nov 11 20:39:19 trixie systemd[1]: hozelock-server.service: Consumed 1.041s CPU time.
+Nov 11 20:39:19 trixie systemd[1]: Started hozelock-server.service - Hozelock cloud replacement.
+Nov 11 20:39:20 trixie uv[2526]: 2026-11-11 20:39:20,273 INFO    hozelock  schedule 'Test' loaded from config.yaml
+Nov 11 20:39:20 trixie uv[2526]: 2026-11-11 20:39:20,280 INFO    hozelock.server  listening on 0.0.0.0:80 for hub ge7si1
+Nov 11 20:39:20 trixie uv[2526]: 2026-11-11 20:39:20,355 INFO    hozelock.mqtt  connected to broker (Success)
+Nov 11 20:39:23 trixie uv[2526]: 2026-11-11 20:39:23,402 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:39:30 trixie uv[2526]: 2026-11-11 20:39:30,406 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:39:37 trixie uv[2526]: 2026-11-11 20:39:37,052 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:39:43 trixie uv[2526]: 2026-11-11 20:39:43,926 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:39:50 trixie uv[2526]: 2026-11-11 20:39:50,671 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:39:57 trixie uv[2526]: 2026-11-11 20:39:57,394 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:40:04 trixie uv[2526]: 2026-11-11 20:40:04,397 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:40:10 trixie uv[2526]: 2026-11-11 20:40:10,980 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:40:17 trixie uv[2526]: 2026-11-11 20:40:17,931 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:40:24 trixie uv[2526]: 2026-11-11 20:40:24,407 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:40:31 trixie uv[2526]: 2026-11-11 20:40:31,392 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:40:38 trixie uv[2526]: 2026-11-11 20:40:38,829 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 04
+Nov 11 20:40:45 trixie uv[2526]: 2026-11-11 20:40:45,680 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:40:52 trixie uv[2526]: 2026-11-11 20:40:52,055 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:40:59 trixie uv[2526]: 2026-11-11 20:40:59,399 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:41:05 trixie uv[2526]: 2026-11-11 20:41:05,928 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:41:12 trixie uv[2526]: 2026-11-11 20:41:12,396 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:41:19 trixie uv[2526]: 2026-11-11 20:41:19,683 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:41:25 trixie uv[2526]: 2026-11-11 20:41:25,976 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:41:33 trixie uv[2526]: 2026-11-11 20:41:33,406 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:41:39 trixie uv[2526]: 2026-11-11 20:41:39,944 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:41:46 trixie uv[2526]: 2026-11-11 20:41:46,684 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:41:53 trixie uv[2526]: 2026-11-11 20:41:53,404 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:42:00 trixie uv[2526]: 2026-11-11 20:42:00,401 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:42:07 trixie uv[2526]: 2026-11-11 20:42:07,482 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:42:14 trixie uv[2526]: 2026-11-11 20:42:14,395 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:42:20 trixie uv[2526]: 2026-11-11 20:42:20,984 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:42:27 trixie uv[2526]: 2026-11-11 20:42:27,411 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 05
+Nov 11 20:42:34 trixie uv[2526]: 2026-11-11 20:42:34,584 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:42:41 trixie uv[2526]: 2026-11-11 20:42:41,402 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:42:48 trixie uv[2526]: 2026-11-11 20:42:48,688 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:42:55 trixie uv[2526]: 2026-11-11 20:42:55,400 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:43:01 trixie uv[2526]: 2026-11-11 20:43:01,977 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:43:08 trixie uv[2526]: 2026-11-11 20:43:08,934 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:43:15 trixie uv[2526]: 2026-11-11 20:43:15,686 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:43:22 trixie uv[2526]: 2026-11-11 20:43:22,485 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:43:29 trixie uv[2526]: 2026-11-11 20:43:29,404 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:43:35 trixie uv[2526]: 2026-11-11 20:43:35,975 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:43:42 trixie uv[2526]: 2026-11-11 20:43:42,939 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:43:49 trixie uv[2526]: 2026-11-11 20:43:49,413 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:43:56 trixie uv[2526]: 2026-11-11 20:43:56,685 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:44:03 trixie uv[2526]: 2026-11-11 20:44:03,400 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:44:09 trixie uv[2526]: 2026-11-11 20:44:09,985 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:44:17 trixie uv[2526]: 2026-11-11 20:44:17,405 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:44:24 trixie uv[2526]: 2026-11-11 20:44:24,402 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:44:31 trixie uv[2526]: 2026-11-11 20:44:31,405 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:44:38 trixie uv[2526]: 2026-11-11 20:44:38,020 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 03
+Nov 11 20:44:45 trixie uv[2526]: 2026-11-11 20:44:45,403 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 03
+Nov 11 20:44:52 trixie uv[2526]: 2026-11-11 20:44:52,403 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 03
+Nov 11 20:44:59 trixie uv[2526]: 2026-11-11 20:44:59,689 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 03
+Nov 11 20:45:06 trixie uv[2526]: 2026-11-11 20:45:06,409 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 03
+Nov 11 20:45:13 trixie uv[2526]: 2026-11-11 20:45:13,407 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 03
+Nov 11 20:45:19 trixie uv[2526]: 2026-11-11 20:45:19,992 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 03
+Nov 11 20:45:27 trixie uv[2526]: 2026-11-11 20:45:27,413 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 03
+Nov 11 20:45:33 trixie uv[2526]: 2026-11-11 20:45:33,953 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:45:40 trixie uv[2526]: 2026-11-11 20:45:40,694 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:45:47 trixie uv[2526]: 2026-11-11 20:45:47,404 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:45:54 trixie uv[2526]: 2026-11-11 20:45:54,476 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:46:01 trixie uv[2526]: 2026-11-11 20:46:01,414 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:46:08 trixie uv[2526]: 2026-11-11 20:46:08,408 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:46:15 trixie uv[2526]: 2026-11-11 20:46:15,411 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:46:22 trixie uv[2526]: 2026-11-11 20:46:22,408 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:46:29 trixie uv[2526]: 2026-11-11 20:46:29,844 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 04
+Nov 11 20:46:36 trixie uv[2526]: 2026-11-11 20:46:36,405 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 04
+Nov 11 20:46:43 trixie uv[2526]: 2026-11-11 20:46:43,408 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 04
+Nov 11 20:46:49 trixie uv[2526]: 2026-11-11 20:46:49,988 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:46:57 trixie uv[2526]: 2026-11-11 20:46:57,415 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:47:04 trixie uv[2526]: 2026-11-11 20:47:04,403 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:47:11 trixie uv[2526]: 2026-11-11 20:47:11,481 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 04
+Nov 11 20:47:18 trixie uv[2526]: 2026-11-11 20:47:18,595 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 20:47:25 trixie uv[2526]: 2026-11-11 20:47:25,416 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 20:47:32 trixie uv[2526]: 2026-11-11 20:47:32,702 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 20:47:39 trixie uv[2526]: 2026-11-11 20:47:39,416 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 20:47:45 trixie uv[2526]: 2026-11-11 20:47:45,988 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 20:47:52 trixie uv[2526]: 2026-11-11 20:47:52,956 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:47:59 trixie uv[2526]: 2026-11-11 20:47:59,407 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:48:06 trixie uv[2526]: 2026-11-11 20:48:06,410 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:48:13 trixie uv[2526]: 2026-11-11 20:48:13,414 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 05
+Nov 11 20:48:20 trixie uv[2526]: 2026-11-11 20:48:20,857 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 05
+Nov 11 20:48:27 trixie uv[2526]: 2026-11-11 20:48:27,489 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 05
+Nov 11 20:48:34 trixie uv[2526]: 2026-11-11 20:48:34,693 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:48:41 trixie uv[2526]: 2026-11-11 20:48:41,408 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:48:48 trixie uv[2526]: 2026-11-11 20:48:48,408 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:48:55 trixie uv[2526]: 2026-11-11 20:48:55,414 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:49:01 trixie uv[2526]: 2026-11-11 20:49:01,999 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:49:09 trixie uv[2526]: 2026-11-11 20:49:09,405 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:49:15 trixie uv[2526]: 2026-11-11 20:49:15,951 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 04
+Nov 11 20:49:22 trixie uv[2526]: 2026-11-11 20:49:22,844 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 04
+Nov 11 20:49:29 trixie uv[2526]: 2026-11-11 20:49:29,709 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:49:35 trixie uv[2526]: 2026-11-11 20:49:35,987 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:49:43 trixie uv[2526]: 2026-11-11 20:49:43,487 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:49:50 trixie uv[2526]: 2026-11-11 20:49:50,406 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:49:57 trixie uv[2526]: 2026-11-11 20:49:57,412 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:50:03 trixie uv[2526]: 2026-11-11 20:50:03,949 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 20:50:10 trixie uv[2526]: 2026-11-11 20:50:10,699 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 20:50:17 trixie uv[2526]: 2026-11-11 20:50:17,406 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 20:50:23 trixie uv[2526]: 2026-11-11 20:50:23,992 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 20:50:31 trixie uv[2526]: 2026-11-11 20:50:31,416 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 20:50:38 trixie uv[2526]: 2026-11-11 20:50:38,407 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 20:50:45 trixie uv[2526]: 2026-11-11 20:50:45,422 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 20:50:51 trixie uv[2526]: 2026-11-11 20:50:51,954 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 03
+Nov 11 20:50:58 trixie uv[2526]: 2026-11-11 20:50:58,787 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 03
+Nov 11 20:51:05 trixie uv[2526]: 2026-11-11 20:51:05,410 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 03
+Nov 11 20:51:11 trixie uv[2526]: 2026-11-11 20:51:11,992 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 03
+Nov 11 20:51:18 trixie uv[2526]: 2026-11-11 20:51:18,423 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 03
+Nov 11 20:51:21 trixie systemd[1]: Stopping hozelock-server.service - Hozelock cloud replacement...
+Nov 11 20:51:21 trixie systemd[1]: hozelock-server.service: Main process exited, code=exited, status=143/n/a
+Nov 11 20:51:21 trixie systemd[1]: hozelock-server.service: Failed with result 'exit-code'.
+Nov 11 20:51:21 trixie systemd[1]: Stopped hozelock-server.service - Hozelock cloud replacement.
+Nov 11 20:51:21 trixie systemd[1]: hozelock-server.service: Consumed 1.398s CPU time.
+Nov 11 20:51:21 trixie systemd[1]: Started hozelock-server.service - Hozelock cloud replacement.
+Nov 11 20:51:21 trixie uv[2672]: 2026-11-11 20:51:21,700 INFO    hozelock  schedule 'Test' loaded from config.yaml
+Nov 11 20:51:21 trixie uv[2672]: 2026-11-11 20:51:21,707 INFO    hozelock.server  listening on 0.0.0.0:80 for hub ge7si1
+Nov 11 20:51:22 trixie uv[2672]: 2026-11-11 20:51:22,334 INFO    hozelock.mqtt  connected to broker (Success)
+Nov 11 20:51:25 trixie uv[2672]: 2026-11-11 20:51:25,424 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 03
+Nov 11 20:51:32 trixie uv[2672]: 2026-11-11 20:51:32,415 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 03
+Nov 11 20:52:05 trixie uv[2672]: 2026-11-11 20:52:05,992 INFO    hozelock.server  heartbeat: state=idle held=0 confirmed=0 generation=08c3 link=01 00 00 (no controller!)
+Nov 11 20:52:17 trixie uv[2672]: 2026-11-11 20:52:17,448 INFO    hozelock.server  heartbeat: state=idle held=0 confirmed=0 generation=08c3 link=01 00 00 (no controller!)
+Nov 11 20:52:20 trixie uv[2672]: 2026-11-11 20:52:20,175 INFO    hozelock.server  tap/0 fetch: generation=08c3 pending=0
+Nov 11 20:52:27 trixie uv[2672]: 2026-11-11 20:52:27,405 INFO    hozelock.server  heartbeat: state=idle held=2243 confirmed=0 generation=08c3 link=01 00 00 (no controller!)
+Nov 11 20:52:33 trixie uv[2672]: 2026-11-11 20:52:33,920 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=0 generation=08c3 link=01 00 00 (no controller!)
+Nov 11 20:52:41 trixie uv[2672]: 2026-11-11 20:52:41,401 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=0 generation=08c3 link=01 00 00 (no controller!)
+Nov 11 20:52:47 trixie uv[2672]: 2026-11-11 20:52:47,982 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=0 generation=08c3 link=93 83 00
+Nov 11 20:52:54 trixie uv[2672]: 2026-11-11 20:52:54,396 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=0 generation=08c3 link=93 83 00
+Nov 11 20:52:58 trixie systemd[1]: Stopping hozelock-server.service - Hozelock cloud replacement...
+Nov 11 20:52:58 trixie systemd[1]: hozelock-server.service: Main process exited, code=exited, status=143/n/a
+Nov 11 20:52:58 trixie systemd[1]: hozelock-server.service: Failed with result 'exit-code'.
+Nov 11 20:52:58 trixie systemd[1]: Stopped hozelock-server.service - Hozelock cloud replacement.
+Nov 11 20:52:58 trixie systemd[1]: Started hozelock-server.service - Hozelock cloud replacement.
+Nov 11 20:52:58 trixie uv[2708]: 2026-11-11 20:52:58,746 INFO    hozelock  schedule 'Test' loaded from config.yaml
+Nov 11 20:52:58 trixie uv[2708]: 2026-11-11 20:52:58,754 INFO    hozelock.server  listening on 0.0.0.0:80 for hub ge7si1
+Nov 11 20:52:59 trixie uv[2708]: 2026-11-11 20:52:59,017 INFO    hozelock.mqtt  connected to broker (Success)
+Nov 11 20:53:01 trixie uv[2708]: 2026-11-11 20:53:01,414 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=0 generation=08c3 link=93 83 00
+Nov 11 20:53:08 trixie uv[2708]: 2026-11-11 20:53:08,403 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=0 generation=08c3 link=02 83 00
+Nov 11 20:53:15 trixie uv[2708]: 2026-11-11 20:53:15,412 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=0 generation=08c3 link=02 83 00
+Nov 11 20:53:22 trixie uv[2708]: 2026-11-11 20:53:22,487 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=0 generation=08c3 link=02 83 00
+Nov 11 20:53:29 trixie uv[2708]: 2026-11-11 20:53:29,406 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=0 generation=08c3 link=02 83 00
+Nov 11 20:53:36 trixie uv[2708]: 2026-11-11 20:53:36,702 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 00
+Nov 11 20:53:43 trixie uv[2708]: 2026-11-11 20:53:43,403 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 00
+Nov 11 20:53:50 trixie uv[2708]: 2026-11-11 20:53:50,000 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 00
+Nov 11 20:53:57 trixie uv[2708]: 2026-11-11 20:53:57,404 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 00
+Nov 11 20:54:03 trixie uv[2708]: 2026-11-11 20:54:03,952 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 03
+Nov 11 20:54:10 trixie uv[2708]: 2026-11-11 20:54:10,697 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 03
+Nov 11 20:54:17 trixie uv[2708]: 2026-11-11 20:54:17,397 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 03
+Nov 11 20:54:23 trixie uv[2708]: 2026-11-11 20:54:23,994 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 03
+Nov 11 20:54:29 trixie uv[2708]: 2026-11-11 20:54:29,966 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:54:36 trixie uv[2708]: 2026-11-11 20:54:36,473 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:54:43 trixie uv[2708]: 2026-11-11 20:54:43,404 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:54:50 trixie uv[2708]: 2026-11-11 20:54:50,714 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:54:57 trixie uv[2708]: 2026-11-11 20:54:57,417 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:55:04 trixie uv[2708]: 2026-11-11 20:55:04,009 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:55:11 trixie uv[2708]: 2026-11-11 20:55:11,411 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:55:17 trixie uv[2708]: 2026-11-11 20:55:17,962 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:55:24 trixie uv[2708]: 2026-11-11 20:55:24,710 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:55:31 trixie uv[2708]: 2026-11-11 20:55:31,414 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:55:38 trixie uv[2708]: 2026-11-11 20:55:38,000 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:55:45 trixie uv[2708]: 2026-11-11 20:55:45,411 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:55:52 trixie uv[2708]: 2026-11-11 20:55:52,042 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:55:59 trixie uv[2708]: 2026-11-11 20:55:59,414 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:56:06 trixie uv[2708]: 2026-11-11 20:56:06,704 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:56:13 trixie uv[2708]: 2026-11-11 20:56:13,402 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:56:20 trixie uv[2708]: 2026-11-11 20:56:20,418 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:56:27 trixie uv[2708]: 2026-11-11 20:56:27,418 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:56:34 trixie uv[2708]: 2026-11-11 20:56:34,007 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:56:39 trixie uv[2708]: 2026-11-11 20:56:39,963 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:56:46 trixie uv[2708]: 2026-11-11 20:56:46,720 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:56:53 trixie uv[2708]: 2026-11-11 20:56:53,409 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:57:00 trixie uv[2708]: 2026-11-11 20:57:00,406 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:57:07 trixie uv[2708]: 2026-11-11 20:57:07,478 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:57:14 trixie uv[2708]: 2026-11-11 20:57:14,012 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:57:19 trixie uv[2708]: 2026-11-11 20:57:19,964 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:57:26 trixie uv[2708]: 2026-11-11 20:57:26,716 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:57:33 trixie uv[2708]: 2026-11-11 20:57:33,419 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:57:40 trixie uv[2708]: 2026-11-11 20:57:40,016 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:57:47 trixie uv[2708]: 2026-11-11 20:57:47,400 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:57:54 trixie uv[2708]: 2026-11-11 20:57:54,410 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:58:01 trixie uv[2708]: 2026-11-11 20:58:01,404 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 20:58:07 trixie uv[2708]: 2026-11-11 20:58:07,956 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 03
+Nov 11 20:58:14 trixie uv[2708]: 2026-11-11 20:58:14,721 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 03
+Nov 11 20:58:21 trixie uv[2708]: 2026-11-11 20:58:21,479 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 03
+Nov 11 20:58:28 trixie uv[2708]: 2026-11-11 20:58:28,002 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 03
+Nov 11 20:58:34 trixie uv[2708]: 2026-11-11 20:58:34,968 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:58:41 trixie uv[2708]: 2026-11-11 20:58:41,404 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:58:48 trixie uv[2708]: 2026-11-11 20:58:48,410 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:58:55 trixie uv[2708]: 2026-11-11 20:58:55,401 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:59:02 trixie uv[2708]: 2026-11-11 20:59:02,886 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 05
+Nov 11 20:59:09 trixie uv[2708]: 2026-11-11 20:59:09,411 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 05
+Nov 11 20:59:16 trixie uv[2708]: 2026-11-11 20:59:16,414 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 05
+Nov 11 20:59:23 trixie uv[2708]: 2026-11-11 20:59:23,721 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:59:30 trixie uv[2708]: 2026-11-11 20:59:30,408 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:59:37 trixie uv[2708]: 2026-11-11 20:59:37,492 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:59:44 trixie uv[2708]: 2026-11-11 20:59:44,013 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:59:51 trixie uv[2708]: 2026-11-11 20:59:51,421 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 20:59:57 trixie uv[2708]: 2026-11-11 20:59:57,972 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 21:00:04 trixie uv[2708]: 2026-11-11 21:00:04,402 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 21:00:11 trixie uv[2708]: 2026-11-11 21:00:11,849 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 02
+Nov 11 21:00:18 trixie uv[2708]: 2026-11-11 21:00:18,411 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 21:00:22 trixie uv[2708]: 2026-11-11 21:00:22,257 INFO    hozelock.mqtt  command stop = PRESS
+Nov 11 21:00:25 trixie uv[2708]: 2026-11-11 21:00:25,007 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c4 link=93 83 02
+Nov 11 21:00:27 trixie uv[2708]: 2026-11-11 21:00:27,736 INFO    hozelock.server  tap/0 fetch: generation=08c4 pending=2
+Nov 11 21:00:35 trixie uv[2708]: 2026-11-11 21:00:35,402 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2244 confirmed=2243 generation=08c4 link=93 83 02
+Nov 11 21:00:41 trixie uv[2708]: 2026-11-11 21:00:41,877 INFO    hozelock.server  heartbeat: state=idle resyncing held=2244 confirmed=2243 generation=08c4 link=93 83 02
+Nov 11 21:00:47 trixie uv[2708]: 2026-11-11 21:00:47,952 INFO    hozelock.server  heartbeat: state=idle resyncing held=2244 confirmed=2243 generation=08c4 link=93 83 02
+Nov 11 21:00:53 trixie uv[2708]: 2026-11-11 21:00:53,918 INFO    hozelock.server  heartbeat: state=idle resyncing held=2244 confirmed=2243 generation=08c4 link=93 83 02
+Nov 11 21:00:58 trixie systemd[1]: Stopping hozelock-server.service - Hozelock cloud replacement...
+Nov 11 21:00:58 trixie systemd[1]: hozelock-server.service: Main process exited, code=exited, status=143/n/a
+Nov 11 21:00:58 trixie systemd[1]: hozelock-server.service: Failed with result 'exit-code'.
+Nov 11 21:00:58 trixie systemd[1]: Stopped hozelock-server.service - Hozelock cloud replacement.
+Nov 11 21:00:58 trixie systemd[1]: hozelock-server.service: Consumed 1.138s CPU time.
+Nov 11 21:00:58 trixie systemd[1]: Started hozelock-server.service - Hozelock cloud replacement.
+Nov 11 21:00:59 trixie uv[2815]: 2026-11-11 21:00:59,340 INFO    hozelock  schedule 'Test' loaded from config.yaml
+Nov 11 21:00:59 trixie uv[2815]: 2026-11-11 21:00:59,347 INFO    hozelock.server  listening on 0.0.0.0:80 for hub ge7si1
+Nov 11 21:00:59 trixie uv[2815]: 2026-11-11 21:00:59,380 INFO    hozelock.mqtt  connected to broker (Success)
+Nov 11 21:00:59 trixie uv[2815]: 2026-11-11 21:00:59,860 INFO    hozelock.server  heartbeat: state=idle resyncing held=2244 confirmed=2243 generation=08c3 link=02 83 06
+Nov 11 21:01:02 trixie uv[2815]: 2026-11-11 21:01:02,585 INFO    hozelock.server  tap/0 fetch: generation=08c3 pending=0
+Nov 11 21:01:09 trixie uv[2815]: 2026-11-11 21:01:09,412 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 06
+Nov 11 21:01:16 trixie uv[2815]: 2026-11-11 21:01:16,412 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 06
+Nov 11 21:01:23 trixie uv[2815]: 2026-11-11 21:01:23,403 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 06
+Nov 11 21:01:30 trixie uv[2815]: 2026-11-11 21:01:30,403 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 06
+Nov 11 21:01:37 trixie uv[2815]: 2026-11-11 21:01:37,406 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 06
+Nov 11 21:01:43 trixie uv[2815]: 2026-11-11 21:01:43,869 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 06
+Nov 11 21:01:50 trixie uv[2815]: 2026-11-11 21:01:50,403 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 06
+Nov 11 21:01:57 trixie uv[2815]: 2026-11-11 21:01:57,626 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 06
+Nov 11 21:02:03 trixie uv[2815]: 2026-11-11 21:02:03,872 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 21:02:10 trixie uv[2815]: 2026-11-11 21:02:10,712 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 21:02:17 trixie uv[2815]: 2026-11-11 21:02:17,018 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 21:02:23 trixie uv[2815]: 2026-11-11 21:02:23,968 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 06
+Nov 11 21:02:30 trixie uv[2815]: 2026-11-11 21:02:30,722 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 06
+Nov 11 21:02:37 trixie uv[2815]: 2026-11-11 21:02:37,404 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 06
+Nov 11 21:02:44 trixie uv[2815]: 2026-11-11 21:02:44,024 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 06
+Nov 11 21:02:51 trixie uv[2815]: 2026-11-11 21:02:51,410 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 06
+Nov 11 21:02:58 trixie uv[2815]: 2026-11-11 21:02:58,413 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 06
+Nov 11 21:03:04 trixie uv[2815]: 2026-11-11 21:03:04,979 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 03
+Nov 11 21:03:11 trixie uv[2815]: 2026-11-11 21:03:11,803 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 03
+Nov 11 21:03:18 trixie uv[2815]: 2026-11-11 21:03:18,408 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 03
+Nov 11 21:03:25 trixie uv[2815]: 2026-11-11 21:03:25,009 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 03
+Nov 11 21:03:31 trixie uv[2815]: 2026-11-11 21:03:31,973 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 21:03:38 trixie uv[2815]: 2026-11-11 21:03:38,727 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 21:03:45 trixie uv[2815]: 2026-11-11 21:03:45,411 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 21:03:52 trixie uv[2815]: 2026-11-11 21:03:52,017 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 21:03:59 trixie uv[2815]: 2026-11-11 21:03:59,411 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 21:04:05 trixie uv[2815]: 2026-11-11 21:04:05,974 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 21:04:12 trixie uv[2815]: 2026-11-11 21:04:12,721 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 21:04:19 trixie uv[2815]: 2026-11-11 21:04:19,408 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 21:04:26 trixie uv[2815]: 2026-11-11 21:04:26,496 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 21:04:33 trixie uv[2815]: 2026-11-11 21:04:33,411 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 21:04:40 trixie uv[2815]: 2026-11-11 21:04:40,405 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 21:04:47 trixie uv[2815]: 2026-11-11 21:04:47,022 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 04
+Nov 11 21:04:52 trixie uv[2815]: 2026-11-11 21:04:52,979 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 05
+Nov 11 21:04:59 trixie uv[2815]: 2026-11-11 21:04:59,853 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 05
+Nov 11 21:05:06 trixie uv[2815]: 2026-11-11 21:05:06,405 INFO    hozelock.server  heartbeat: state=idle resyncing held=2243 confirmed=2243 generation=08c3 link=02 83 05
+Nov 11 21:05:13 trixie uv[2815]: 2026-11-11 21:05:13,717 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 21:05:20 trixie uv[2815]: 2026-11-11 21:05:20,023 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 21:05:26 trixie uv[2815]: 2026-11-11 21:05:26,973 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 05
+Nov 11 21:05:33 trixie uv[2815]: 2026-11-11 21:05:33,729 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 05
+Nov 11 21:05:40 trixie uv[2815]: 2026-11-11 21:05:40,490 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 05
+Nov 11 21:05:46 trixie uv[2815]: 2026-11-11 21:05:46,421 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 05
+Nov 11 21:05:53 trixie uv[2815]: 2026-11-11 21:05:53,026 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 05
+Nov 11 21:05:59 trixie uv[2815]: 2026-11-11 21:05:59,406 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 05
+Nov 11 21:06:05 trixie uv[2815]: 2026-11-11 21:06:05,983 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 04
+Nov 11 21:06:12 trixie uv[2815]: 2026-11-11 21:06:12,731 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 04
+Nov 11 21:06:19 trixie uv[2815]: 2026-11-11 21:06:19,412 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 04
+Nov 11 21:06:26 trixie uv[2815]: 2026-11-11 21:06:26,028 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 04
+Nov 11 21:06:32 trixie uv[2815]: 2026-11-11 21:06:32,422 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 04
+Nov 11 21:06:39 trixie uv[2815]: 2026-11-11 21:06:39,413 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 04
+Nov 11 21:06:45 trixie uv[2815]: 2026-11-11 21:06:45,978 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 04
+Nov 11 21:06:52 trixie uv[2815]: 2026-11-11 21:06:52,811 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 04
+Nov 11 21:06:59 trixie uv[2815]: 2026-11-11 21:06:59,419 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 04
+Nov 11 21:07:06 trixie uv[2815]: 2026-11-11 21:07:06,413 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 04
+Nov 11 21:07:13 trixie uv[2815]: 2026-11-11 21:07:13,031 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 04
+Nov 11 21:07:19 trixie uv[2815]: 2026-11-11 21:07:19,981 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 04
+Nov 11 21:07:26 trixie uv[2815]: 2026-11-11 21:07:26,410 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 04
+Nov 11 21:07:33 trixie uv[2815]: 2026-11-11 21:07:33,725 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 04
+Nov 11 21:07:40 trixie uv[2815]: 2026-11-11 21:07:40,426 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 04
+Nov 11 21:07:46 trixie uv[2815]: 2026-11-11 21:07:46,027 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 04
+Nov 11 21:07:53 trixie uv[2815]: 2026-11-11 21:07:53,413 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 04
+Nov 11 21:07:59 trixie uv[2815]: 2026-11-11 21:07:59,980 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 04
+Nov 11 21:08:07 trixie uv[2815]: 2026-11-11 21:08:07,479 INFO    hozelock.server  heartbeat: state=scheduled resyncing held=2243 confirmed=2243 generation=08c3 link=94 82 04
+Nov 11 21:08:14 trixie uv[2815]: 2026-11-11 21:08:14,727 INFO    hozelock.server  heartbeat: state=idle held=2243 confirmed=2243 generation=08c3 link=94 82 04
+Nov 11 21:08:21 trixie uv[2815]: 2026-11-11 21:08:21,027 INFO    hozelock.server  heartbeat: state=idle held=2243 confirmed=2243 generation=08c3 link=94 82 04
+Nov 11 21:08:28 trixie uv[2815]: 2026-11-11 21:08:28,417 INFO    hozelock.server  heartbeat: state=idle held=2243 confirmed=2243 generation=08c3 link=94 82 04
+Nov 11 21:08:34 trixie uv[2815]: 2026-11-11 21:08:34,986 INFO    hozelock.server  heartbeat: state=idle held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 21:08:41 trixie uv[2815]: 2026-11-11 21:08:41,724 INFO    hozelock.server  heartbeat: state=idle held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 21:08:48 trixie uv[2815]: 2026-11-11 21:08:48,414 INFO    hozelock.server  heartbeat: state=idle held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 21:08:55 trixie uv[2815]: 2026-11-11 21:08:55,033 INFO    hozelock.server  heartbeat: state=idle held=2243 confirmed=2243 generation=08c3 link=93 83 02
+Nov 11 21:09:01 trixie uv[2815]: 2026-11-11 21:09:01,984 INFO    hozelock.server  heartbeat: state=idle held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 21:09:08 trixie uv[2815]: 2026-11-11 21:09:08,723 INFO    hozelock.server  heartbeat: state=idle held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 21:09:15 trixie uv[2815]: 2026-11-11 21:09:15,411 INFO    hozelock.server  heartbeat: state=idle held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 21:09:22 trixie uv[2815]: 2026-11-11 21:09:22,486 INFO    hozelock.server  heartbeat: state=idle held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 21:09:29 trixie uv[2815]: 2026-11-11 21:09:29,414 INFO    hozelock.server  heartbeat: state=idle held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 21:09:36 trixie uv[2815]: 2026-11-11 21:09:36,411 INFO    hozelock.server  heartbeat: state=idle held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 21:09:43 trixie uv[2815]: 2026-11-11 21:09:43,427 INFO    hozelock.server  heartbeat: state=idle held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 21:09:50 trixie uv[2815]: 2026-11-11 21:09:50,027 INFO    hozelock.server  heartbeat: state=idle held=2243 confirmed=2243 generation=08c3 link=02 83 05
+Nov 11 21:09:56 trixie uv[2815]: 2026-11-11 21:09:56,620 INFO    hozelock.server  heartbeat: state=idle held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 21:10:03 trixie uv[2815]: 2026-11-11 21:10:03,415 INFO    hozelock.server  heartbeat: state=idle held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 21:10:10 trixie uv[2815]: 2026-11-11 21:10:10,727 INFO    hozelock.server  heartbeat: state=idle held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 21:10:17 trixie uv[2815]: 2026-11-11 21:10:17,415 INFO    hozelock.server  heartbeat: state=idle held=2243 confirmed=2243 generation=08c3 link=93 83 05
+Nov 11 21:10:24 trixie uv[2815]: 2026-11-11 21:10:24,424 INFO    hozelock.server  heartbeat: state=idle held=2243 confirmed=2243 generation=08c3 link=93 83 05

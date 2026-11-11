@@ -2,3 +2,47 @@
                   (times as displayed in app; assumed BST = UTC+1)
 2026-08-22 19:46  hub power-cycled to force a tap/0 fetch
                   -> purpose: solve the tap/0 time-code encoding from two known clock times
+
+2026-08-27 18:42  routed-mode live session, hub on 10.0.9.x behind the Pi
+                  -> captures/livetest-20260827-1842{19,46}.pcap, 346 notify
+                     requests each, 18:42-19:14. Two tcpdump instances on the
+                     same traffic, started 27s apart: 130 of 134 request values
+                     are common to both, so it is one session, not two
+                  -> docs/checksum.md dates the corrupt-checksum answer and the
+                     live checksum validation to this day
+
+2026-11-11 19:20  cutover run against the replacement server, demo mode on
+                  -> purpose: live-test.md steps 5-12, the whole runbook in one evening
+                  -> full journal in captures/livetest-20261111.log
+2026-11-11 19:58  hub power-cycled onto the Pi's segment
+2026-11-11 19:59  hub accepted our programme: held=2243 (0x08c3) = our generation
+                  -> step 10. Schedule checksum computed from scratch for a blob
+                     no capture ever contained
+2026-11-11 20:11  link bytes flat (02 00 00): tap controller out of radio contact
+                  -> the hub stays healthy and keeps confirming generations, so
+                     nothing waters and nothing looks wrong. Bytes 11-13 had been
+                     documented as "no decision value"
+2026-11-11 20:15  controller back in contact; hub reports 02 00 (the old "state-02")
+2026-11-11 20:18  water now -> hub reports 03 10, ran 60s, closed itself
+                  -> step 11. Byte 7 is a bitfield (0x01 watering | 0x02 resyncing)
+                  -> manual duration is the controller's own 60s default, not a
+                     wire field; docs had said the tap stays open until stopped
+2026-11-11 20:25  second water command collected and ignored
+                  -> the hub acts on the flag field CHANGING. The blob it held
+                     already had that flag set. A stop in between fixed it
+2026-11-11 20:26  stop -> pending=2 collected, run cut short. Offset 213 proven
+2026-11-11 20:45  scheduled watering did not fire (1st attempt)
+                  -> clamp_gaps capped gaps at 199 units, so a once-daily schedule
+                     lost 445 min/day: 20:45 was encoded as 15:05. Fixed, 3fc0857
+2026-11-11 20:52  scheduled watering did not fire (2nd attempt)
+                  -> restart resets the generation, hub already held it, so no
+                     re-fetch: the edited config never reached it. Fixed
+2026-11-11 21:05  scheduled watering fired at 21:05, closed at 21:08
+                  -> step 12. The programme epoch was inferred from the captures
+                     and is correct. 5-min gap units (21:04 rounds to 21:05);
+                     duration honoured to the minute
+2026-11-11 21:07  hub reports 03 04 - scheduled while resyncing
+                  -> predicted by the bitfield reading before it was ever seen
+2026-11-11 21:08  resync bit cleared, ~70 min after the power cycle
+2026-11-11 21:10  Home Assistant: device present, entities live, last-contact
+                  updating -> step 5

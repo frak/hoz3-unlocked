@@ -92,6 +92,7 @@ cd server && uv run python test_checksum.py
 | live validation of the heartbeat form | `data/hb_validate.json` |
 | captured heartbeat pairs | `server/hozelock/checksums.py` |
 | original captures and pcaps | `data/captures/` |
+| the 27 Aug routed-mode live session | `data/captures/livetest-20260827-*.pcap` |
 | collection and solving tool | `capture/collect-checksums.py` |
 | cloud API driver | `capture/hozelock-api.py` |
 
