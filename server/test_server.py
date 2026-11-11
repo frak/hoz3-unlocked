@@ -148,6 +148,22 @@ def main():
         st.observe(codec.b64_decode('AgEIG-IAAgEQAAAAAgAAAAAIwAAAAAjA'))
         ok &= check('watering state parsed from a real request', st.watering, 'manual')
 
+        # A restart resets the generation, so a hub already holding that value
+        # would never re-fetch and an edited config.yaml would not apply.
+        fresh = state_mod.HubState(
+            HUB, schedule.Site(latitude=51.5, longitude=-0.1),
+            [schedule.Event('06:00', 30)])
+        req = bytearray(codec.b64_decode('AgEIG-IAAgEQAAAAAgAAAAAIwAAAAAjA'))
+        req[16], req[17] = fresh.generation >> 8, fresh.generation & 0xff
+        req[20], req[21] = req[16], req[17]
+        req = bytes(req)
+        fresh.observe(req)
+        ok &= check('first contact with a matching generation forces a re-fetch',
+                    fresh.generation != fresh.generation_held, True)
+        before = fresh.generation
+        fresh.observe(req)
+        ok &= check('  and only once', fresh.generation, before)
+
         # A zero checksum is what the real service never sends, and the hub may
         # discard the response entirely if we get it wrong.
         from hozelock import checksums, heartbeat_checksum as hb, state as sm

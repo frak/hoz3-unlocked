@@ -91,6 +91,7 @@ class HubState:
         # it reads as whether the tap controller is in radio contact.
         self.link = None
         self._warned_checksum = False
+        self._greeted = False
         self._lock = threading.Lock()
         self._listeners = []
 
@@ -200,6 +201,16 @@ class HubState:
         self.generation_held = fields['generation_held']
         self.generation_confirmed = fields['generation_confirmed']
         self.link = fields['link']
+        if not self._greeted:
+            self._greeted = True
+            # A restart resets the generation to the same starting value, so a
+            # hub already holding it sees no change and keeps serving the
+            # programme from before -- an edited config.yaml would silently not
+            # apply. One bump on first contact makes "edit and restart" work.
+            if self.generation_held == self.generation:
+                log.info('hub already holds %04x, so bumping to make it collect '
+                         'this build', self.generation)
+                self.bump()
         # The hub only echoes a command once it has acted on it.
         if self.pending and self.generation_confirmed == self.generation:
             self.pending = CMD_NONE

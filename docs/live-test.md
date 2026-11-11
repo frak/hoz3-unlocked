@@ -338,9 +338,15 @@ schedules:
         duration_min: 2
 ```
 
-Watch for `programme refreshed` or a `tap/0 fetch` after the restart. A schedule
-that cannot be encoded is logged as an error at startup rather than discovered on
-the hub's fetch path, so check the first few log lines too.
+**A `tap/0 fetch` must appear within seconds of the restart.** Without one the hub
+is still running the programme from before and the edit has not applied — the
+generation resets to the same value on every start, so a hub already holding it
+sees no change. The server bumps once on first contact to force the fetch; if you
+see neither the fetch nor `hub already holds ... so bumping`, the edit is not
+live and waiting is pointless.
+
+A schedule that cannot be encoded is logged as an error at startup rather than
+discovered on the hub's fetch path, so check the first few log lines too.
 
 **Check:** the tap opens at 18:30, and the log shows `state=scheduled` rather than
 `manual`.

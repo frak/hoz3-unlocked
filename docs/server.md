@@ -101,6 +101,12 @@ programme the hub collects.
 **Nothing happens without a bump.** Any new state that should reach the hub must
 call `bump()`, or the hub will never come and look.
 
+That includes starting up. The generation resets to the same first value on every
+start, so a hub that already holds it sees no change and keeps running the
+programme it has — an edited `config.yaml` would silently not apply. `observe()`
+bumps once on first contact when the held generation matches ours, which costs
+one re-fetch per restart and makes "edit and restart" mean what it says.
+
 ## Entities in Home Assistant
 
 Published by discovery, so they appear without any YAML:
