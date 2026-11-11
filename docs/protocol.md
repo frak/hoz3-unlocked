@@ -117,8 +117,15 @@ once for ~64 minutes, because a 47-hour capture caught it only while nothing was
 All 1117 captured requests decode under this reading with nothing left over.
 
 The resync bit follows a hub power cycle: bytes 11–13 go flat, then come back, then this bit
-clears a while later. **It does not block commands** — the 11 November manual run was started
-and completed with it set.
+clears a while later — about 70 minutes after the power cycle on 11 November, against the
+48–64 minutes the August capture bounded it to. **It does not block watering** — a manual run
+and a scheduled run both completed with it set, reporting `03 10` and `03 04`. `03 04` was
+predicted by this reading of the field before it was ever observed, and then observed at
+21:07 the same evening.
+
+It cleared on the same heartbeat a scheduled run finished, which is suggestive but probably
+coincidence: in the capture it cleared with no watering anywhere near it, so elapsed time is
+the better explanation.
 
 The hub reports *why* it is watering, so the server can tell its own commands from schedule
 firings.

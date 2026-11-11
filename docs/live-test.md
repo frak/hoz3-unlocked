@@ -15,13 +15,17 @@ Two things to know before starting:
 
 - **The Hozelock phone app stops being useful.** It reports what the hub tells
   *Hozelock*, and the hub will be talking to us. Expected, and reversible.
-- **Use demo mode throughout.** The tap controller polls the hub every 20 minutes
-  normally, 1 minute in demo mode. It expires after an hour; turn it back on as
-  needed. Without it every test costs 20 minutes.
+- **Use demo mode throughout**, via `demo_mode: true` in `config.yaml`. The tap
+  controller polls the hub every 20 minutes normally, 1 minute in demo mode.
+  Unlike the app's demo mode this does **not** expire — the server asserts it on
+  every heartbeat — so turn it off in config when you are done or it runs the
+  controller's batteries down indefinitely.
 
 Work through the steps in order. Each ends with something to check before moving on.
 
-Four things are unproven in software and only this run can settle them:
+Four things are unproven in software and only this run can settle them. Steps 10,
+11 and 12 were all confirmed against the hardware on 11 November 2026; the table
+stands as what to check and what a failure would mean.
 
 | step | what it proves | what a failure means |
 |---|---|---|
@@ -327,7 +331,12 @@ curl localhost/api/state
 
 Set a schedule a few minutes ahead in `config.yaml`, restart the server, and wait.
 `config.yaml` is the only place schedules live, so this is also the test that an
-edit-and-restart reaches the hub at all:
+edit-and-restart reaches the hub at all.
+
+**Use a multiple of 5 minutes.** Gaps are whole 5-minute units measured from the
+Saturday 22:55 origin, so every encodable time ends in 0 or 5 and anything else
+rounds up to the next one. A 21:04 event waters at 21:05, and an unexplained
+minute of offset is the last thing you want while measuring the epoch.
 
 ```yaml
 active_schedule: Test
@@ -351,16 +360,38 @@ discovered on the hub's fetch path, so check the first few log lines too.
 **Check:** the tap opens at 18:30, and the log shows `state=scheduled` rather than
 `manual`.
 
-This is the only step that tests the **programme epoch**, which was inferred from the
-captures rather than proven. A consistent offset from the intended time — always 25
-minutes late, say — is that, and it is a fixable constant rather than a broken design.
+This is the only step that tests the **programme epoch**. It was inferred from the
+captures rather than proven until 11 November 2026, when a 21:05 event watered at
+21:05 — so the constant in `state.py` is right. A consistent offset from the
+intended time would mean it had drifted, and it is a one-line fix rather than a
+broken design.
+
+Before you walk away: put `active_schedule` back to your real schedule, set
+`demo_mode: false`, and restart.
 
 ---
 
 ## Rollback
 
+**Keep the evidence first.** The journal is the only record of what the hub did, and
+it cannot be reproduced once the rig is gone:
+
+```bash
+journalctl -u hozelock-server --since "<when you started>" > livetest-$(date +%Y%m%d).log
+cp /var/captures/livetest-*.pcap <somewhere off the Pi>
+```
+
+Four of this protocol's findings — the watering bitfield, the controller-presence
+bytes, the 60-second manual default and the edge-triggered flags — came from a log
+like that rather than from the original captures.
+
 Unplug the hub from the Pi and connect it back to the router; it returns to the real
-service, which exists until April 2027. To undo the Pi's side as well:
+service, which exists until April 2027. **Power-cycle it** so it reports `held=0000`
+and collects from the real service at once rather than when it next notices a
+generation change. Demo mode needs no undoing: the real service drives that flag, so
+the controller goes back to its 20-minute poll on its own.
+
+To undo the Pi's side as well:
 
 ```bash
 sudo rm /etc/dnsmasq.d/hozelock.conf

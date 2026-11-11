@@ -41,6 +41,7 @@ Python 3.14, dependencies managed by `uv` via `pyproject.toml`.
 | `hozelock/{schedule,heartbeat}_checksum.py` | the solved checksums — [checksum.md](checksum.md) |
 | `hozelock/api.py` | the JSON control API — [api.md](api.md) |
 | `hozelock/dashboard.py` | generates the Home Assistant card |
+| `hozelock/programme.py` | prints what the hub will do, decoded from the blob we serve |
 | `hozelock/state.py` | hub state and the generation counter |
 | `hozelock/server.py` | the two HTTP endpoints |
 | `hozelock/mqtt_bridge.py` | Home Assistant entities over MQTT discovery |
@@ -66,6 +67,17 @@ dragged every event after the first one earlier: a once-daily schedule needs
 20:45 event reached the hub as 15:05. Hozelock's own captured programmes carry
 gaps up to 1547 units, so the clamp protected nothing. It costs 3 extra payload
 bytes for the week around midsummer, against a 211-byte budget.
+
+To see what the hub will actually do, rather than what the schedule says:
+
+```bash
+uv run python -m hozelock.programme config.yaml
+```
+
+That decodes the chain we serve and flags any firing more than a gap unit from
+the time asked for. `next_watering` resolves the schedule directly and never
+looks at the blob, so it cannot see an encoding fault — it reported 20:45 while
+the hub held a programme that said 15:05.
 
 Startup trial-builds and encodes the active schedule, and logs an error if it
 cannot: `schedule_blob()` is on the hub's fetch path, where an unencodable
@@ -146,9 +158,13 @@ regenerated after April 2027 — the tests are worth more than usual for that re
 
 ## Known limits
 
-- **The programme epoch is inferred.** Gaps are counted from a day boundary in the
-  server's own clock frame, which fits the captured blobs but is not proven. If
-  waterings land at a consistent offset from the intended time, this is why.
+- ~~**The programme epoch is inferred.**~~ **Confirmed live 11 Nov 2026**: a
+  21:05 event watered at 21:05. The epoch is the Saturday 22:55 origin in
+  `state.py`, and nothing needs adjusting. Schedule times quantise to whole
+  5-minute units from that origin, so every encodable time ends in 0 or 5 and
+  anything else rounds — 21:04 becomes 21:05. Durations are not quantised: the
+  same run closed at 21:08 for a 3-minute event, confirming the duration byte is
+  honoured to the minute.
 - **Manual watering runs for 60 seconds and ends by itself.** Timed at the tap on
   11 Nov 2026. No duration field exists in the blob, and the one captured sample
   was stopped by hand after 37 seconds, so this used to be recorded as unknown —
