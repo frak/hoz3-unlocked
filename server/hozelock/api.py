@@ -1,5 +1,8 @@
 """JSON control API, mounted under /api/ on the hub's listener.
 
+Read-only but for the two commands and the schedule switch: schedules come from
+config.yaml, so there is nothing here to edit them with.
+
 This and the MQTT bridge are both adapters over HubState; neither owns any
 behaviour. Unlike the bridge, this keeps working when the broker is down, which
 is the difference between a stuck tap and a stoppable one.
@@ -10,7 +13,6 @@ are testable without a socket.
 import json
 import logging
 
-from .schedule import DAYS, Event
 from .state import COMMAND_NAMES
 
 log = logging.getLogger('hozelock.api')
@@ -19,8 +21,6 @@ PREFIX = '/api/'
 
 JSON_TYPE = 'application/json'
 MUTATING = ('POST', 'PUT', 'PATCH', 'DELETE')
-
-EVENT_KEYS = {'at', 'duration_min', 'days', 'offset_min'}
 
 
 def _iso(dt):
@@ -35,7 +35,6 @@ def _schedule_dict(s):
 
 
 def _state_dict(state):
-    ov = state.overlays
     return {
         'hub_id': state.hub_id,
         'watering': state.watering,
@@ -48,35 +47,7 @@ def _state_dict(state):
         'schedule_enabled': state.schedule_enabled,
         'active_schedule': state.active_schedule,
         'schedules': [s.name for s in state.schedules],
-        'overlays': {
-            'paused_until': _iso(ov.pause_until),
-            'adjust_percent': ov.adjust_percent,
-            'adjust_until': _iso(ov.adjust_until),
-        },
     }
-
-
-def _events_from(payload):
-    """-> [Event]. Raises ValueError with something a human can act on."""
-    if not isinstance(payload, list):
-        raise ValueError('events must be a list')
-    out = []
-    for i, e in enumerate(payload):
-        if not isinstance(e, dict):
-            raise ValueError(f'event {i} must be an object')
-        unknown = set(e) - EVENT_KEYS
-        if unknown:
-            raise ValueError(f'event {i} has unknown keys {sorted(unknown)}; '
-                             f'expected {sorted(EVENT_KEYS)}')
-        if 'at' not in e or 'duration_min' not in e:
-            raise ValueError(f'event {i} needs at and duration_min')
-        days = e.get('days', list(DAYS))
-        bad = [d for d in days if d not in DAYS]
-        if bad:
-            raise ValueError(f'event {i} has unknown days {bad}; expected {DAYS}')
-        out.append(Event(at=str(e['at']), duration_min=int(e['duration_min']),
-                         days=list(days), offset_min=int(e.get('offset_min', 0))))
-    return out
 
 
 def handle(state, method, path, content_type=None, body=b''):
@@ -118,50 +89,11 @@ def _dispatch(state, method, route, payload):
         return 200, {'active': state.active_schedule,
                      'schedules': [_schedule_dict(s) for s in state.schedules]}
 
-    if method == 'PUT' and route == 'schedules/active':
-        name = payload.get('name')
-        if not name:
-            return 400, {'error': 'expected {"name": ...}'}
-        reason = state.select_schedule(name)
-        if reason:
-            return (404 if 'no schedule named' in reason else 400), {'error': reason}
-        return 200, _state_dict(state)
-
-    if method == 'PUT' and route.startswith('schedules/'):
-        name = route[len('schedules/'):]
-        target = state._find(name)
-        if not target:
-            return 404, {'error': f'no schedule named {name!r}'}
-        events = _events_from(payload.get('events', []))
-        if name != state.active_schedule:
-            # Only the active schedule reaches the hub, so an inactive one needs
-            # no trial encode -- it gets validated when it is selected.
-            target.events = events
-            state._persist()
-            state._notify()
-            return 200, _schedule_dict(target)
-        reason = state.set_schedule(events)
-        if reason:
-            return 400, {'error': reason}
-        return 200, _schedule_dict(target)
-
     if method == 'PUT' and route == 'enabled':
         if 'enabled' not in payload:
             return 400, {'error': 'expected {"enabled": true|false}'}
         state.set_enabled(bool(payload['enabled']))
         return 200, _state_dict(state)
-
-    if method == 'PUT' and route == 'pause':
-        if 'days' not in payload:
-            return 400, {'error': 'expected {"days": n}; 0 cancels'}
-        reason = state.pause(payload['days'])
-        return (400, {'error': reason}) if reason else (200, _state_dict(state))
-
-    if method == 'PUT' and route == 'adjust':
-        if 'percent' not in payload:
-            return 400, {'error': 'expected {"percent": n, "days": n}; 0 cancels'}
-        reason = state.adjust(payload['percent'], payload.get('days', 1))
-        return (400, {'error': reason}) if reason else (200, _state_dict(state))
 
     if method == 'POST' and route == 'water':
         state.water_now()

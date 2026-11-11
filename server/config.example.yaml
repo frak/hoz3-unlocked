@@ -28,10 +28,14 @@ demo_mode: false
 # -- the hub does validate it and refuses the programme. Kept for re-testing.
 corrupt_checksum: false
 
-# Named schedules, switchable from Home Assistant. The hub never learns there is
-# more than one -- it is told the active one's resolved programme and nothing
-# else -- so have as many as you like. `schedule:` (a bare event list) is still
-# accepted and becomes a single schedule named Default.
+# Named schedules. The hub never learns there is more than one -- it is told the
+# active one's resolved programme and nothing else -- so have as many as you
+# like, and switch by editing the line below and restarting. `schedule:` (a bare
+# event list) is still accepted and becomes a single schedule named Default.
+#
+# active_schedule goes first deliberately: at the bottom it reads like a key of
+# the last schedule in the list, which it is not.
+active_schedule: Summer
 schedules:
   - name: Summer
     events:
@@ -45,19 +49,8 @@ schedules:
         duration_min: 20
   - name: Away
     events: []
-active_schedule: Summer
 
-# Editable event slots exposed to Home Assistant. A minimum, not a cap: it grows
-# to fit the longest schedule, so the card can never edit fewer waterings than
-# the hub is served. Spare slots read "Unused" and cost nothing.
-max_event_slots: 4
-
-# Where the active schedule, its events and any pause/adjust are kept. Written on
-# every change, and it WINS over `schedules:` above once it exists -- edits made
-# in Home Assistant live here. Delete it to re-seed from this file.
-state_file: state.json
-
-# `days` and `offset_min` are config-only; the card edits time and duration:
+# Two further per-event keys:
 #   - at: sunrise
 #     offset_min: 30        # 30 minutes after sunrise
 #     days: [mon, wed, fri]

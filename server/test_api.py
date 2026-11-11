@@ -75,47 +75,21 @@ def main():
                     [e['at'] for e in b['schedules'][0]['events']],
                     ['sunrise', 'sunset'])
 
-        before = st.generation
-        status, b, _ = call(port, 'PUT', '/api/schedules/active', {'name': 'Winter'})
-        ok &= check('PUT schedules/active', status, 200)
-        ok &= check('  switches', st.active_schedule, 'Winter')
-        ok &= check('  bumps the generation so the hub refetches',
-                    st.generation != before, True)
-
-        status, b, _ = call(port, 'PUT', '/api/schedules/active', {'name': 'Nope'})
-        ok &= check('unknown schedule is 404', status, 404)
-        ok &= check('  and says so', 'no schedule named' in b['error'], True)
-        ok &= check('  leaving state untouched', st.active_schedule, 'Winter')
-
-        status, b, _ = call(port, 'PUT', '/api/schedules/Winter',
-                            {'events': [{'at': '07:00', 'duration_min': 15}]})
-        ok &= check('PUT a schedule body', status, 200)
-        ok &= check('  events replaced',
-                    [(e.at, e.duration_min) for e in st.events], [('07:00', 15)])
-
-        status, b, _ = call(port, 'PUT', '/api/schedules/Winter',
-                            {'events': [{'at': '07:00', 'duration_min': 900}]})
-        ok &= check('an unencodable duration is refused', status, 400)
-        ok &= check('  with a reason', 'duration' in b['error'].lower(), True)
-        ok &= check('  and the old events survive',
-                    [(e.at, e.duration_min) for e in st.events], [('07:00', 15)])
-
-        status, b, _ = call(port, 'PUT', '/api/schedules/Winter',
-                            {'events': [{'at': '07:00', 'duration_min': 15,
-                                         'days': ['funday']}]})
-        ok &= check('an unknown weekday is refused', status, 400)
-
-        status, b, _ = call(port, 'PUT', '/api/pause', {'days': 2})
-        ok &= check('PUT pause', status, 200)
-        ok &= check('  records the expiry', bool(b['overlays']['paused_until']), True)
-        status, b, _ = call(port, 'PUT', '/api/pause', {'days': 0})
-        ok &= check('pause 0 cancels', b['overlays']['paused_until'], None)
-
-        status, b, _ = call(port, 'PUT', '/api/adjust', {'percent': 50, 'days': 2})
-        ok &= check('PUT adjust', status, 200)
-        ok &= check('  records the percent', b['overlays']['adjust_percent'], 50)
-        status, b, _ = call(port, 'PUT', '/api/adjust', {'percent': 0})
-        ok &= check('adjust 0 cancels', b['overlays']['adjust_percent'], 0)
+        print()
+        print('  -- the editing routes are gone, not merely unused --')
+        for method, path, payload in (
+                ('PUT', '/api/schedules/active', {'name': 'Winter'}),
+                ('PUT', '/api/schedules/Winter',
+                 {'events': [{'at': '07:00', 'duration_min': 15}]}),
+                ('PUT', '/api/pause', {'days': 2}),
+                ('PUT', '/api/adjust', {'percent': 50, 'days': 2})):
+            status, b, _ = call(port, method, path, payload)
+            ok &= check(f'{method} {path} is 404', status, 404)
+        ok &= check('  and the active schedule is untouched',
+                    st.active_schedule, 'Summer')
+        ok &= check('  as are its events',
+                    [(e.at, e.duration_min) for e in st.events],
+                    [('sunrise', 45), ('sunset', 60)])
 
         status, b, _ = call(port, 'POST', '/api/water', {})
         ok &= check('POST water', status, 200)
@@ -144,7 +118,7 @@ def main():
         ok &= check('no Content-Type at all is refused', status, 415)
         ok &= check('  and did not act', st.pending, state_mod.CMD_NONE)
 
-        status, b, _ = call(port, 'PUT', '/api/pause', b'{not json',
+        status, b, _ = call(port, 'PUT', '/api/enabled', b'{not json',
                             content_type='application/json')
         ok &= check('malformed JSON is 400, not 500', status, 400)
 

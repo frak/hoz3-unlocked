@@ -149,15 +149,6 @@ def main():
                 [(e['at'], e['duration_min'], e.get('days'))
                  for e in schedule.to_config(scheds)[0]['events']])
 
-    print()
-    print('  -- pause and adjust --')
-    ok &= check('adjust matches the captured +50% (45/60 -> 68/90)',
-                (schedule.scale_duration(45, 50), schedule.scale_duration(60, 50)),
-                (68, 90))
-    ok &= check('a duration cannot overflow its byte',
-                schedule.scale_duration(200, 100), 255)
-    ok &= check('a shrink works too', schedule.scale_duration(60, -50), 30)
-
     print('\nOK' if ok else '\nFAILURES')
     return 0 if ok else 1
 

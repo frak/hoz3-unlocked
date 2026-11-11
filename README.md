@@ -68,11 +68,11 @@ docker compose up -d       # serves port 80, reads ./config.yaml
 Then point `hoz3.com` at it with a DNS override on the router. The hub resolves via
 the DHCP-supplied resolver, so no NAT interception is needed.
 
-Control is via **Home Assistant over MQTT discovery** — entities appear
-automatically, and `python -m hozelock.dashboard config.yaml` prints the two cards.
-Several named schedules can be defined and switched at will, with the app's pause and
-±% adjust as temporary overlays. A [JSON API](docs/api.md) covers the same ground for
-scripts, and keeps working when the broker does not.
+Schedules live in `config.yaml`. **Home Assistant over MQTT discovery** shows the
+status and offers water/stop — entities appear automatically, and
+`python -m hozelock.dashboard config.yaml` prints the card. A
+[JSON API](docs/api.md) covers the same ground for scripts, and keeps working when
+the broker does not.
 
 The Hozelock phone app is not supported and dies with the service.
 
@@ -85,7 +85,6 @@ uv run python test_codec.py     # round-trips 24 captured blobs byte-for-byte
 uv run python test_schedule.py
 uv run python test_server.py
 uv run python test_checksum.py  # 560 captured programmes + the worked example
-uv run python test_overlays.py  # pause and adjust
 uv run python test_api.py
 uv run python test_mqtt.py
 uv run python test_dashboard.py

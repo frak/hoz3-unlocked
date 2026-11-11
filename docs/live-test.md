@@ -21,6 +21,15 @@ Two things to know before starting:
 
 Work through the steps in order. Each ends with something to check before moving on.
 
+Four things are unproven in software and only this run can settle them:
+
+| step | what it proves | what a failure means |
+|---|---|---|
+| 5 | the generated card renders against real entities | HA's MQTT integration, or an entity id mismatch |
+| 10 | the hub accepts a **computed** checksum, at generations never captured | the algorithm does not generalise — fall back to `restrict_generations: true` |
+| 11 | a command reaches the tap through the flag bytes | the bridge, the API, or the flag offsets |
+| 12 | the **programme epoch**, the one value inferred rather than proven | a consistent offset is a fixable constant, not a broken design |
+
 ---
 
 ## 1. Install what the Pi needs
@@ -72,6 +81,7 @@ site:
 
 restrict_generations: false   # both checksums are computed; see docs/checksum.md
 
+active_schedule: Summer       # a key of the file, not of the last schedule below
 schedules:
   - name: Summer
     events:
@@ -81,7 +91,6 @@ schedules:
         duration_min: 60
   - name: Away
     events: []
-active_schedule: Summer
 
 mqtt:
   host: 192.168.1.6       # your Mosquitto container
@@ -148,12 +157,15 @@ mosquitto_sub -h 192.168.1.6 -u xxxx -P xxxx -v -t 'homeassistant/+/hozelock/#' 
 
 **Check:** a retained `.../config` message per entity and
 `hozelock/hozelock/available` reading `online`. In Home Assistant a device called
-**Hozelock Cloud Controller** appears. Then generate the cards and paste each into a
-Manual card:
+**Hozelock Cloud Controller** appears with six entities: watering, next watering,
+last hub contact, active schedule, the enable switch, and the two buttons. Then
+generate the card and paste it into a Manual card:
 
 ```bash
 uv run python -m hozelock.dashboard config.yaml
-``` If the topics are there but HA shows nothing, the problem is HA's MQTT
+```
+
+If the topics are there but HA shows nothing, the problem is HA's MQTT
 integration, not the server.
 
 Leave this subscription running — it is the clearest view of what the server is doing.
@@ -260,6 +272,9 @@ mosquitto_pub -h 192.168.1.6 -u xxxx -P xxxx -t hozelock/hozelock/stop/set -m PR
 Do this via MQTT before trying the Home Assistant button: it separates "the server
 works" from "the HA integration works", so a failure tells you which half to look at.
 
+A manual watering has no duration on the wire, so the tap stays open until the
+stop arrives. Do not walk away between the two.
+
 The [control API](api.md) is a third way in, and the one that still works when the
 broker is down:
 
@@ -273,12 +288,21 @@ curl localhost/api/state
 ## 12. Test a scheduled watering
 
 Set a schedule a few minutes ahead in `config.yaml`, restart the server, and wait.
+`config.yaml` is the only place schedules live, so this is also the test that an
+edit-and-restart reaches the hub at all:
 
 ```yaml
-schedule:
-  - at: "18:30"
-    duration_min: 2
+active_schedule: Test
+schedules:
+  - name: Test
+    events:
+      - at: "18:30"
+        duration_min: 2
 ```
+
+Watch for `programme refreshed` or a `tap/0 fetch` after the restart. A schedule
+that cannot be encoded is logged as an error at startup rather than discovered on
+the hub's fetch path, so check the first few log lines too.
 
 **Check:** the tap opens at 18:30, and the log shows `state=scheduled` rather than
 `manual`.

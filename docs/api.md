@@ -10,31 +10,25 @@ That is the difference between a stuck tap and a stoppable one.
 ```bash
 curl localhost/api/state
 curl -X POST -H 'Content-Type: application/json' localhost/api/water
-curl -X PUT  -H 'Content-Type: application/json' \
-     -d '{"name": "Winter"}' localhost/api/schedules/active
 ```
 
 ## Routes
 
 | method | route | body | notes |
 |---|---|---|---|
-| GET | `/api/state` | — | everything the cards show, plus overlays and their expiries |
-| GET | `/api/schedules` | — | every schedule with its events |
-| PUT | `/api/schedules/active` | `{"name": "Summer"}` | `404` if unknown |
-| PUT | `/api/schedules/{name}` | `{"events": [...]}` | replaces the event list |
+| GET | `/api/state` | — | everything the card shows |
+| GET | `/api/schedules` | — | every configured schedule with its events |
 | PUT | `/api/enabled` | `{"enabled": true}` | the master switch |
-| PUT | `/api/pause` | `{"days": 2}` | `0` cancels |
-| PUT | `/api/adjust` | `{"percent": 50, "days": 2}` | `0` cancels |
 | POST | `/api/water` | — | rides the next programme's flag bytes |
 | POST | `/api/stop` | — | |
 
-An event is `{"at": "06:00"|"sunrise"|"sunset", "duration_min": 45,
-"days": ["mon", ...], "offset_min": 0}`. Only `at` and `duration_min` are
-required.
+Schedules are read-only here: they come from `config.yaml`. The routes that
+edited them (`PUT /api/schedules/...`, `/api/pause`, `/api/adjust`) were removed
+with the rest of the editing layer and now answer `404`; they are in the
+`ha-controls` tag if they are wanted back.
 
-Errors are `{"error": "..."}` with a reason worth reading: `400` for something
-the hub could not be served (an unencodable duration, a programme too long for
-218 bytes), `404` for an unknown schedule or route, `415` for the content type.
+Errors are `{"error": "..."}` with a reason worth reading: `400` for a malformed
+body, `404` for an unknown route, `415` for the content type.
 
 ## Two things that are security controls, not style
 

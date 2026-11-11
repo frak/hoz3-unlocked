@@ -3,10 +3,14 @@
 Stands in for `hoz3.com` so the hub keeps working after Hozelock shut the service
 down at the end of April 2027. Wire format: [protocol.md](protocol.md).
 
-Control lives in Home Assistant over MQTT discovery, with a
-[JSON API](api.md) alongside it that keeps working when the broker does not. The
-Hozelock phone app is not supported and will stop working when the real service
-dies.
+Schedules are configured in `config.yaml`. Home Assistant gets the status and
+the two commands over MQTT discovery, with a [JSON API](api.md) alongside it that
+keeps working when the broker does not. The Hozelock phone app is not supported
+and will stop working when the real service dies.
+
+Editing schedules from Home Assistant — a picker, per-event slots, and pause /
+adjust overlays — was built and then cut back to this while the hardware side is
+still being proven. It is tagged `ha-controls` if it is wanted again.
 
 ## Running
 
@@ -36,8 +40,7 @@ Python 3.14, dependencies managed by `uv` via `pyproject.toml`.
 | `hozelock/schedule.py` | human schedule → 7-day interval chain, with solar resolution via `astral` |
 | `hozelock/{schedule,heartbeat}_checksum.py` | the solved checksums — [checksum.md](checksum.md) |
 | `hozelock/api.py` | the JSON control API — [api.md](api.md) |
-| `hozelock/persist.py` | `state.json`: schedules, selection and overlays across restarts |
-| `hozelock/dashboard.py` | generates the Home Assistant cards |
+| `hozelock/dashboard.py` | generates the Home Assistant card |
 | `hozelock/state.py` | hub state and the generation counter |
 | `hozelock/server.py` | the two HTTP endpoints |
 | `hozelock/mqtt_bridge.py` | Home Assistant entities over MQTT discovery |
@@ -45,60 +48,33 @@ Python 3.14, dependencies managed by `uv` via `pyproject.toml`.
 
 ## Schedules
 
-Several named schedules, one active at a time, switchable from Home Assistant or
-the API. **The hub never learns there is more than one** — it is handed the
+Defined in `config.yaml` and read once at startup. Several named schedules can be
+listed with one named in `active_schedule`; switching means editing that line and
+restarting. **The hub never learns there is more than one** — it is handed the
 active schedule's resolved 218-byte programme and nothing else, so there is no
 limit on how many you define. The real ceiling is inside one schedule: 211 bytes
 of chain at ~2 bytes a watering, so about 100 a week.
 
-Two temporary overlays sit on top, as the app offers them:
+An event is a time (`HH:MM`, `sunrise` or `sunset`), a duration in minutes, and
+optionally `offset_min` and `days`. Solar times are resolved for the site's
+coordinates and re-resolved hourly as they drift.
 
-- **Pause for N days** — suppress waterings in that window.
-- **Adjust ±X% for N days** — scale durations. `+50%` turns 45/60 into 68/90,
-  matching the capture exactly. Clamped to 0–255: a duration is one byte.
-
-Both carry an absolute expiry, so they survive a restart and still lapse on time.
-When one lapses the generation is bumped — without that the hub would never
-refetch and would keep watering the boosted programme indefinitely.
-
-The programme is a repeating week anchored at an origin in the past, so a slot
-the clock has already gone by fires when the cycle comes round again, not now.
-Overlays compare against that real occurrence; it is why a 2-day pause leaves
-next week's slots alone and an 8-day one reaches them.
-
-### config.yaml seeds it; state.json owns it
-
-Once schedules can be edited from Home Assistant, `config.yaml` cannot stay the
-source of truth. So:
-
-- no `state.json` → seed from `config.yaml` and write it
-- `state.json` present → **it wins**, and `config.yaml`'s `schedules:` is ignored
-- re-seed by deleting `state.json`
-
-The server logs which it used at startup. Editing `config.yaml` on a running
-install and seeing nothing change is the expected trap, so it says so.
-
-`days` and `offset_min` stay config-only — the card edits when and how long. An
-event can still be `sunrise` with `offset_min: 30`; the card simply shows it as
-`Sunrise` with no offset control.
+Startup trial-builds and encodes the active schedule, and logs an error if it
+cannot: `schedule_blob()` is on the hub's fetch path, where an unencodable
+programme means the hub is served nothing and there is nobody watching.
 
 ## Home Assistant
 
-Generate the two cards rather than copying them, so they cannot fall behind the
-entities:
+Generate the card rather than copying it, so the entity ids cannot fall behind
+the configured `node_id`:
 
 ```bash
 uv run python -m hozelock.dashboard config.yaml
 ```
 
-Paste each into a Manual card. A **status** card (watering, next watering, hub
-contact, water/stop, pause and adjust) and a **schedule** card (the picker, the
-enable switch, and one block per event slot). Core card types only — nothing to
-install.
-
-Event slots auto-size to the longest schedule, so the card can never edit fewer
-waterings than the hub is served; `max_event_slots` is a minimum, not a cap.
-Unused slots hide themselves, and the time row only appears in Clock mode.
+Paste it into a Manual card: watering, next watering, hub contact, which schedule
+is running, the enable switch, and water/stop buttons. Core card types only —
+nothing to install.
 
 ## How control actually works
 
@@ -114,11 +90,6 @@ Manual watering rides in the schedule blob's flag bytes: offset 212 starts, 213
 stops. So "water now" is not a separate request — it is a flag on the next
 programme the hub collects.
 
-Every mutation goes through `HubState`, which trial-builds the programme before
-committing: an edit that could not be encoded is refused with a reason rather
-than leaving the hub with nothing to fetch. Home Assistant is republished on a
-refusal so the card snaps back instead of showing a value the server rejected.
-
 **Nothing happens without a bump.** Any new state that should reach the hub must
 call `bump()`, or the hub will never come and look.
 
@@ -127,15 +98,15 @@ call `bump()`, or the hub will never come and look.
 Published by discovery, so they appear without any YAML:
 
 - `binary_sensor` — watering, with the trigger (manual/scheduled) as an attribute
-- `sensor` — next watering, last hub contact, paused until, adjust until
-- `sensor` — schedule detail, carrying the whole active schedule as attributes
+- `sensor` — next watering, last hub contact, active schedule
 - `button` — water now, stop
 - `switch` — schedule enabled
-- `select` — active schedule, and a mode per event slot
-- `text` — a clock time per event slot
-- `number` — a duration per event slot, plus pause days, adjust percent and days
 
-Every entity declares an `object_id`, so ids are stable (`select.hozelock_active_schedule`)
+The bridge also publishes an empty retained config for every entity the editable
+version announced. Discovery configs are retained, so without that an install
+upgraded from `ha-controls` would keep them forever as unavailable entities.
+
+Every entity declares an `object_id`, so ids are stable (`sensor.hozelock_active_schedule`)
 and survive renaming the device — without it Home Assistant derives them from the
 device name and a rename silently breaks every card that names one.
 
@@ -151,10 +122,9 @@ uv run python test_codec.py      # round-trips all 24 captured blobs byte-for-by
 uv run python test_schedule.py   # rebuilds a captured programme from a schedule
 uv run python test_server.py     # replays ~200 real hub requests at the server
 uv run python test_checksum.py   # both checksums against every captured sample
-uv run python test_overlays.py   # pause and adjust: scaling, clamping, expiry
 uv run python test_api.py        # routes, validation, and the two security controls
 uv run python test_mqtt.py       # discovery payloads and command handling
-uv run python test_dashboard.py  # the cards only name entities that exist
+uv run python test_dashboard.py  # the card only names entities that exist
 ```
 
 The corpus in `../data/captures/hb-raw.tsv` is the ground truth, and it cannot be

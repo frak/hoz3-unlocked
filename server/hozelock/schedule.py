@@ -33,64 +33,6 @@ class Schedule:
 
 
 @dataclass
-class Overlays:
-    """Temporary modifiers on the active schedule, as the app offers them.
-
-    Not edits: they are applied when the programme is built and expire by
-    themselves. Expiries are absolute, so they survive a restart and still lapse
-    on time.
-    """
-    pause_until: datetime = None
-    adjust_percent: int = 0
-    adjust_until: datetime = None
-
-    def paused(self, now):
-        return bool(self.pause_until and now < self.pause_until)
-
-    def adjusting(self, now):
-        return bool(self.adjust_percent and self.adjust_until
-                    and now < self.adjust_until)
-
-    def next_expiry(self, now):
-        """Soonest expiry still in the future, or None."""
-        ends = [t for t in (self.pause_until, self.adjust_until) if t and t > now]
-        return min(ends) if ends else None
-
-    def apply(self, firings, now=None):
-        """-> firings with paused ones dropped and adjusted ones scaled.
-
-        The programme is a repeating week anchored at an origin in the past, so
-        a slot the clock has already gone by does not fire now -- it fires when
-        the cycle comes round again. Comparing that real occurrence against the
-        expiry is what makes "pause for 8 days" reach into next week's slots
-        while "pause for 2" leaves them alone.
-        """
-        now = now or datetime.now()
-        cycle = timedelta(days=HORIZON_DAYS)
-        out = []
-        for when, duration in firings:
-            occurs = when if when >= now else when + cycle
-            if self.pause_until and occurs < self.pause_until:
-                continue
-            if (self.adjust_percent and self.adjust_until
-                    and occurs < self.adjust_until):
-                duration = scale_duration(duration, self.adjust_percent)
-            out.append((when, duration))
-        return out
-
-
-def scale_duration(duration_min, percent):
-    """Scale a duration, clamped to what one byte can carry.
-
-    The capture's '+50% for 2 days' turned 45/60 into 68/90, so the rounding is
-    round-half-up on 67.5 -- and a duration is a single byte, so a large boost
-    has to clamp rather than wrap.
-    """
-    scaled = int(duration_min * (100 + percent) / 100 + 0.5)
-    return max(0, min(0xff, scaled))
-
-
-@dataclass
 class Site:
     latitude: float
     longitude: float
@@ -155,7 +97,7 @@ def clamp_gaps(firings, horizon_end):
     return out
 
 
-def build(events, site, epoch, now=None, overlays=None):
+def build(events, site, epoch):
     """-> (lead_gap_units, [(duration_min, gap_units)]) covering exactly one week.
 
     The final gap is closed against epoch + 7 days so the chain totals
@@ -164,8 +106,6 @@ def build(events, site, epoch, now=None, overlays=None):
     firings = [f for f in resolve(events, site, epoch) if f[0] >= epoch]
     horizon_end = epoch + timedelta(days=HORIZON_DAYS)
     firings = [f for f in firings if f[0] < horizon_end]
-    if overlays:
-        firings = overlays.apply(firings, now)
     if not firings:
         return 0, []
 
@@ -185,9 +125,8 @@ def build(events, site, epoch, now=None, overlays=None):
     return lead, out
 
 
-def encode(events, site, epoch, flags=b'\x00' * 5, checksum=b'\x00\x00',
-           overlays=None):
-    lead, chain = build(events, site, epoch, overlays=overlays)
+def encode(events, site, epoch, flags=b'\x00' * 5, checksum=b'\x00\x00'):
+    lead, chain = build(events, site, epoch)
     return codec.encode_schedule(lead, chain, flags=flags, checksum=checksum)
 
 
