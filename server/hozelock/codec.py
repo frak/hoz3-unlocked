@@ -22,15 +22,25 @@ CONT_C9 = 0xc9
 CONT_C9_VALUE = 200
 CONT_FF_VALUE = 255
 
-WATERING_STATES = {
-    (0x00, 0x00): 'idle',
-    (0x01, 0x10): 'manual',
-    (0x01, 0x04): 'scheduled',
-    # Seen once on the real service, 18:05-19:09 on 21 Aug, with no watering and
-    # nothing unusual around it. Not "waiting for the controller": it persists in
-    # demo mode where the controller polls every minute. Meaning unknown.
-    (0x02, 0x00): 'state-02',
-}
+# Offsets 7-8. Byte 7 is a bitfield, byte 8 says what started the watering.
+# Solved live on 11 Nov 2026: a manual run begun while the hub was resynchronising
+# with its controller reported 03 10, i.e. both bits of byte 7 at once. The old
+# lookup table treated each pair as an opaque state and could not express that.
+WATERING_BIT = 0x01
+RESYNC_BIT = 0x02           # controller back in radio contact, not yet in step
+STATE_BITS = WATERING_BIT | RESYNC_BIT
+
+TRIGGERS = {0x00: None, 0x10: 'manual', 0x04: 'scheduled'}
+
+
+def decode_watering(byte7, byte8):
+    """-> (state, resyncing). state is idle/manual/scheduled, or a raw string."""
+    if byte7 & ~STATE_BITS or byte8 not in TRIGGERS:
+        return f'unknown {byte7:02x}{byte8:02x}', bool(byte7 & RESYNC_BIT)
+    resyncing = bool(byte7 & RESYNC_BIT)
+    if not byte7 & WATERING_BIT:
+        return 'idle', resyncing
+    return TRIGGERS[byte8] or 'watering', resyncing
 
 
 def b64_decode(s):
@@ -159,8 +169,10 @@ def schedule_checksum(blob):
 
 
 def decode_heartbeat_request(blob):
+    state, resyncing = decode_watering(blob[7], blob[8])
     return {
-        'state': WATERING_STATES.get((blob[7], blob[8]), f'unknown {blob[7]:02x}{blob[8]:02x}'),
+        'state': state,
+        'resyncing': resyncing,
         'generation_held': (blob[16] << 8) | blob[17],
         'generation_confirmed': (blob[20] << 8) | blob[21],
         'link': bytes(blob[11:14]),

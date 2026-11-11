@@ -135,8 +135,13 @@ regenerated after April 2027 — the tests are worth more than usual for that re
 - **The programme epoch is inferred.** Gaps are counted from a day boundary in the
   server's own clock frame, which fits the captured blobs but is not proven. If
   waterings land at a consistent offset from the intended time, this is why.
-- **Manual watering duration is unknown** — one captured sample, no duration field
-  identified. The server issues a start and relies on an explicit stop.
+- **Manual watering runs for 60 seconds and ends by itself.** Timed at the tap on
+  11 Nov 2026. No duration field exists in the blob, and the one captured sample
+  was stopped by hand after 37 seconds, so this used to be recorded as unknown —
+  the 60s is the controller's own default, which is why the app labelled its
+  button "water now for 1 minute". In the log the watering bit stays set for up
+  to ~2 minutes, because the controller only reports in on its 1-minute poll;
+  trust the tap over the log. An unattended press is not an open tap.
 - **No battery or signal sensors.** Request bytes 11–13 are undecoded. Decoding them
   needs the real service to compare against, so it must happen before April 2027 if
   those readings matter.

@@ -97,14 +97,28 @@ Both requests carry the *same* 24-byte heartbeat blob in `hb`; only the response
 | 20–21 | generation the hub has confirmed |
 | 22–23 | checksum — [checksum.md](checksum.md) |
 
-Watering state, offsets 7–8:
+Watering state, offsets 7–8. Byte 7 is a **bitfield**, byte 8 is the trigger:
 
-| value | meaning |
+| byte 7 | meaning |
 |---|---|
-| `00 00` | idle |
-| `01 10` | watering, manually triggered |
-| `01 04` | watering, schedule triggered |
-| `02 00` | unknown — seen for ~64 minutes on the real service with no watering, and observed persisting on the replacement while the hub was otherwise healthy. Not a fault: the hub accepts programmes and heartbeats normally in this state |
+| `0x01` | watering |
+| `0x02` | resyncing — the tap controller is back in radio contact but not yet in step |
+
+| byte 8 | meaning |
+|---|---|
+| `0x00` | nothing running |
+| `0x10` | manually triggered |
+| `0x04` | schedule triggered |
+
+So `01 10` is a manual run, `01 04` a scheduled one, `02 00` idle-while-resyncing, and
+`03 10` a manual run begun *during* a resync — which is how the bitfield was found, live on
+11 November 2026, 20:18. Before that `02 00` had been recorded as an unexplained state seen
+once for ~64 minutes, because a 47-hour capture caught it only while nothing was watering.
+All 1117 captured requests decode under this reading with nothing left over.
+
+The resync bit follows a hub power cycle: bytes 11–13 go flat, then come back, then this bit
+clears a while later. **It does not block commands** — the 11 November manual run was started
+and completed with it set.
 
 The hub reports *why* it is watering, so the server can tell its own commands from schedule
 firings.
@@ -229,10 +243,24 @@ exactly with the only two manual commands ever logged:
 So offset 212 starts a manual watering and offset 213 stops one. The hub then reports `01 10` —
 watering, manually triggered — which is how the server confirms the command landed.
 
-**The duration of a manual watering is not encoded here.** The one sample was a 1-minute run
-and offsets 214–215 were both zero, so either manual runs use a default the hub already holds,
-or the duration lives somewhere not yet seen. Issue the command and then stop it explicitly
-rather than assume a duration.
+**The hub acts on the flag field changing, not on its value.** Observed live on 11 November
+2026: water started a run, a second water command 2 minutes later was collected (`tap/0
+fetch`, new generation) and ignored, and a stop followed by a water started one again. The
+ignored command was the only one where the programme the hub already held carried the same
+flag. Two consequences:
+
+- A command must be followed by a cleared programme, or the next identical command is a
+  no-op. `HubState.observe` bumps the generation again as soon as a command is confirmed, so
+  the hub's held programme goes back to `00 00 00 00 00`.
+- Offsets 20–21, the *confirmed* generation, mean "acted on", not "collected". The ignored
+  command was fetched and never confirmed. A command still pending with its generation long
+  since held is the signature of this.
+
+**The duration of a manual watering is not encoded here** — offsets 214–215 were zero in the
+one captured sample, and the first of the two possible explanations is the right one: the
+controller holds its own default. Timed at the tap on 11 November 2026 it ran for **60
+seconds**, matching the "water now for 1 minute" the app offered while the cloud was still in
+charge. So the flag starts a fixed 60-second run; the stop flag cuts one short.
 
 ### Worked examples
 

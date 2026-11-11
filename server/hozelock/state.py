@@ -83,6 +83,7 @@ class HubState:
         self.schedule_enabled = True
         self.last_seen = None
         self.watering = 'idle'
+        self.resyncing = False
         self.generation_held = None
         self.generation_confirmed = None
         # Bytes 11-13 of the request. Flat (xx 00 00) in every captured sample
@@ -171,8 +172,11 @@ class HubState:
         # One slot, last write wins. The hub may be offline for minutes, so an
         # undelivered command being replaced is silent data loss unless said.
         if self.pending and self.pending != command:
-            log.warning('replacing an undelivered %s command with %s - the hub '
-                        'never collected the first one',
+            # "Unconfirmed", not "uncollected": the hub may well have fetched the
+            # blob and declined to act, which is what it does when the flag has
+            # not changed.
+            log.warning('replacing an unconfirmed %s command with %s - the hub '
+                        'never acted on the first one',
                         COMMAND_NAMES.get(self.pending, self.pending), name)
         self.pending = command
         self.bump()
@@ -192,12 +196,18 @@ class HubState:
         fields = codec.decode_heartbeat_request(request_blob)
         self.last_seen = datetime.now()
         self.watering = fields['state']
+        self.resyncing = fields['resyncing']
         self.generation_held = fields['generation_held']
         self.generation_confirmed = fields['generation_confirmed']
         self.link = fields['link']
         # The hub only echoes a command once it has acted on it.
         if self.pending and self.generation_confirmed == self.generation:
             self.pending = CMD_NONE
+            # It acts on the flag field *changing*, so leaving the flag set in
+            # the programme it holds makes an identical next command a no-op --
+            # observed live on 11 Nov 2026: water, then water again, did nothing
+            # until a stop in between. Re-serve a cleared programme at once.
+            self.bump()
         self._notify()
         return fields
 
@@ -207,6 +217,10 @@ class HubState:
         checksum = bytes([ck >> 8, ck & 0xff])
         return codec.encode_heartbeat_response(minutes, seconds, self.generation,
                                                flag=self.flag, checksum=checksum)
+
+    @property
+    def is_watering(self):
+        return self.watering in ('manual', 'scheduled', 'watering')
 
     @property
     def controller_seen(self):

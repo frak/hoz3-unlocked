@@ -75,6 +75,23 @@ def main():
             failures.append(f'{len(blob)}-byte blob encodes to {n} chars, not a '
                             f'multiple of 4 - padding was stripped')
 
+    # Offsets 7-8 as a bitfield. 03 10 was observed live on 11 Nov 2026 -- a
+    # manual run started while the controller was resynchronising -- and the
+    # earlier lookup table could only call it "unknown 0310".
+    cases = {
+        (0x00, 0x00): ('idle', False),
+        (0x01, 0x10): ('manual', False),
+        (0x01, 0x04): ('scheduled', False),
+        (0x02, 0x00): ('idle', True),        # was the unexplained "state-02"
+        (0x03, 0x10): ('manual', True),      # watering while resyncing
+        (0x03, 0x04): ('scheduled', True),
+        (0x08, 0x10): ('unknown 0810', False),   # unknown bits stay honest
+    }
+    for (b7, b8), want in cases.items():
+        got = codec.decode_watering(b7, b8)
+        if got != want:
+            failures.append(f'watering {b7:02x} {b8:02x}: {got} != {want}')
+
     if failures:
         print(f'\n{len(failures)} FAILURES:')
         for f in failures[:10]:

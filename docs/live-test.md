@@ -271,14 +271,34 @@ every captured sample.
 
 ## 11. Test manual watering
 
-Put the hub in demo mode first. Then:
+**Wait for the tap controller first.** Every heartbeat logs the hub's link bytes,
+and after a power cycle they read flat for up to half an hour:
+
+```
+heartbeat: state=idle held=2243 generation=08c3 link=02 00 00 (no controller!)
+heartbeat: state=idle held=2243 generation=08c3 link=95 83 04
+```
+
+A flat `xx 00 00` means the controller is not in radio contact, so no command can
+reach the tap however healthy the rest looks — the hub still accepts programmes
+and confirms generations exactly as normal. The controller reacquires on its own
+~16-20 minute poll, because it only learns demo mode exists once it has talked to
+the hub again. In the capture these gaps ran 1.3 to 27 minutes and every one
+recovered untouched (`hb.tsv`, and `19:46 hub power-cycled` in `events.log`).
+
+Across the whole corpus, all 33 waterings happened on a fluctuating field and not
+one on a flat one. If it is still flat after about 30 minutes, suspect the
+controller's batteries or its distance from the hub rather than anything here.
+
+Then, with the hub in demo mode:
 
 ```bash
 mosquitto_pub -h 192.168.1.6 -u xxxx -P xxxx -t hozelock/hozelock/water_now/set -m PRESS
 ```
 
-**Check:** within about a minute the tap opens, and the server log shows
-`state=manual`. Then stop it:
+**Check:** the tap opens and the server log shows `state=manual`. The capture
+puts this 14 seconds after the flag goes out — two heartbeats — so if `state` is
+still `idle` after four or five, it is not slowness. Check the link bytes first. Then stop it:
 
 ```bash
 mosquitto_pub -h 192.168.1.6 -u xxxx -P xxxx -t hozelock/hozelock/stop/set -m PRESS
@@ -287,8 +307,11 @@ mosquitto_pub -h 192.168.1.6 -u xxxx -P xxxx -t hozelock/hozelock/stop/set -m PR
 Do this via MQTT before trying the Home Assistant button: it separates "the server
 works" from "the HA integration works", so a failure tells you which half to look at.
 
-A manual watering has no duration on the wire, so the tap stays open until the
-stop arrives. Do not walk away between the two.
+A manual run is a fixed **60 seconds** and ends on its own (timed 11 Nov 2026).
+The log keeps the watering bit set for up to ~2 minutes afterwards because the
+controller reports in on its 1-minute poll, so trust the tap. Send the stop
+anyway, within that minute: offset 213 is a separate code path from offset 212
+and this is the only thing that exercises it.
 
 The [control API](api.md) is a third way in, and the one that still works when the
 broker is down:
@@ -347,7 +370,8 @@ sudo systemctl restart dnsmasq
 | hub never appears in the log | DNS — check `hoz3.com` resolves to `10.0.9.1` from the hub's segment |
 | hub appears but never fetches `tap/0` | cut over without a power cycle (step 9) |
 | `tap/0` fetched repeatedly, `held` never settles | hub is rejecting the blob — run `test_checksum.py` |
-| tap opens and never closes | manual watering has no duration field; send Stop explicitly |
+| tap opens and never closes | send Stop; a manual run should self-close after 60s |
+| hub healthy but nothing waters | link bytes flat (`xx 00 00`) — no controller in radio contact |
 | watering fires at a consistent offset | programme epoch is wrong — see step 12 |
 | entities missing in HA, topics present | HA's MQTT integration, not the server |
 | hub gets a DHCP lease then loops every ~45s | nothing listening on port 80 — check the service is running |

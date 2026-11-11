@@ -45,6 +45,7 @@ def _state_dict(state):
                             if state.generation_held is not None else None),
         'pending_command': COMMAND_NAMES.get(state.pending),
         'link': state.link.hex(' ') if state.link else None,
+        'resyncing': state.resyncing,
         'controller_seen': state.controller_seen,
         'schedule_enabled': state.schedule_enabled,
         'active_schedule': state.active_schedule,

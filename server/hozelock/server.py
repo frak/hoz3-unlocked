@@ -99,8 +99,11 @@ class Handler(BaseHTTPRequestHandler):
 
         m = HEARTBEAT_PATH.match(url.path)
         if m and m.group(1) == self.state.hub_id:
-            log.info('heartbeat: state=%s held=%s generation=%04x link=%s%s',
-                     self.state.watering, self.state.generation_held,
+            log.info('heartbeat: state=%s%s held=%s confirmed=%s generation=%04x '
+                     'link=%s%s',
+                     self.state.watering,
+                     ' resyncing' if self.state.resyncing else '',
+                     self.state.generation_held, self.state.generation_confirmed,
                      self.state.generation,
                      self.state.link.hex(' ') if self.state.link else '?',
                      '' if self.state.controller_seen else ' (no controller!)')

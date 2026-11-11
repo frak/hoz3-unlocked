@@ -145,8 +145,10 @@ class Bridge:
         s = self.state
         nxt = s.next_watering()
         self.client.publish(f'{self.base}/active_schedule', s.active_schedule)
-        self.client.publish(f'{self.base}/watering',
-                            'ON' if s.watering != 'idle' else 'OFF')
+        # The resync bit rides alongside the watering bit, so this must test the
+        # decoded state and not "anything that is not idle" -- that put a false
+        # watering in HA's history for every reacquisition.
+        self.client.publish(f'{self.base}/watering', 'ON' if s.is_watering else 'OFF')
         self.client.publish(f'{self.base}/attributes', json.dumps({
             'trigger': s.watering,
             'generation': f'{s.generation:04x}',
@@ -154,6 +156,7 @@ class Bridge:
                                 if s.generation_held is not None else None),
             'pending_command': s.pending,
             'controller_seen': s.controller_seen,
+            'resyncing': s.resyncing,
         }))
         self.client.publish(f'{self.base}/next_watering',
                             nxt.astimezone().isoformat() if nxt else '')
