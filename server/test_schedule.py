@@ -97,7 +97,7 @@ def main():
     # checksum bits cannot be measured, and the hub would refuse it.
     st2 = sm.HubState('x', SITE, [])
     solar = [schedule.Event('sunrise', 45), schedule.Event('sunset', 60)]
-    ends, bad = set(), 0
+    ends, bad, nock = set(), 0, 0
     for n in range(366):
         day = datetime(2026, 9, 1) + timedelta(days=n)
         lead, chain = schedule.build(solar, SITE, st2.week_origin(day))
@@ -105,11 +105,41 @@ def main():
         ends.add(len(blob[:210].rstrip(b'\xff')))
         if lead + sum(g for _, g in chain) != codec.CYCLE_UNITS:
             bad += 1
-    ok &= check('a year of solar programmes keeps one payload length',
-                sorted(ends), [32])
+        if codec.schedule_checksum(blob) is None:
+            nock += 1
+    # 35 bytes for the week around midsummer, when the sunrise-to-sunset gap
+    # needs a continuation byte. Against a 211-byte budget that is free; the
+    # clamp that used to keep this at a flat 32 cost 445 min/day of drift.
+    ok &= check('a year of solar programmes stays inside the payload budget',
+                (sorted(ends), max(ends) <= codec.SCHEDULE_LEN - 7),
+                ([32, 35], True))
     ok &= check('every one closes the weekly cycle', bad, 0)
-    ok &= check('no gap needs a continuation byte',
-                max(g for _, g in chain) <= schedule.MAX_GAP_UNITS, True)
+    ok &= check('every one has a computable checksum', nock, 0)
+
+    print()
+    print('  -- the encoded programme fires when the schedule says --')
+    # A once-daily schedule needs 288-unit gaps. Clamping them to 199 used to
+    # drag each event 445 minutes earlier than the last, so the hub watered at
+    # 15:05 for a 20:45 event; the captured programmes go up to 1547 units.
+    for events in ([schedule.Event('20:45', 3)],
+                   [schedule.Event('06:00', 30), schedule.Event('21:00', 45)],
+                   [schedule.Event('09:00', 5), schedule.Event('09:30', 5)]):
+        epoch = st2.week_origin(datetime(2026, 11, 11, 20, 40))
+        lead, chain = schedule.build(events, SITE, epoch)
+        intended = [w for w, _ in schedule.resolve(events, SITE, epoch)
+                    if epoch <= w < epoch + timedelta(days=7)]
+        t = epoch + timedelta(minutes=lead * codec.GAP_UNIT_MIN)
+        actual = []
+        for _, gap in chain:
+            actual.append(t)
+            t += timedelta(minutes=gap * codec.GAP_UNIT_MIN)
+        label = '+'.join(e.at for e in events)
+        ok &= check(f'{label}: fires at the intended times', actual, intended)
+        blob = codec.encode_schedule(lead, chain)
+        ok &= check(f'{label}: still encodes to {codec.SCHEDULE_LEN} bytes',
+                    len(blob), codec.SCHEDULE_LEN)
+        ok &= check(f'{label}: checksum computable',
+                    codec.schedule_checksum(blob) is not None, True)
 
     print()
     print('  -- importing the app\'s schedules from the cloud --')

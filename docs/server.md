@@ -59,6 +59,14 @@ An event is a time (`HH:MM`, `sunrise` or `sunset`), a duration in minutes, and
 optionally `offset_min` and `days`. Solar times are resolved for the site's
 coordinates and re-resolved hourly as they drift.
 
+Gaps between events are emitted at their true length. Until 11 Nov 2026 they were
+clamped to 199 units (995 minutes) to avoid continuation bytes, which silently
+dragged every event after the first one earlier: a once-daily schedule needs
+288-unit gaps, so it lost 445 minutes per day, cascading through the week — a
+20:45 event reached the hub as 15:05. Hozelock's own captured programmes carry
+gaps up to 1547 units, so the clamp protected nothing. It costs 3 extra payload
+bytes for the week around midsummer, against a 211-byte budget.
+
 Startup trial-builds and encodes the active schedule, and logs an error if it
 cannot: `schedule_blob()` is on the hub's fetch path, where an unencodable
 programme means the hub is served nothing and there is nobody watching.
@@ -142,6 +150,15 @@ regenerated after April 2027 — the tests are worth more than usual for that re
   button "water now for 1 minute". In the log the watering bit stays set for up
   to ~2 minutes, because the controller only reports in on its 1-minute poll;
   trust the tap over the log. An unattended press is not an open tap.
+- **The DST changeover day fires twice or not at all, for events between 01:00
+  and 02:00 local.** The week clock and the programme are both computed in naive
+  local time, which is what keeps a `20:45` event at 20:45 in BST and in GMT
+  alike, and what makes a replayed captured blob still fire at its original
+  wall-clock times. The cost is that in autumn the hub sees the week clock go
+  back an hour (wall 01:30 is week-minute 155 twice over), so a watering in that
+  hour runs again; in spring the hour does not exist and it is skipped. Nothing
+  outside 01:00-02:00 is affected.
+
 - **No battery or signal sensors.** Request bytes 11–13 are undecoded. Decoding them
   needs the real service to compare against, so it must happen before April 2027 if
   those readings matter.

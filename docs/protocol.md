@@ -282,7 +282,9 @@ Weekly — Tuesday 16:30 for 30 min:
 ```
 
 787 + 1229 = 2016. A weekly schedule is not a different format — it is the same chain with gaps
-long enough to need continuation bytes.
+long enough to need continuation bytes. The corpus has gaps up to 1547 units, so these are
+ordinary rather than exotic: a server that avoids them is mis-timing its schedule, not playing
+safe.
 
 ### Corroboration
 
