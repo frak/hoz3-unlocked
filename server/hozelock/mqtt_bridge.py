@@ -153,6 +153,7 @@ class Bridge:
             'generation_held': (f'{s.generation_held:04x}'
                                 if s.generation_held is not None else None),
             'pending_command': s.pending,
+            'controller_seen': s.controller_seen,
         }))
         self.client.publish(f'{self.base}/next_watering',
                             nxt.astimezone().isoformat() if nxt else '')

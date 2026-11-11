@@ -85,6 +85,10 @@ class HubState:
         self.watering = 'idle'
         self.generation_held = None
         self.generation_confirmed = None
+        # Bytes 11-13 of the request. Flat (xx 00 00) in every captured sample
+        # where nothing was watering; fluctuating in all 33 that did water. So
+        # it reads as whether the tap controller is in radio contact.
+        self.link = None
         self._warned_checksum = False
         self._lock = threading.Lock()
         self._listeners = []
@@ -190,6 +194,7 @@ class HubState:
         self.watering = fields['state']
         self.generation_held = fields['generation_held']
         self.generation_confirmed = fields['generation_confirmed']
+        self.link = fields['link']
         # The hub only echoes a command once it has acted on it.
         if self.pending and self.generation_confirmed == self.generation:
             self.pending = CMD_NONE
@@ -202,6 +207,13 @@ class HubState:
         checksum = bytes([ck >> 8, ck & 0xff])
         return codec.encode_heartbeat_response(minutes, seconds, self.generation,
                                                flag=self.flag, checksum=checksum)
+
+    @property
+    def controller_seen(self):
+        """-> False when the link bytes are flat, i.e. no controller in contact."""
+        if not self.link:
+            return None
+        return self.link[1:] != b'\x00\x00'
 
     def flags(self):
         f = bytearray(5)

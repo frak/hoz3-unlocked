@@ -183,8 +183,20 @@ sudo ip link del br0
 
 Stopping a `oneshot` unit does not undo its work, hence the explicit `br0` delete.
 
-**Check:** `ip link show br0` reports "does not exist", and
-`ip -4 addr show eth0` shows a normal `192.168.1.x` address.
+**Check:** `ip link show br0` reports "does not exist". `eth0` will have **no
+IPv4 address** at this point and that is correct — the bridge script flushed it
+and left it `managed no`, so NetworkManager is not running DHCP on it. Step 7
+hands it back. To confirm the cable and DHCP now rather than inside the routing
+step:
+
+```bash
+sudo nmcli device set eth0 managed yes
+sudo nmcli device connect eth0
+ip -4 addr show eth0        # now 192.168.1.x
+```
+
+`Device "eth0" does not exist` is the one answer that is a real problem — that
+means the interface is named something else.
 
 ---
 
@@ -202,7 +214,10 @@ This gives the hub its own subnet with the Pi as gateway and resolver, NATs it o
 to the LAN, and points `hoz3.com` at the Pi.
 
 **Check:** the script prints `hoz3.com -> 10.0.9.1:80 -> 10.0.9.1:80` and exits 0.
-If it complains that `eth0` has no address, step 6 was skipped.
+
+`eth0 has no IPv4 address` means the 20-second wait for DHCP ran out: the cable
+to the router, or NetworkManager having no profile for `eth0`. The script sets it
+`managed yes` itself, so this is not the bridge's doing.
 
 ---
 

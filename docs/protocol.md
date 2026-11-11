@@ -92,7 +92,7 @@ Both requests carry the *same* 24-byte heartbeat blob in `hb`; only the response
 | 0–1 | `02 01` — constant, version or message type |
 | 2–4 | `08 1b e2` — constant, hub identity |
 | 7–8 | **watering state** (below) |
-| 11–13 | radio link metrics — fluctuate continuously, no decision value |
+| 11–13 | radio link metrics. They fluctuate while the tap controller is in contact and go **flat** (`xx 00 00`) when it is not: across the corpus all 33 waterings happened on a fluctuating field, and the 287 flat samples are all `idle`. Treat flat as "no controller", which is otherwise invisible — the hub keeps accepting programmes normally |
 | 16–17 | generation the hub currently holds |
 | 20–21 | generation the hub has confirmed |
 | 22–23 | checksum — [checksum.md](checksum.md) |
