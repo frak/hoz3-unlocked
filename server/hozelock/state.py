@@ -49,7 +49,7 @@ def generations_for(flag):
 
 
 class HubState:
-    def __init__(self, hub_id, site, events=None, clock_epoch=None,
+    def __init__(self, hub_id, site, events=None,
                  restrict_generations=False, initial_generation=None,
                  corrupt_checksum=False, replay_blob=None, demo_mode=False,
                  schedules=None, active_schedule=None):
@@ -64,7 +64,6 @@ class HubState:
             log.warning('active_schedule %r is not defined - using %r',
                         active_schedule, self.schedules[0].name)
             self.active_schedule = self.schedules[0].name
-        self.clock_epoch = clock_epoch or datetime(2026, 1, 1)
         self.restrict_generations = restrict_generations
         self.corrupt_checksum = corrupt_checksum
         self.flag = FLAG_DEMO if demo_mode else FLAG_NORMAL
